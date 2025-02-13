@@ -67,4 +67,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.logback.classic)
+    dependencies {
+        // Dependencies for HTTP communication
+        implementation(libs.ktor.client.core)
+        implementation(libs.ktor.client.cio) // Async HTTP client
+        implementation(libs.ktor.client.content.negotiation)
+        implementation(libs.ktor.serialization.kotlinx.json)
+    }
+
 }
