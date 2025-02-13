@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">LearningSquare</string>
+    <string name="hello_constraintlayout">Hello, ConstraintLayout!</string>
+    <string name="log_in">Log in</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
 </resources>
