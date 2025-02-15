@@ -7,7 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="150dp">
+        android:padding="16dp"
+        android:gravity="center_horizontal">
 
         <EditText
             android:id="@+id/inputUsername"
@@ -15,7 +16,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/username"
             android:inputType="text"
-            android:layout_marginBottom="150dp"/>
+            android:layout_marginBottom="16dp"
+            android:autofillHints="username"/>
 
         <EditText
             android:id="@+id/inputPassword"
@@ -23,12 +25,13 @@
             android:layout_height="wrap_content"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:layout_marginBottom="150dp"/>
+            android:layout_marginBottom="16dp"
+            android:autofillHints="password"/>
 
         <Button
             android:id="@+id/loginButton"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/log_in"/>
     </LinearLayout>
 
