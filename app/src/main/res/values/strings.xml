@@ -4,4 +4,6 @@
     <string name="log_in">Log in</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="hello_student">Hello Student!</string>
+    <string name="hello_instructor">Hello Instructor!</string>
 </resources>
