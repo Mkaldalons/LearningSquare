@@ -36,16 +36,26 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.appcompat)  // Add this for Fragment support
-    implementation(libs.androidx.constraintlayout) // Add ConstraintLayout support
-    implementation(libs.androidx.material) // Material Components for UI
-
+        implementation(libs.androidx.core.ktx)
+        implementation(libs.androidx.lifecycle.runtime.ktx)
+        implementation(libs.androidx.appcompat)  // Add this for Fragment support
+        implementation(libs.androidx.constraintlayout) // Add ConstraintLayout support
+        implementation(libs.androidx.material)
+        implementation(libs.androidx.annotation)
+        implementation(libs.androidx.lifecycle.livedata.ktx)
+        implementation(libs.androidx.lifecycle.viewmodel.ktx)
+        implementation(libs.androidx.activity) // Material Components for UI
+        implementation(libs.retrofit)
+        implementation(libs.retrofitConverterGson)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+        androidTestImplementation(libs.androidx.junit)
+        androidTestImplementation(libs.androidx.espresso.core)
 }
