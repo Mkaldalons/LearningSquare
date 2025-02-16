@@ -17,12 +17,11 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:id="@+id/fragment_container_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph" />
+        android:name="hbv601g.learningsquare.ui.LoginFragment" >
+    </androidx.fragment.app.FragmentContainerView>
 
     <include
         layout="@layout/fragment_login"
