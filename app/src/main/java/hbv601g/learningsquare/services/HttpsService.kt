@@ -19,14 +19,20 @@ class HttpsService {
     private val client = HttpClient(CIO)
     private val url = "https://hugbo1-6b15.onrender.com"
 
-    suspend fun getUser(user: String): UserModel
+    /** Get the User by userName
+     * Return the User
+     */
+    suspend fun getUser(userName: String): UserModel
     {
-        val url = "https://hugbo1-6b15.onrender.com/users/${user}"
+        val url = "https://hugbo1-6b15.onrender.com/users/${userName}"
         Log.d("UserService", "Requesting URL: $url")
         val response: HttpResponse = client.get(url)
         return parseUserResponse(response)
     }
 
+    /** Login the user
+     *  Return the kind of user that was logged in
+     */
     suspend fun loginUser(userName: String, password: String): String
     {
         val url = "https://hugbo1-6b15.onrender.com/login"
@@ -45,7 +51,9 @@ class HttpsService {
         }
     }
 
-
+    /** Parse a user response
+     *  Return a User
+     */
     private suspend fun parseUserResponse(response: HttpResponse): UserModel
     {
         if(response.status.value == 200)
@@ -58,6 +66,9 @@ class HttpsService {
         }
     }
 
+    /** Parse the login response
+     *  Return true if isInstructor field is true, otherwise false
+     */
     private suspend fun parseLoginResponse(response: HttpResponse): Boolean
     {
         val jsonObject = Json{ ignoreUnknownKeys = true }

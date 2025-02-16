@@ -4,6 +4,9 @@ import hbv601g.learningsquare.models.UserModel
 
 class UserService(private val httpsService: HttpsService) {
 
+    /** Get the user by username
+     *  Return the kind of user
+     */
     public suspend fun getUser(userName: String): String
     {
         val user: UserModel = httpsService.getUser(userName)
@@ -17,6 +20,10 @@ class UserService(private val httpsService: HttpsService) {
         }
         return "none"
     }
+
+    /** Login the user with a given username and password
+     *  Return the type of user
+     */
     public suspend fun loginUser(userName: String, password: String): String
     {
         val userType: String = httpsService.loginUser(userName, password)
