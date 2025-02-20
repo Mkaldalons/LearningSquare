@@ -6,4 +6,5 @@
     <string name="password">Password</string>
     <string name="hello_student">Hello Student!</string>
     <string name="hello_instructor">Hello Instructor!</string>
+    <string name="text_view_error_not_instructor">Dashboard is only available to instructors</string>
 </resources>
