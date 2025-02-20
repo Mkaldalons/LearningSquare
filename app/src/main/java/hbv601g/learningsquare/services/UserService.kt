@@ -22,7 +22,7 @@ class UserService(private val httpsService: HttpsService) {
 
         val user = parseUserResponse(response)
 
-        return user;
+        return user
     }
 
     /** Login the user with a given username and password
@@ -38,7 +38,7 @@ class UserService(private val httpsService: HttpsService) {
             return getUser(userName)
         }
         Log.d("LoginFragment", "No user found. Returning null")
-        return null;
+        return null
     }
 
     /** Parse a user response
