@@ -17,6 +17,7 @@
             android:hint="@string/username"
             android:inputType="text"
             android:layout_marginBottom="16dp"
+            android:minHeight="48dp"
             android:autofillHints="username"/>
 
         <EditText
@@ -26,6 +27,7 @@
             android:hint="@string/password"
             android:inputType="textPassword"
             android:layout_marginBottom="16dp"
+            android:minHeight="48dp"
             android:autofillHints="password"/>
 
         <Button
@@ -45,6 +47,15 @@
             android:visibility="gone"
             android:textColor="#963535"
             android:padding="8dp" />
+
+        <Button
+            android:id="@+id/signupButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:text="@string/signup_button"
+            android:clickable="true"
+            android:background="#0080FF"/>
 
     </LinearLayout>
 

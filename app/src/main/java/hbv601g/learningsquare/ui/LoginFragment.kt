@@ -27,6 +27,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         val inputPassword = view.findViewById<EditText>(R.id.inputPassword)
         val loginButton = view.findViewById<Button>(R.id.loginButton)
         val errorTextView = view.findViewById<TextView>(R.id.errorTextView)
+        val signupButton = view.findViewById<Button>(R.id.signupButton)
 
         Log.d("LoginFragment", "onCreateViewExecuted")
 
@@ -64,6 +65,15 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             else {
                 errorTextView.visibility = View.VISIBLE
                 errorTextView.text = "Please enter username and password"
+            }
+        }
+        signupButton.setOnClickListener {
+            Log.d("LoginFragment", "Signup button clicked")
+            lifecycleScope.launch {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container_view, SignupFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
         }
 
