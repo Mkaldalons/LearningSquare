@@ -7,7 +7,9 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import hbv601g.learningsquare.R
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
+import androidx.collection.emptyLongSet
 import androidx.lifecycle.lifecycleScope
 import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
@@ -15,15 +17,16 @@ import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
-     override fun onViewCreated(
+    override fun onViewCreated(
         view: View,
-        savedInstanceState: Bundle?)
-     {
-         super.onViewCreated(view, savedInstanceState)
+        savedInstanceState: Bundle?
+    ) {
+        super.onViewCreated(view, savedInstanceState)
 
         val inputUsername = view.findViewById<EditText>(R.id.inputUsername)
         val inputPassword = view.findViewById<EditText>(R.id.inputPassword)
         val loginButton = view.findViewById<Button>(R.id.loginButton)
+        val errorTextView = view.findViewById<TextView>(R.id.errorTextView)
 
         Log.d("LoginFragment", "onCreateViewExecuted")
 
@@ -31,29 +34,38 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             val username = inputUsername?.text.toString()
             val password = inputPassword?.text.toString()
             Log.d("LoginFragment", "ButtonClicked")
-            lifecycleScope.launch {
-                try {
+            if (username.isNotBlank() && password.isNotBlank()) {
+                lifecycleScope.launch {
                     val httpsService = HttpsService()
                     val userService = UserService(httpsService)
 
-                    val response = userService.loginUser(username, password)
-                    Log.d("LoginFragment", "Validated tag: $response")
-                    if( response == "instructor")
+                    val user = userService.loginUser(username, password)
+                    if (user != null)
                     {
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container_view, InstructorDashboardFragment())
-                            .addToBackStack(null)
-                            .commit()
+                        Log.d("LoginFragment", "Validated tag: ${user.isInstructor}")
+                        if (user.isInstructor) {
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_container_view, InstructorDashboardFragment())
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                        else
+                        {
+                            errorTextView.visibility = View.VISIBLE
+                            errorTextView.text = "Dashboard is currently only available to instructors"
+                        }
                     }
                     else {
-                        Toast.makeText(requireContext(), "Error: Only instructors have access to the dashboard.", Toast.LENGTH_SHORT).show()
+                        errorTextView.visibility = View.VISIBLE
+                        errorTextView.text = "Wrong username or password"
                     }
-                }catch (e: Exception){
-                    Log.e("LoginFragment", "Error fetching user: ${e.localizedMessage}")
-                    Toast.makeText(requireContext(), "Error fetching user data.", Toast.LENGTH_SHORT).show()
                 }
             }
+            else {
+                errorTextView.visibility = View.VISIBLE
+                errorTextView.text = "Please enter username and password"
+            }
         }
-    }
 
+    }
 }
