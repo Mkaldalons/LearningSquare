@@ -55,17 +55,29 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
                                     .addToBackStack(null)
                                     .commit()
                             }
+                            else
+                            {
+                                parentFragmentManager.beginTransaction()
+                                    .replace(R.id.fragment_container_view, StudentDashboardFragment())
+                                    .addToBackStack(null)
+                                    .commit()
+                            }
                         }
                         else
                         {
                             Log.d("SignupFragment", "Could not create user")
+                            // Could not sign up user
                         }
-
                     }
                 }
+                else
+                {
+                    //Display passwords do not match
+                }
             }
-            else {
-                //Call error text view
+            else
+            {
+                //Please fill all fields
             }
         }
     }

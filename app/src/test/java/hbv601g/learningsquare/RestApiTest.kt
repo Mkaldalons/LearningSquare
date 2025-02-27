@@ -32,4 +32,9 @@ class RestApiTest {
             assertEquals(user.name, userName)
         }
     }
+
+    @Test
+    fun testDeleteUserEndpoint(): Unit = runBlocking {
+
+    }
 }
