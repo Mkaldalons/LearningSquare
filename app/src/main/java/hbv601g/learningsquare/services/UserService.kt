@@ -34,10 +34,20 @@ class UserService(private val httpsService: HttpsService) {
         val isInstructor = parseLoginResponse(response)
         if (isInstructor != null)
         {
-            Log.d("LoginFragment", "Returning a user")
             return getUser(userName)
         }
-        Log.d("LoginFragment", "No user found. Returning null")
+        return null
+    }
+
+    suspend fun signupUser(userName: String, name: String, email: String, password: String, isInstructor: Boolean): UserModel?
+    {
+        val httpsResponse = httpsService.registerUser(userName, name, email, password, isInstructor)
+        if(parseSignupResponse(httpsResponse))
+        {
+            val user = getUser(userName)
+            Log.d("SignupFragment", "returning user ${user.userName}")
+            return user
+        }
         return null
     }
 
@@ -68,5 +78,16 @@ class UserService(private val httpsService: HttpsService) {
         } else {
             null
         }
+    }
+
+    private suspend fun parseSignupResponse(response: HttpResponse): Boolean
+    {
+        if(response.body<String>().toString() == "User registered successfully")
+        {
+            Log.d("SignupFragment", "User registered successfully response")
+            return true
+        }
+        Log.d("SignupFragment", "Could not register student")
+        return false
     }
 }

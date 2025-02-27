@@ -29,12 +29,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         val errorTextView = view.findViewById<TextView>(R.id.errorTextView)
         val signupButton = view.findViewById<Button>(R.id.signupButton)
 
-        Log.d("LoginFragment", "onCreateViewExecuted")
+        //Log.d("LoginFragment", "onCreateViewExecuted")
 
         loginButton.setOnClickListener {
             val username = inputUsername?.text.toString()
             val password = inputPassword?.text.toString()
-            Log.d("LoginFragment", "ButtonClicked")
+            //Log.d("LoginFragment", "ButtonClicked")
             if (username.isNotBlank() && password.isNotBlank()) {
                 lifecycleScope.launch {
                     val httpsService = HttpsService()
@@ -43,7 +43,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     val user = userService.loginUser(username, password)
                     if (user != null)
                     {
-                        Log.d("LoginFragment", "Validated tag: ${user.isInstructor}")
+                        //Log.d("LoginFragment", "Validated tag: ${user.isInstructor}")
                         if (user.isInstructor) {
                             parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_container_view, InstructorDashboardFragment())
@@ -68,7 +68,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
         }
         signupButton.setOnClickListener {
-            Log.d("LoginFragment", "Signup button clicked")
+            //Log.d("LoginFragment", "Signup button clicked")
             lifecycleScope.launch {
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container_view, SignupFragment())

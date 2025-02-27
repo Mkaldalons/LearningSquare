@@ -42,4 +42,27 @@ class HttpsService {
         }
         return response
     }
+
+    suspend fun registerUser(userName: String, name: String, email: String, password: String, isInstructor: Boolean): HttpResponse
+    {
+        val url = "$url/signup"
+        val jsonBody = """
+        |{
+        |  "username": "$userName",
+        |  "name": "$name",
+        |  "email": "$email",
+        |  "password": "$password",
+        |  "confirmPassword": "$password",
+        |  "isInstructor": $isInstructor
+        |}
+        """.trimMargin()
+        Log.d("SignupFragment", "POSTng to URL: $url with data: $jsonBody")
+
+        val response: HttpResponse = client.post(url)
+        {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
+        return response
+    }
 }
