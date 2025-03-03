@@ -9,8 +9,8 @@ data class UserModel(
     val email: String,
     val password: String,
     val isInstructor: Boolean,
-    val profileImagePath: String,
-    val recoveryEmail: String
+    val profileImagePath: String?,
+    val recoveryEmail: String?
     )
 {
 

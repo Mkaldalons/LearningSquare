@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">LearningSquare</string>
-    <string name="hello_constraintlayout">Hello, ConstraintLayout!</string>
+    <string name="hello_constraintlayout">Welcome to Learning Square!</string>
     <string name="log_in">Log in</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="hello_student">Hello Student!</string>
     <string name="hello_instructor">Hello Instructor!</string>
     <string name="text_view_error_not_instructor">Dashboard is only available to instructors</string>
+    <string name="signup_button">Sign Up</string>
+    <string name="name_input">Name</string>
+    <string name="email_input">Email</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="instructor">Instructor</string>
 </resources>
