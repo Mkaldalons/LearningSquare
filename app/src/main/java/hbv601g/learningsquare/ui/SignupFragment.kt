@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import hbv601g.learningsquare.R
@@ -27,15 +28,18 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
         val confirmPasswordInput = view.findViewById<EditText>(R.id.confirmPasswordInput)
         val isInstructorCheckBox = view.findViewById<CheckBox>(R.id.isInstructorCheckbox)
         val confirmSignupButton = view.findViewById<Button>(R.id.confirmSignupButton)
+        val errorMessageTextView = view.findViewById<TextView>(R.id.errorMessageTextView)
 
-        val textInputs= mutableListOf(inputUsername, nameInput, emailInput, passwordInput, confirmPasswordInput)
+        val textInputs = mutableListOf(inputUsername.text.toString(), nameInput.text.toString(),
+            emailInput.text.toString(), passwordInput.text.toString(), confirmPasswordInput.text.toString())
+
+        var errorText: String = ""
 
         confirmSignupButton.setOnClickListener{
             Log.d("SignupFragment", "Button Clicked")
             val isInstructor = isInstructorCheckBox.isChecked
-            if(textInputs.size == 5)
+            if(textInputs.all { it.isNotEmpty() })
             {
-                Log.d("SignupFragment", "Inputs entered: ${textInputs.size}")
                 if(passwordInput.text.toString() == confirmPasswordInput.text.toString())
                 {
                     lifecycleScope.launch {
@@ -65,19 +69,34 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
                         }
                         else
                         {
+                            errorText = "Could not create user ${inputUsername.text}"
                             Log.d("SignupFragment", "Could not create user")
-                            // Could not sign up user
+                            errorMessageTextView.visibility = View.VISIBLE
+                            errorMessageTextView.text = errorText
+                            errorMessageTextView.postDelayed({
+                                errorMessageTextView.visibility = View.GONE
+                            }, 5_000)
                         }
                     }
                 }
                 else
                 {
-                    //Display passwords do not match
+                    errorText = "Passwords do not match"
+                    errorMessageTextView.visibility = View.VISIBLE
+                    errorMessageTextView.text = errorText
+                    errorMessageTextView.postDelayed({
+                        errorMessageTextView.visibility = View.GONE
+                    }, 5_000)
                 }
             }
             else
             {
-                //Please fill all fields
+                errorText = "Please fill all fields"
+                errorMessageTextView.visibility = View.VISIBLE
+                errorMessageTextView.text = errorText
+                errorMessageTextView.postDelayed({
+                    errorMessageTextView.visibility = View.GONE
+                }, 5_000)
             }
         }
     }

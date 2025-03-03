@@ -3,7 +3,6 @@ package hbv601g.learningsquare
 import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert
 import org.junit.Test
 
 import org.junit.Assert.*

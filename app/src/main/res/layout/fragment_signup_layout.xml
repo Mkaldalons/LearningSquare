@@ -83,6 +83,15 @@
             android:layout_height="wrap_content"/>
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/errorMessageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="gone"
+            android:textColor="#963535"
+            android:padding="8dp" />
+
         <Button
             android:id="@+id/confirmSignupButton"
             android:layout_width="match_parent"
