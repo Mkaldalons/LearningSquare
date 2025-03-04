@@ -48,12 +48,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         }
                         else
                         {
-                            errorTextString = "Dashboard is currently only available to instructors"
-                            errorTextView.visibility = View.VISIBLE
-                            errorTextView.text = errorTextString
-                            errorTextView.postDelayed({
-                                errorTextView.visibility = View.GONE
-                            }, 5_000)
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_container_view, StudentDashboardFragment())
+                                .addToBackStack(null)
+                                .commit()
                         }
                     }
                     else {
