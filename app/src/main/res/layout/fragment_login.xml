@@ -39,15 +39,6 @@
             android:clickable="true"
             android:background="#FF0000"/>
 
-        <TextView
-            android:id="@+id/errorTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:visibility="gone"
-            android:textColor="#963535"
-            android:padding="8dp" />
-
         <Button
             android:id="@+id/signupButton"
             android:layout_width="wrap_content"
@@ -56,6 +47,15 @@
             android:text="@string/signup_button"
             android:clickable="true"
             android:background="#0080FF"/>
+
+        <TextView
+            android:id="@+id/errorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="gone"
+            android:textColor="#963535"
+            android:padding="8dp" />
 
     </LinearLayout>
 

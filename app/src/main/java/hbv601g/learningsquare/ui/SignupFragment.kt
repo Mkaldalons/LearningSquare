@@ -30,12 +30,11 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
         val confirmSignupButton = view.findViewById<Button>(R.id.confirmSignupButton)
         val errorMessageTextView = view.findViewById<TextView>(R.id.errorMessageTextView)
 
-        val textInputs = mutableListOf(inputUsername.text.toString(), nameInput.text.toString(),
-            emailInput.text.toString(), passwordInput.text.toString(), confirmPasswordInput.text.toString())
-
-        var errorText: String = ""
+        var errorText = ""
 
         confirmSignupButton.setOnClickListener{
+            val textInputs = mutableListOf(inputUsername.text.toString(), nameInput.text.toString(),
+                emailInput.text.toString(), passwordInput.text.toString(), confirmPasswordInput.text.toString())
             Log.d("SignupFragment", "Button Clicked")
             val isInstructor = isInstructorCheckBox.isChecked
             if(textInputs.all { it.isNotEmpty() })
@@ -69,13 +68,14 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
                         }
                         else
                         {
-                            errorText = "Could not create user ${inputUsername.text}"
-                            Log.d("SignupFragment", "Could not create user")
+                            errorText = "User with username ${textInputs[0]} already exists"
                             errorMessageTextView.visibility = View.VISIBLE
                             errorMessageTextView.text = errorText
                             errorMessageTextView.postDelayed({
                                 errorMessageTextView.visibility = View.GONE
                             }, 5_000)
+                            inputUsername.text.clear()
+                            emailInput.text.clear()
                         }
                     }
                 }
@@ -87,11 +87,13 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
                     errorMessageTextView.postDelayed({
                         errorMessageTextView.visibility = View.GONE
                     }, 5_000)
+                    passwordInput.text.clear()
+                    confirmPasswordInput.text.clear()
                 }
             }
             else
             {
-                errorText = "Please fill all fields"
+                errorText = "Please fill all text fields"
                 errorMessageTextView.visibility = View.VISIBLE
                 errorMessageTextView.text = errorText
                 errorMessageTextView.postDelayed({
