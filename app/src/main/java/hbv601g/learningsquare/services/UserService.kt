@@ -1,6 +1,5 @@
 package hbv601g.learningsquare.services
 
-import android.util.Log
 import hbv601g.learningsquare.models.UserModel
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
@@ -14,9 +13,10 @@ import kotlinx.serialization.json.jsonPrimitive
 class UserService(private val httpsService: HttpsService) {
 
     /** Get the user by username
-     *  Return the kind of user
+     *  @param userName
+     *  @return UserModel The user if it exists, otherwise null
      */
-    private suspend fun getUser(userName: String): UserModel
+    suspend fun getUser(userName: String): UserModel?
     {
         val response = httpsService.getUser(userName)
 
@@ -26,7 +26,9 @@ class UserService(private val httpsService: HttpsService) {
     }
 
     /** Login the user with a given username and password
-     *  Return the type of user
+     *  @param userName
+     *  @param password
+     *  @return UserModel The user if the login was successful, otherwise null
      */
     suspend fun loginUser(userName: String, password: String): UserModel?
     {
@@ -39,35 +41,52 @@ class UserService(private val httpsService: HttpsService) {
         return null
     }
 
+    /** Register the user
+     * @param userName
+     * @param name
+     * @param email
+     * @param password
+     * @param isInstructor
+     * @return UserModel The user if it was successfully registered, otherwise null
+     */
     suspend fun signupUser(userName: String, name: String, email: String, password: String, isInstructor: Boolean): UserModel?
     {
         val httpsResponse = httpsService.registerUser(userName, name, email, password, isInstructor)
-        if(parseSignupResponse(httpsResponse))
+        val user = parseUserResponse(httpsResponse)
+        if(user != null)
         {
-            val user = getUser(userName)
-            Log.d("SignupFragment", "returning user ${user.userName}")
             return user
         }
         return null
     }
 
-    /** Parse a user response
-     *  Return a User
+    /** Delete the user
+     * @param userName
+     * @return response Return true if the user was deleted, otherwise false
      */
-    private suspend fun parseUserResponse(response: HttpResponse): UserModel
+    suspend fun deleteUser(userName: String): Boolean {
+        val httpResponse = httpsService.deleteUser(userName)
+        val response = parseDeleteResponse(httpResponse)
+
+        return response
+    }
+
+    /** Parse a user response from json
+     * @param response
+     * @return UserModel Return a user if HttpResponse value is 200, otherwise null
+     */
+    private suspend fun parseUserResponse(response: HttpResponse): UserModel?
     {
-        if(response.status.value == 200)
-        {
-            return Json.decodeFromString<UserModel>(response.body())
-        }
-        else
-        {
-            throw Exception("Failed to retrieve user data. Status code: ${response.status}")
+        return if(response.status.value == 200) {
+            Json.decodeFromString<UserModel>(response.body())
+        } else {
+            null
         }
     }
 
     /** Parse the login response
-     *  Return true if isInstructor field is true, otherwise false
+     *  @param response
+     *  @return Boolean? Return true/false based on the type of user, return null if none is found
      */
     private suspend fun parseLoginResponse(response: HttpResponse): Boolean?
     {
@@ -80,14 +99,12 @@ class UserService(private val httpsService: HttpsService) {
         }
     }
 
-    private suspend fun parseSignupResponse(response: HttpResponse): Boolean
+    /** Parse the delete response
+     * @param response
+     * @return Boolean Return true if the status value is 200, otherwise false
+     */
+    private fun parseDeleteResponse(response: HttpResponse): Boolean
     {
-        if(response.body<String>().toString() == "User registered successfully")
-        {
-            Log.d("SignupFragment", "User registered successfully response")
-            return true
-        }
-        Log.d("SignupFragment", "Could not register student")
-        return false
+        return response.status.value == 200
     }
 }
