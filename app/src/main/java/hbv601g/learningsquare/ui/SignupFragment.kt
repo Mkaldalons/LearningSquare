@@ -35,7 +35,6 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
         confirmSignupButton.setOnClickListener{
             val textInputs = mutableListOf(inputUsername.text.toString(), nameInput.text.toString(),
                 emailInput.text.toString(), passwordInput.text.toString(), confirmPasswordInput.text.toString())
-            Log.d("SignupFragment", "Button Clicked")
             val isInstructor = isInstructorCheckBox.isChecked
             if(textInputs.all { it.isNotEmpty() })
             {
