@@ -1,6 +1,5 @@
 package hbv601g.learningsquare.services
 
-import android.util.Log
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -18,7 +17,6 @@ class HttpsService {
     suspend fun getUser(userName: String): HttpResponse
     {
         val url = "https://hugbo1-6b15.onrender.com/users/${userName}"
-        Log.d("UserService", "Requesting URL: $url")
         val response: HttpResponse = client.get(url)
         return response
     }
@@ -26,14 +24,12 @@ class HttpsService {
     /** Login the user
      * @param userName: String
      * @param password: String
-     * @return response: HttpResponse
-     *  Return the user if the login was successful, otherwise null.
+     * @return HttpResponse The response form the backend in JSON
      */
     suspend fun loginUser(userName: String, password: String): HttpResponse
     {
         val url = "https://hugbo1-6b15.onrender.com/login"
         val jsonBody = """{"username": "$userName", "password": "$password"}"""
-        Log.d("UserService", "POSTing to URL: $url with data: $jsonBody")
 
         val response: HttpResponse = client.post(url)
         {
@@ -43,6 +39,14 @@ class HttpsService {
         return response
     }
 
+    /** Register a user
+     * @param userName: String
+     * @param name: String
+     * @param email: String
+     * @param password: String
+     * @param isInstructor: boolean
+     * @return HttpResponse The response from the backend in JSON
+     */
     suspend fun registerUser(userName: String, name: String, email: String, password: String, isInstructor: Boolean): HttpResponse
     {
         val url = "$url/signup"
@@ -56,13 +60,24 @@ class HttpsService {
         |  "isInstructor": $isInstructor
         |}
         """.trimMargin()
-        Log.d("SignupFragment", "POSTng to URL: $url with data: $jsonBody")
 
         val response: HttpResponse = client.post(url)
         {
             contentType(ContentType.Application.Json)
             setBody(jsonBody)
         }
+        return response
+    }
+
+    /** Delete a user by their username
+     * @param userName: String
+     * @return HttpResponse The response from the backend in JSON
+     */
+    suspend fun deleteUser(userName: String): HttpResponse
+    {
+        val url = "https://hugbo1-6b15.onrender.com/users/${userName}"
+        val response: HttpResponse = client.delete(url)
+
         return response
     }
 }
