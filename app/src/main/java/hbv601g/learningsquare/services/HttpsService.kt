@@ -1,5 +1,6 @@
 package hbv601g.learningsquare.services
 
+import hbv601g.learningsquare.models.MakeQuestion
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -79,5 +80,39 @@ class HttpsService {
         val response: HttpResponse = client.delete(url)
 
         return response
+    }
+
+    /**
+     * Creates an assignment with multiple choice questions for a given course.
+     * @param courseId The ID of the course.
+     * @param title The assignment title.
+     * @param description The assignment description.
+     * @param dueDate The assignment due date.
+     * @param questions A list of MCQ questions.
+     */
+    suspend fun createAssignment(
+        courseId: String,
+        title: String,
+        description: String,
+        dueDate: String,
+        questions: List<MakeQuestion>
+    ): HttpResponse {
+        val assignmentUrl = "$url/assignments"
+        val questionsJson = questions.joinToString(separator = ",", prefix = "[", postfix = "]") { question ->
+            val optionsJson = question.options.joinToString(separator = ",", prefix = "[", postfix = "]") { "\"$it\"" }
+            """{"questionText": "${question.questionText}", "options": $optionsJson, "correctAnswer": ${question.correctAnswer}}"""
+        }
+
+        val jsonBody = """{
+            "title": "$title",
+            "description": "$description",
+            "dueDate": "$dueDate",
+            "questions": $questionsJson
+        }""".trimIndent()
+
+        return client.post(assignmentUrl) {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
     }
 }
