@@ -1,0 +1,11 @@
+name: 10-minute-cron
+on:
+  schedule:
+    - cron: ‘*/10 * * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curls site to prevent cold start
+        run: |
+          curl https://hugbo1-6b15.onrender.com/users/kennari
