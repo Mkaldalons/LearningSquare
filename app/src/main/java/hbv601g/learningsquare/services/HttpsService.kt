@@ -10,7 +10,6 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import android.util.Log
 import hbv601g.learningsquare.models.CourseModel
 import io.ktor.http.HttpStatusCode
