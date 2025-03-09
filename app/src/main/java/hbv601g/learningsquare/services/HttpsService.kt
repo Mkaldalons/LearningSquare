@@ -104,7 +104,7 @@ class HttpsService {
 
     suspend fun getAssignment(assignmentId: Int): HttpResponse
     {
-        val url = "$url/$assignmentId"
+        val url = "$url/assignments/$assignmentId"
 
         val response: HttpResponse = client.get(url)
         return response

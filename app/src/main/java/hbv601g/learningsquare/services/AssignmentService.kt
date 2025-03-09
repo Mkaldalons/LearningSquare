@@ -5,7 +5,6 @@ import hbv601g.learningsquare.models.QuestionModel
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
-import io.ktor.util.reflect.instanceOf
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -42,7 +41,9 @@ class AssignmentService(private val httpsService: HttpsService) {
     {
         val json = Json { ignoreUnknownKeys = true }
         val response = httpsService.getAssignment(assignmentId)
-        return json.decodeFromString<AssignmentModel>(response.body())
+        val assignment = json.decodeFromString<AssignmentModel>(response.body())
+        assignment.assignmentId = assignmentId
+        return assignment
     }
 
     private suspend fun parseAssignment(response: HttpResponse) : String

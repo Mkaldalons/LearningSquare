@@ -16,7 +16,7 @@ class AssignmentServiceTest {
 
     @Test
     fun testCreateAssignment(): Unit = runBlocking {
-        val assignmentName = "Test Assignment endpoint"
+        val assignmentName = "Test Assignment endpoint Again"
         val courseId = 0
         val published = false
         val dueDate = LocalDate(2025, 3, 9)
@@ -33,7 +33,15 @@ class AssignmentServiceTest {
             assertEquals(assignment.assignmentId, assignmentId)
             assertEquals(assignment.courseId, courseId)
         }
-
+        assertNotNull(assignmentId)
     }
 
+    @Test
+    fun testGetAssignment(): Unit = runBlocking {
+        val assignmentId = 17
+
+        val assignment = assignmentService.getAssignment(assignmentId)
+        assertNotNull(assignment)
+        assertEquals(assignment.assignmentId, assignmentId)
+    }
 }
