@@ -10,7 +10,14 @@ import kotlinx.serialization.json.Json
 class AssignmentService(private val httpsService: HttpsService) {
 
     /**
-     * Býr til assignment með multiple choice spurningum.
+     * Kallar á HttpsService til að búa til assignment með multiple choice spurningum.
+     *
+     * @param courseId Auðkenni námskeiðsins.
+     * @param title Titill assignmentsins.
+     * @param description Lýsing (sendum þó ekki notað af backendinum).
+     * @param dueDate Afhendingardagur.
+     * @param questions Listi af spurningum.
+     * @return AssignmentModel ef POST beiðnin gengur, annars null.
      */
     suspend fun createMakeAssignment(
         courseId: String,
