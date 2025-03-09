@@ -1,18 +1,22 @@
 package hbv601g.learningsquare.services
 
+import hbv601g.learningsquare.models.AssignmentModel
+import hbv601g.learningsquare.models.QuestionModel
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.client.engine.cio.*
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import kotlinx.datetime.LocalDate
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import android.util.Log
 import hbv601g.learningsquare.models.CourseModel
 import io.ktor.http.HttpStatusCode
 import io.ktor.client.call.body
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-
 
 class HttpsService {
     // private val client = HttpClient(CIO)
@@ -93,12 +97,36 @@ class HttpsService {
         return response
     }
 
+    /**
+     *
+     */
+    suspend fun createAssignment(assignmentModel: AssignmentModel): HttpResponse
+    {
+        val url = "$url/assignments"
+        val jsonBody = Json.encodeToString(assignmentModel)
+
+        val response: HttpResponse = client.post(url)
+        {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
+        return response
+    }
+
+    suspend fun getAssignment(assignmentId: Int): HttpResponse
+    {
+        val url = "$url/assignments/$assignmentId"
+
+        val response: HttpResponse = client.get(url)
+        return response
+    }
+    
     /** Create a course
      *
      */
     suspend fun createCourse(courseName: String, instructor: String, description: String): HttpResponse
     {
-        val url = "https://hugbo1-6b15.onrender.com/courses"  // Ensure baseUrl is defined in your class
+        val url = "https://hugbo1-6b15.onrender.com/courses" 
         val jsonBody = """
             {
                 "courseName": "$courseName",
@@ -125,7 +153,7 @@ class HttpsService {
             val response: HttpResponse = client.get(url)
 
             if (response.status == HttpStatusCode.OK) {
-                val coursesList: List<CourseModel> = response.body() // ✅ Convert response to List
+                val coursesList: List<CourseModel> = response.body() 
                 Log.d("HttpsService", "Received courses: $coursesList")
                 coursesList
             } else {
@@ -137,5 +165,4 @@ class HttpsService {
             emptyList()
         }
     }
-
 }
