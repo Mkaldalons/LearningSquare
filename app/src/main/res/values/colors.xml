@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="primary_blue">#0080FF</color>
+    <color name="error_red">#963535</color>
+    <color name="secondary_blue">#FF4081</color> <!-- Example color, change as needed -->
+    <color name="gray">#B0B0B0</color>
 </resources>

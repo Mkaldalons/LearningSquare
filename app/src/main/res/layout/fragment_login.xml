@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,52 +11,56 @@
         android:padding="16dp"
         android:gravity="center_horizontal">
 
+        <!-- Logo -->
+        <ImageView
+            android:id="@+id/logoImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ls_logo"
+            android:layout_marginBottom="24dp"
+            android:contentDescription="@string/logo_description" />
+
+        <!-- Username -->
         <EditText
             android:id="@+id/inputUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/InputField"
             android:hint="@string/username"
             android:inputType="text"
-            android:layout_marginBottom="16dp"
-            android:minHeight="48dp"
-            android:autofillHints="username"/>
+            android:autofillHints="username"
+            android:layout_marginBottom="16dp"/>
 
+        <!-- Password -->
         <EditText
             android:id="@+id/inputPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/InputField"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:layout_marginBottom="16dp"
-            android:minHeight="48dp"
-            android:autofillHints="password"/>
+            android:autofillHints="password"
+            android:layout_marginBottom="16dp"/>
 
+        <!-- Login Button -->
         <Button
             android:id="@+id/loginButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:focusable="true"
+            style="@style/PrimaryButton"
             android:text="@string/log_in"
-            android:clickable="true"
-            android:background="#FF0000"/>
+            android:layout_marginBottom="12dp"/>
 
+        <!-- Signup Button -->
         <Button
             android:id="@+id/signupButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:focusable="true"
+            style="@style/SecondaryButton"
             android:text="@string/signup_button"
-            android:clickable="true"
-            android:background="#0080FF"/>
+            android:layout_marginBottom="16dp"/>
 
+        <!-- Error Message -->
         <TextView
             android:id="@+id/errorTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             android:visibility="gone"
-            android:textColor="#963535"
-            android:padding="8dp" />
+            android:textColor="@color/error_red"
+            android:padding="8dp"/>
 
     </LinearLayout>
 
