@@ -59,6 +59,7 @@ class UserServiceTest {
         assertEquals(userName, user?.userName)
     }
 
+    // Change this line for testing
     // Could delete this or create a user and then delete the user to test this separately
 //    @Test
 //    fun testDeleteUserEndpoint(): Unit = runBlocking {
