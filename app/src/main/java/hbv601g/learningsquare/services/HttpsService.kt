@@ -130,4 +130,10 @@ class HttpsService {
             setBody(jsonBody)
         }
     }
+    suspend fun getAllAssignments(): HttpResponse {
+        val endpoint = "$url/assignments"
+        return client.get(endpoint) {
+            contentType(ContentType.Application.Json)
+        }
+    }
 }
