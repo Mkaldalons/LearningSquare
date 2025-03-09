@@ -11,9 +11,20 @@ import io.ktor.http.contentType
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import android.util.Log
+import hbv601g.learningsquare.models.CourseModel
+import io.ktor.http.HttpStatusCode
+import io.ktor.client.call.body
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
 class HttpsService {
-    private val client = HttpClient(CIO)
+    // private val client = HttpClient(CIO)
+    private val client = HttpClient {
+        install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
+            json(Json {ignoreUnknownKeys = true})
+        }
+    }
     private val url = "https://hugbo1-6b15.onrender.com"
 
     /** Get the User by userName
@@ -108,5 +119,50 @@ class HttpsService {
 
         val response: HttpResponse = client.get(url)
         return response
+    }
+    
+    /** Create a course
+     *
+     */
+    suspend fun createCourse(courseName: String, instructor: String, description: String): HttpResponse
+    {
+        val url = "https://hugbo1-6b15.onrender.com/courses" 
+        val jsonBody = """
+            {
+                "courseName": "$courseName",
+                "instructor": "$instructor",
+                "description": "$description"
+            }
+        """.trimIndent()
+
+            Log.d("CreateCourse", "POSTing to URL: $url with data: $jsonBody")
+            val response: HttpResponse = client.post(url)
+            {
+                contentType(ContentType.Application.Json)
+                setBody(jsonBody)
+            }
+            return response
+
+    }
+
+    suspend fun getCourses(instructor: String): List<CourseModel> {
+        val url = "https://hugbo1-6b15.onrender.com/courses?instructor=$instructor"
+        Log.d("HttpsService", "Fetching courses for instructor: $instructor")
+
+        return try {
+            val response: HttpResponse = client.get(url)
+
+            if (response.status == HttpStatusCode.OK) {
+                val coursesList: List<CourseModel> = response.body() 
+                Log.d("HttpsService", "Received courses: $coursesList")
+                coursesList
+            } else {
+                Log.e("HttpsService", "Failed to fetch courses: ${response.status}")
+                emptyList()
+            }
+        } catch (e: Exception) {
+            Log.e("HttpsService", "Error fetching courses: ${e.message}")
+            emptyList()
+        }
     }
 }
