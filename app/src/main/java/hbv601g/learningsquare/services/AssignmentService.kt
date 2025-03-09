@@ -10,13 +10,14 @@ import kotlinx.serialization.json.Json
 class AssignmentService(private val httpsService: HttpsService) {
 
     /**
-     * Creates an assignment with multiple choice questions.
-     * @param courseId The course ID.
-     * @param title Assignment title.
-     * @param description Assignment description.
-     * @param dueDate Assignment due date.
-     * @param questions A list of multiple choice questions.
-     * @return The created AssignmentModel if successful, or null otherwise.
+     * Kallar á HttpsService til að búa til assignment með multiple choice spurningum.
+     *
+     * @param courseId Auðkenni námskeiðsins.
+     * @param title Titill assignmentsins.
+     * @param description Lýsing (sendum þó ekki notað af backendinum).
+     * @param dueDate Afhendingardagur.
+     * @param questions Listi af spurningum.
+     * @return AssignmentModel ef POST beiðnin gengur, annars null.
      */
     suspend fun createMakeAssignment(
         courseId: String,
@@ -27,11 +28,9 @@ class AssignmentService(private val httpsService: HttpsService) {
     ): AssignmentModel? {
         val response: HttpResponse = httpsService.createAssignment(courseId, title, description, dueDate, questions)
         return if (response.status.value == 200) {
-            Json.decodeFromString(response.body())
+            Json.decodeFromString<AssignmentModel>(response.body())
         } else {
             null
         }
     }
-
-    // TODO: adding more methods (e.g., getAssignments etc.).
 }

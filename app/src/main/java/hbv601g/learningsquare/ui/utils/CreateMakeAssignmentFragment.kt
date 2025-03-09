@@ -20,7 +20,7 @@ class CreateMakeAssignmentFragment : Fragment(R.layout.fragment_create_make_assi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Retrieve courseId from fragment arguments.
+        // Sækir courseId úr argumentunum (t.d. "123")
         courseId = arguments?.getString("COURSE_ID")
         assignmentService = AssignmentService(HttpsService())
     }
@@ -28,27 +28,21 @@ class CreateMakeAssignmentFragment : Fragment(R.layout.fragment_create_make_assi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Assignment detail inputs.
         val titleEditText = view.findViewById<EditText>(R.id.assignmentTitleEditText)
         val descriptionEditText = view.findViewById<EditText>(R.id.assignmentDescriptionEditText)
         val dueDateEditText = view.findViewById<EditText>(R.id.assignmentDueDateEditText)
-
-        // MCQ question inputs.
         val questionEditText = view.findViewById<EditText>(R.id.questionEditText)
         val option1EditText = view.findViewById<EditText>(R.id.option1EditText)
         val option2EditText = view.findViewById<EditText>(R.id.option2EditText)
         val option3EditText = view.findViewById<EditText>(R.id.option3EditText)
         val option4EditText = view.findViewById<EditText>(R.id.option4EditText)
         val correctAnswerEditText = view.findViewById<EditText>(R.id.correctAnswerEditText)
-
         val createButton = view.findViewById<Button>(R.id.createAssignmentButton)
 
         createButton.setOnClickListener {
             val title = titleEditText.text.toString().trim()
             val description = descriptionEditText.text.toString().trim()
             val dueDate = dueDateEditText.text.toString().trim()
-
-            // Collect the question data.
             val questionText = questionEditText.text.toString().trim()
             val options = listOf(
                 option1EditText.text.toString().trim(),
@@ -56,18 +50,15 @@ class CreateMakeAssignmentFragment : Fragment(R.layout.fragment_create_make_assi
                 option3EditText.text.toString().trim(),
                 option4EditText.text.toString().trim()
             )
-            val correctAnswerStr = correctAnswerEditText.text.toString().trim()
-            val correctAnswer = correctAnswerStr.toIntOrNull() ?: -1 // Expect index between 0 and 3.
+            val correctAnswer = correctAnswerEditText.text.toString().toIntOrNull() ?: -1
 
-            if (title.isNotEmpty() && description.isNotEmpty() && dueDate.isNotEmpty() &&
-                questionText.isNotEmpty() && options.all { it.isNotEmpty() } && correctAnswer in 0..3 && courseId != null
-            ) {
+            if (title.isNotEmpty() && dueDate.isNotEmpty() && questionText.isNotEmpty() &&
+                options.all { it.isNotEmpty() } && correctAnswer in 0..3 && courseId != null) {
                 val question = MakeQuestion(questionText, options, correctAnswer)
                 lifecycleScope.launch {
                     val assignment = assignmentService.createMakeAssignment(courseId!!, title, description, dueDate, listOf(question))
                     if (assignment != null) {
                         Toast.makeText(requireContext(), "Assignment created!", Toast.LENGTH_SHORT).show()
-                        // Navigate back to the previous fragment (e.g., Instructor Dashboard)
                         parentFragmentManager.popBackStack()
                     } else {
                         Toast.makeText(requireContext(), "Failed to create assignment.", Toast.LENGTH_SHORT).show()

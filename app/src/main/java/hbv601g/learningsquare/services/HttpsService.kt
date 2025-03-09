@@ -15,8 +15,7 @@ class HttpsService {
     /** Get the User by userName
      * Return the User
      */
-    suspend fun getUser(userName: String): HttpResponse
-    {
+    suspend fun getUser(userName: String): HttpResponse {
         val url = "https://hugbo1-6b15.onrender.com/users/${userName}"
         val response: HttpResponse = client.get(url)
         return response
@@ -27,8 +26,7 @@ class HttpsService {
      * @param password: String
      * @return HttpResponse The response form the backend in JSON
      */
-    suspend fun loginUser(userName: String, password: String): HttpResponse
-    {
+    suspend fun loginUser(userName: String, password: String): HttpResponse {
         val url = "https://hugbo1-6b15.onrender.com/login"
         val jsonBody = """{"username": "$userName", "password": "$password"}"""
 
@@ -48,8 +46,13 @@ class HttpsService {
      * @param isInstructor: boolean
      * @return HttpResponse The response from the backend in JSON
      */
-    suspend fun registerUser(userName: String, name: String, email: String, password: String, isInstructor: Boolean): HttpResponse
-    {
+    suspend fun registerUser(
+        userName: String,
+        name: String,
+        email: String,
+        password: String,
+        isInstructor: Boolean
+    ): HttpResponse {
         val url = "$url/signup"
         val jsonBody = """
         |{
@@ -74,8 +77,7 @@ class HttpsService {
      * @param userName: String
      * @return HttpResponse The response from the backend in JSON
      */
-    suspend fun deleteUser(userName: String): HttpResponse
-    {
+    suspend fun deleteUser(userName: String): HttpResponse {
         val url = "https://hugbo1-6b15.onrender.com/users/${userName}"
         val response: HttpResponse = client.delete(url)
 
@@ -83,12 +85,13 @@ class HttpsService {
     }
 
     /**
-     * Creates an assignment with multiple choice questions for a given course.
-     * @param courseId The ID of the course.
-     * @param title The assignment title.
-     * @param description The assignment description.
-     * @param dueDate The assignment due date.
-     * @param questions A list of MCQ questions.
+     * Býr til assignment með multiple choice spurningum fyrir tiltekið námskeið.
+     *
+     * @param courseId Auðkenni námskeiðsins (sem strengur; verður breytt í heiltölu).
+     * @param title Titill assignmentsins (sent sem "assignmentName").
+     * @param description Lýsing (þó backendið noti hana ekki).
+     * @param dueDate Afhendingardagur assignmentsins (snið, t.d. "2025-03-08").
+     * @param questions Listi af spurningum.
      */
     suspend fun createAssignment(
         courseId: String,
@@ -97,20 +100,32 @@ class HttpsService {
         dueDate: String,
         questions: List<MakeQuestion>
     ): HttpResponse {
-        val assignmentUrl = "$url/assignments"
-        val questionsJson = questions.joinToString(separator = ",", prefix = "[", postfix = "]") { question ->
-            val optionsJson = question.options.joinToString(separator = ",", prefix = "[", postfix = "]") { "\"$it\"" }
-            """{"questionText": "${question.questionText}", "options": $optionsJson, "correctAnswer": ${question.correctAnswer}}"""
-        }
+        val endpoint = "$url/create"
 
+        // Umbreyting á spurningum í JSON, með réttum lykilum:
+        val questionsJson =
+            questions.joinToString(separator = ",", prefix = "[", postfix = "]") { questionRequest ->
+                val optionsJson = questionRequest.options.joinToString(
+                    separator = ",",
+                    prefix = "[",
+                    postfix = "]"
+                ) { "\"$it\"" }
+                // Notum "question" lykilinn (ekki "questionText") til að passa backend
+                """{"question": "${questionRequest.questionText}", "options": $optionsJson, "correctAnswer": "${questionRequest.correctAnswer}"}"""
+            }
+
+        // Breytum courseId í heiltölu; ef það bilar, notum 0.
+        val courseIdInt = courseId.toIntOrNull() ?: 0
+
+        // Myndum JSON payloadið sem backendið bíður eftir:
         val jsonBody = """{
-            "title": "$title",
-            "description": "$description",
+            "courseId": $courseIdInt,
+            "assignmentName": "$title",
             "dueDate": "$dueDate",
-            "questions": $questionsJson
+            "questionRequests": $questionsJson
         }""".trimIndent()
 
-        return client.post(assignmentUrl) {
+        return client.post(endpoint) {
             contentType(ContentType.Application.Json)
             setBody(jsonBody)
         }
