@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
+import android.content.Context
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -40,6 +41,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     val user = userService.loginUser(username, password)
                     if (user != null)
                     {
+                        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                        with(sharedPref.edit()) {
+                            putString("loggedInInstructor", user.userName)
+                            apply()
+                        }
                         if (user.isInstructor) {
                             parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_container_view, InstructorDashboardFragment())

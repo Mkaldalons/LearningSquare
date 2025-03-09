@@ -14,7 +14,7 @@ class InstructorDashboardFragment : Fragment(R.layout.fragment_instructor_layout
         val buttonCourses = view.findViewById<Button>(R.id.buttonCourses)
         buttonCourses.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_view, CoursesFragment())
+                .replace(R.id.fragment_container_view, CourseFragment())
                 .addToBackStack(null)
                 .commit()
         }
