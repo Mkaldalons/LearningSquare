@@ -1,4 +1,4 @@
-package hbv601g.learningsquare.ui.utils
+package hbv601g.learningsquare.ui
 
 import android.os.Bundle
 import android.view.View
