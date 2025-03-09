@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -32,11 +31,15 @@
             android:layout_gravity="center_horizontal"
             tools:ignore="Autofill,HardcodedText,TextFields" />
 
+        <!-- Due Date EditText modified to trigger a date picker -->
         <EditText
             android:id="@+id/assignmentDueDateEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Due Date (YYYY-MM-DD)"
+            android:hint="Select Due Date"
+            android:focusable="false"
+            android:clickable="true"
+            android:inputType="none"
             android:minHeight="48dp"
             android:maxWidth="487dp"
             android:layout_gravity="center_horizontal"
@@ -92,16 +95,12 @@
             android:layout_gravity="center_horizontal"
             tools:ignore="Autofill,HardcodedText,TextFields" />
 
-        <EditText
-            android:id="@+id/correctAnswerEditText"
+        <!-- Replace the correct answer EditText with a Spinner -->
+        <Spinner
+            android:id="@+id/correctAnswerSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Correct Answer Index (0-3)"
-            android:inputType="number"
-            android:minHeight="48dp"
-            android:maxWidth="487dp"
-            android:layout_gravity="center_horizontal"
-            tools:ignore="Autofill,HardcodedText" />
+            android:layout_marginTop="16dp" />
 
         <Button
             android:id="@+id/createAssignmentButton"

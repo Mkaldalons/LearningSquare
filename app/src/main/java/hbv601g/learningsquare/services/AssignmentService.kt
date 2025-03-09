@@ -2,22 +2,22 @@ package hbv601g.learningsquare.services
 
 import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.models.MakeQuestion
-import io.ktor.client.statement.HttpResponse
 import io.ktor.client.call.body
+import io.ktor.client.statement.HttpResponse
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class AssignmentService(private val httpsService: HttpsService) {
 
     /**
-     * Kallar á HttpsService til að búa til assignment með multiple choice spurningum.
+     * Calls HttpsService to create an assignment with multiple choice questions.
      *
-     * @param courseId Auðkenni námskeiðsins.
-     * @param title Titill assignmentsins.
-     * @param description Lýsing (sendum þó ekki notað af backendinum).
-     * @param dueDate Afhendingardagur.
-     * @param questions Listi af spurningum.
-     * @return AssignmentModel ef POST beiðnin gengur, annars null.
+     * @param courseId Identifier for the course.
+     * @param title Title of the assignment.
+     * @param description (Not used by backend)
+     * @param dueDate Due date.
+     * @param questions List of questions.
+     * @return AssignmentModel if the POST request is successful, otherwise null.
      */
     suspend fun createMakeAssignment(
         courseId: String,
@@ -28,18 +28,28 @@ class AssignmentService(private val httpsService: HttpsService) {
     ): AssignmentModel? {
         val response: HttpResponse = httpsService.createAssignment(courseId, title, description, dueDate, questions)
         return if (response.status.value == 200) {
-            Json.decodeFromString<AssignmentModel>(response.body())
+            try {
+                Json.decodeFromString<AssignmentModel>(response.body())
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         } else {
             null
         }
     }
 
-    // Nýr function til að sækja öll assignments úr gagnagrunninum.
+    // New function to fetch all assignments from the database.
     suspend fun getAllAssignments(): List<AssignmentModel>? {
         val response: HttpResponse = httpsService.getAllAssignments()
         return if (response.status.value == 200) {
-            // Athugaðu að JSON svarið frá backend verður að vera í samræmi við AssignmentModel.
-            Json.decodeFromString(response.body())
+            try {
+                // Decode the JSON response into a List of AssignmentModel
+                Json.decodeFromString<List<AssignmentModel>>(response.body())
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         } else {
             null
         }

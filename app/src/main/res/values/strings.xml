@@ -12,4 +12,6 @@
     <string name="email_input">Email</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="instructor">Instructor</string>
+    <string name="view_assignments">View Assignments</string>
+    <string name="create_assignment">Create Assignment</string>
 </resources>

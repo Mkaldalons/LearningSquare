@@ -1,13 +1,15 @@
 package hbv601g.learningsquare.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AssignmentModel(
-    val assignmentId: String,
-    val courseId: String,
+    val assignmentId: Int,
+    val courseId: Int,
+    @SerialName("assignmentName")
     val title: String,
-    val description: String,
     val dueDate: String,
-    val questions: List<MakeQuestion> = emptyList()
+    val jsonData: String,
+    val published: Boolean = false
 )
