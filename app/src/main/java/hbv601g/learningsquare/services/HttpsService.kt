@@ -91,7 +91,7 @@ class HttpsService {
      */
     suspend fun createAssignment(assignmentModel: AssignmentModel): HttpResponse
     {
-        val url = "http://localhost:8080/assignments"
+        val url = "$url/assignments"
         val jsonBody = Json.encodeToString(assignmentModel)
 
         val response: HttpResponse = client.post(url)
@@ -104,7 +104,7 @@ class HttpsService {
 
     suspend fun getAssignment(assignmentId: Int): HttpResponse
     {
-        val url = "http://localhost:8080/assignments/$assignmentId"
+        val url = "$url/$assignmentId"
 
         val response: HttpResponse = client.get(url)
         return response
