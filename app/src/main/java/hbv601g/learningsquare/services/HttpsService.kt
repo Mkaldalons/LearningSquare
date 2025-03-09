@@ -1,11 +1,16 @@
 package hbv601g.learningsquare.services
 
+import hbv601g.learningsquare.models.AssignmentModel
+import hbv601g.learningsquare.models.QuestionModel
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.client.engine.cio.*
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import kotlinx.datetime.LocalDate
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class HttpsService {
     private val client = HttpClient(CIO)
@@ -78,6 +83,30 @@ class HttpsService {
         val url = "https://hugbo1-6b15.onrender.com/users/${userName}"
         val response: HttpResponse = client.delete(url)
 
+        return response
+    }
+
+    /**
+     *
+     */
+    suspend fun createAssignment(assignmentModel: AssignmentModel): HttpResponse
+    {
+        val url = "http://localhost:8080/assignments"
+        val jsonBody = Json.encodeToString(assignmentModel)
+
+        val response: HttpResponse = client.post(url)
+        {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
+        return response
+    }
+
+    suspend fun getAssignment(assignmentId: Int): HttpResponse
+    {
+        val url = "http://localhost:8080/assignments/$assignmentId"
+
+        val response: HttpResponse = client.get(url)
         return response
     }
 }
