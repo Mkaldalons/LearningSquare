@@ -12,4 +12,13 @@
     <string name="email_input">Email</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="instructor">Instructor</string>
+    <string name="add_student_to_course">Add student to course</string>
+    <string name="student_username">Student username</string>
+    <string name="add_students_to_course">Add students to course</string>
+    <string name="course_description">Course Description</string>
+    <string name="course_name">Course Name</string>
+    <string name="view_course">View Course</string>
+    <string name="edit_course">Edit Course</string>
+    <string name="add">Add</string>
+    <string name="student_name">Student Name</string>
 </resources>

@@ -1,14 +1,11 @@
 package hbv601g.learningsquare.services
 
 import hbv601g.learningsquare.models.AssignmentModel
-import hbv601g.learningsquare.models.QuestionModel
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import io.ktor.client.engine.cio.*
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import kotlinx.datetime.LocalDate
 import kotlinx.serialization.encodeToString
 import android.util.Log
 import hbv601g.learningsquare.models.CourseModel
@@ -134,14 +131,13 @@ class HttpsService {
             }
         """.trimIndent()
 
-            Log.d("CreateCourse", "POSTing to URL: $url with data: $jsonBody")
-            val response: HttpResponse = client.post(url)
-            {
-                contentType(ContentType.Application.Json)
-                setBody(jsonBody)
-            }
-            return response
-
+        Log.d("CreateCourse", "POSTing to URL: $url with data: $jsonBody")
+        val response: HttpResponse = client.post(url)
+        {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
+        return response
     }
 
     suspend fun getCourses(instructor: String): List<CourseModel> {
@@ -163,5 +159,21 @@ class HttpsService {
             Log.e("HttpsService", "Error fetching courses: ${e.message}")
             emptyList()
         }
+    }
+
+    suspend fun addStudentToCourse(courseId: Int, userName: String): HttpResponse
+    {
+        val url = "$url/courses/$courseId/$userName"
+        val response: HttpResponse = client.post(url)
+
+        return response
+    }
+
+    suspend fun getAllStudentsInCourse(courseId: Int): HttpResponse
+    {
+        val url = "$url/courses/$courseId/students"
+        val response: HttpResponse = client.get(url)
+
+        return response
     }
 }
