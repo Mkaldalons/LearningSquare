@@ -11,24 +11,35 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Course Name -->
         <TextView
             android:id="@+id/courseName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="Course Name"/>
+            android:textColor="#2196F3"
+            android:text="@string/course_name"/>
 
-        <!-- Course Description -->
         <TextView
             android:id="@+id/courseDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:textColor="@android:color/darker_gray"
-            android:text="Course Description"/>
+            android:textColor="#2196F3"
+            android:text="@string/course_description"/>
 
+        <TextView
+            android:id="@+id/courseId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#2196F3" />
+
+        <Button
+            android:id="@+id/viewCoursesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view_course" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

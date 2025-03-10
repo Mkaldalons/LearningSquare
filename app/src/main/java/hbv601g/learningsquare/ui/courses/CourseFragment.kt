@@ -1,4 +1,4 @@
-package hbv601g.learningsquare.ui
+package hbv601g.learningsquare.ui.courses
 
 import android.os.Bundle
 import android.view.View
@@ -12,9 +12,6 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.CourseModel
 import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.launch
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.client.call.body
 import android.content.Context
 
 class CourseFragment : Fragment(R.layout.fragment_course) {
@@ -29,7 +26,16 @@ class CourseFragment : Fragment(R.layout.fragment_course) {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Initialize Adapter
-        courseAdapter = CourseAdapter(courses)
+        courseAdapter = CourseAdapter(courses) { selectedCourse ->
+            val bundle = Bundle().apply {
+                putInt("courseId", selectedCourse.courseId)
+            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, CourseDetailsFragment().apply { arguments = bundle })
+                .addToBackStack(null)
+                .commit()
+        }
+
         recyclerView.adapter = courseAdapter
 
         // Load courses from API
@@ -56,9 +62,9 @@ class CourseFragment : Fragment(R.layout.fragment_course) {
 
         lifecycleScope.launch {
             val httpsService = HttpsService()
-            val coursesList = httpsService.getCourses(loggedInInstructor) // ✅ Fetching as a List<CourseModel>
+            val coursesList = httpsService.getCourses(loggedInInstructor)
 
-            if (coursesList.isNotEmpty()) {  // ✅ Now `isNotEmpty()` will work
+            if (coursesList.isNotEmpty()) {
                 courses.clear()
                 courses.addAll(coursesList)
                 courseAdapter.notifyDataSetChanged()

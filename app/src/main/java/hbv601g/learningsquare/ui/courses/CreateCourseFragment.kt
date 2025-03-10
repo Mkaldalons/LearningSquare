@@ -1,4 +1,4 @@
-package hbv601g.learningsquare.ui
+package hbv601g.learningsquare.ui.courses
 
 import android.os.Bundle
 import android.util.Log
