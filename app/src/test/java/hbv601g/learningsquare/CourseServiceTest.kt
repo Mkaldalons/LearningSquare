@@ -1,5 +1,6 @@
 package hbv601g.learningsquare
 
+import hbv601g.learningsquare.models.StudentModel
 import hbv601g.learningsquare.services.CourseService
 import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.runBlocking
@@ -13,11 +14,12 @@ class CourseServiceTest {
     @Test
     fun testRegisterStudentInCourse(): Unit = runBlocking {
         val courseId = 0
-        val studentUserName = "mariaros"
+        val studentUserName = "lena"
         val successMessage = "Student $studentUserName registered successfully"
         val response = courseService.registerStudentToCourse(courseId, studentUserName)
 
         assertEquals(successMessage, response)
+
     }
 
     @Test
@@ -33,6 +35,22 @@ class CourseServiceTest {
         assertEquals(3, users.size)
         assertEquals(expectedId, users[indexToCheck].studentId)
         assertEquals(expectedUserName, users[indexToCheck].userName)
+
+    }
+
+    @Test
+    fun testDeleteStudentFromCourse(): Unit = runBlocking {
+        // Breyta eftir þörfum
+        val courseId = 1
+        val studentToDelete = 2
+
+        val students = courseService.getRegisteredStudents(courseId)
+        val before = students.size
+        val isDeleted = courseService.deleteStudentFromCourse(courseId, studentToDelete)
+        assertTrue(isDeleted)
+        val studentAfter = courseService.getRegisteredStudents(courseId)
+        val after = studentAfter.size
+        assertNotSame(before, after)
     }
 
 }

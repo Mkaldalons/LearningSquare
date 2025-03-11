@@ -169,9 +169,25 @@ class HttpsService {
         return response
     }
 
+    suspend fun deleteStudentFromCourse(courseId: Int, studentId: Int): HttpResponse
+    {
+        val url = "$url/courses/$courseId/students/$studentId"
+        val response: HttpResponse = client.delete(url)
+
+        return response
+    }
+
     suspend fun getAllStudentsInCourse(courseId: Int): HttpResponse
     {
         val url = "$url/courses/$courseId/students"
+        val response: HttpResponse = client.get(url)
+
+        return response
+    }
+
+    suspend fun getAllAssignmentsForCourse(courseId: Int): HttpResponse
+    {
+        val url = "http://localhost:8080/assignments/courses/$courseId"
         val response: HttpResponse = client.get(url)
 
         return response

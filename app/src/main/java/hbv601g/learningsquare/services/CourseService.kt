@@ -29,4 +29,11 @@ class CourseService(private val httpsService: HttpsService) {
         }
         return students
     }
+
+    suspend fun deleteStudentFromCourse(courseId: Int, studentId: Int) : Boolean
+    {
+        val response = httpsService.deleteStudentFromCourse(courseId, studentId)
+
+        return response.status.value == 200
+    }
 }
