@@ -22,4 +22,14 @@
     <string name="edit_course">Edit Course</string>
     <string name="add">Add</string>
     <string name="student_name">Student Name</string>
+    <string name="remove">Remove</string>
+    <string name="remove_student_title">Remove Student</string>
+    <string name="remove_student_message">Are you sure you want to remove %1$s?</string>
+    <string name="remove_student_success">Student removed successfully</string>
+    <string name="remove_student_failed">Failed to remove student</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_student_success">Student added successfully</string>
+    <string name="add_student_failed">Could not register student to course</string>
+    <string name="enter_username">Please enter a username</string>
 </resources>

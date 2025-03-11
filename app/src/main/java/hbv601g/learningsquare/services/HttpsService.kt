@@ -176,4 +176,13 @@ class HttpsService {
 
         return response
     }
+    suspend fun removeStudentFromCourse(courseId: Int, userName: String): HttpResponse {
+        val url = "$url/courses/$courseId/students/$userName"
+
+        Log.d("DEBUG", "Sending DELETE request to: $url")
+
+        return client.delete(url) {
+            contentType(ContentType.Application.Json)
+        }
+    }
 }

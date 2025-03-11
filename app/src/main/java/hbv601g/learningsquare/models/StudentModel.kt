@@ -4,9 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StudentModel(
-    val studentId: Int,
+    val studentId: Int? = null,
     val userName: String,
-    val name: String
+    val name: String = ""
 )
-{
-}
