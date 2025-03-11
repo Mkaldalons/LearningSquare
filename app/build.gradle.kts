@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout) // Add ConstraintLayout support
     implementation(libs.androidx.material)
     implementation(libs.firebase.crashlytics.buildtools) // Material Components for UI
+    implementation(libs.kotlinx.datetime)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
