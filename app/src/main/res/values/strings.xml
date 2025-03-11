@@ -12,6 +12,7 @@
     <string name="email_input">Email</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="instructor">Instructor</string>
+    <string name="logo_description">Learning Square Logo</string>
     <string name="add_student_to_course">Add student to course</string>
     <string name="student_username">Student username</string>
     <string name="add_students_to_course">Add students to course</string>

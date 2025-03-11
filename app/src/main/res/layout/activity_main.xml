@@ -10,7 +10,6 @@
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_constraintlayout"
         android:textSize="20sp"
         android:textColor="@color/purple_700"
         app:layout_constraintTop_toTopOf="parent"
