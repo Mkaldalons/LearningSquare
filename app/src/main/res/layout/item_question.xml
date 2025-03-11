@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:padding="12dp">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutQuestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/question" />
+        <EditText
+            android:id="@+id/editTextQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_question" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/options"
+            android:layout_marginTop="8dp" />
+        <EditText
+            android:id="@+id/editTextOption1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/option_1" />
+        <EditText
+            android:id="@+id/editTextOption2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/option_2" />
+        <EditText
+            android:id="@+id/editTextOption3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/option_3" />
+        <EditText
+            android:id="@+id/editTextOption4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/option_4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/correct_answer"
+            android:layout_marginTop="8dp" />
+        <Spinner
+            android:id="@+id/spinnerCorrectAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

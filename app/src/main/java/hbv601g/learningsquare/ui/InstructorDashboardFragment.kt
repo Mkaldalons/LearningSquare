@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import hbv601g.learningsquare.R
 import android.widget.Button
+import hbv601g.learningsquare.ui.assignments.AssignmentFragment
 import hbv601g.learningsquare.ui.courses.CourseFragment
 
 class InstructorDashboardFragment : Fragment(R.layout.fragment_instructor_layout) {
@@ -13,9 +14,18 @@ class InstructorDashboardFragment : Fragment(R.layout.fragment_instructor_layout
         super.onViewCreated(view, savedInstanceState)
 
         val buttonCourses = view.findViewById<Button>(R.id.buttonCourses)
+        val buttonAssignments = view.findViewById<Button>(R.id.buttonAssignments)
+
         buttonCourses.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_view, CourseFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        buttonAssignments.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, AssignmentFragment())
                 .addToBackStack(null)
                 .commit()
         }

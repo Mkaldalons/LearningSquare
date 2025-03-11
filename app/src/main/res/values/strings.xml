@@ -21,4 +21,25 @@
     <string name="edit_course">Edit Course</string>
     <string name="add">Add</string>
     <string name="student_name">Student Name</string>
+    <string name="assignments">Assignments</string>
+    <string name="courses">Courses</string>
+    <string name="assignment_name">Assignment Name</string>
+    <string name="assignment_due_date">Assignment Due Date</string>
+    <string name="view_assignment">View Assignment</string>
+    <string name="welcome_to_assignments">Welcome to Assignments</string>
+    <string name="create_new_assignment">Create New Assignment</string>
+    <string name="question">Question:</string>
+    <string name="enter_question">Enter question</string>
+    <string name="options">Options:</string>
+    <string name="option_1">Option 1</string>
+    <string name="option_2">Option 2</string>
+    <string name="option_3">Option 3</string>
+    <string name="option_4">Option 4</string>
+    <string name="correct_answer">Correct Answer:</string>
+    <string name="add_question">Add Question</string>
+    <string name="create_assignment">Create Assignment</string>
+    <string name="questions">Questions:</string>
+    <string name="select_due_date">Select due date</string>
+    <string name="due_date">Due Date:</string>
+    <string name="enter_assignment_name">Enter assignment name</string>
 </resources>

@@ -32,9 +32,20 @@
             android:id="@+id/buttonCourses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Courses"
+            android:text="@string/courses"
             android:backgroundTint="@color/white"
-            android:textColor="@color/black"
+            android:textColor="#2196F3"
+            style="?android:attr/buttonBarButtonStyle"
+            android:padding="8dp"/>
+
+        <Button
+            android:id="@+id/buttonAssignments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/assignments"
+            android:backgroundTint="@color/white"
+            android:textColor="#2196F3"
+            style="?android:attr/buttonBarButtonStyle"
             android:padding="8dp"/>
 
     </LinearLayout>
