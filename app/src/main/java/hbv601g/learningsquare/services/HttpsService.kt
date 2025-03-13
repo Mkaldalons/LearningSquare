@@ -187,7 +187,7 @@ class HttpsService {
 
     suspend fun getAllAssignmentsForCourse(courseId: Int): HttpResponse
     {
-        val url = "http://localhost:8080/assignments/courses/$courseId"
+        val url = "$url/assignments/courses/$courseId"
         val response: HttpResponse = client.get(url)
 
         return response

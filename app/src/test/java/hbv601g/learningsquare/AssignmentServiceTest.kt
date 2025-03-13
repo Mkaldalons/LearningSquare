@@ -1,5 +1,6 @@
 package hbv601g.learningsquare
 
+import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.runBlocking
@@ -24,7 +25,11 @@ class AssignmentServiceTest {
         val options: List<String> = listOf("a", "b", "c")
         val correctAnswer = "a"
 
-        val assignmentId = assignmentService.createAssignment(assignmentName, courseId, published, dueDate, question, options, correctAnswer)
+        val questionItem = QuestionModel(question, options, correctAnswer)
+
+        val questionData = listOf(questionItem)
+
+        val assignmentId = assignmentService.createAssignment(assignmentName, courseId, published, dueDate, questionData)
 
         if(assignmentId != null)
         {
@@ -43,5 +48,16 @@ class AssignmentServiceTest {
         val assignment = assignmentService.getAssignment(assignmentId)
         assertNotNull(assignment)
         assertEquals(assignment.assignmentId, assignmentId)
+    }
+
+    @Test
+    fun testGetAllAssignmentsForCourse(): Unit = runBlocking {
+        // Breyta courseId og expected size eftir þörfum
+        val courseId = 0
+        val expectedSize = 10
+
+        val assignments = assignmentService.getAllAssignmentsForCourse(courseId)
+        assertNotNull(assignments)
+        assertTrue(assignments.size == expectedSize)
     }
 }

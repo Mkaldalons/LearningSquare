@@ -11,19 +11,14 @@ import kotlinx.serialization.json.Json
 
 class AssignmentService(private val httpsService: HttpsService) {
 
-    suspend fun createAssignment(assignmentName: String, courseId: Int, published: Boolean, dueDate: LocalDate, question: String, options: List<String>, correctAnswer: String) : Int?
+    suspend fun createAssignment(assignmentName: String, courseId: Int, published: Boolean, dueDate: LocalDate, questionData: List<QuestionModel>) : Int?
     {
-        val questionData = QuestionModel(
-            question = question,
-            options = options,
-            correctAnswer = correctAnswer
-        )
         val assignment = AssignmentModel(
             assignmentName = assignmentName,
             courseId = courseId,
             published = published,
             dueDate = dueDate,
-            questionRequest = listOf(questionData)
+            questionRequest = questionData
         )
 
         val response = httpsService.createAssignment(assignment)
@@ -44,6 +39,14 @@ class AssignmentService(private val httpsService: HttpsService) {
         val assignment = json.decodeFromString<AssignmentModel>(response.body())
         assignment.assignmentId = assignmentId
         return assignment
+    }
+
+    suspend fun getAllAssignmentsForCourse(courseId: Int) : List<AssignmentModel>
+    {
+        val json = Json { ignoreUnknownKeys = true }
+        val response = httpsService.getAllAssignmentsForCourse(courseId)
+        val assignments = json.decodeFromString<List<AssignmentModel>>(response.body())
+        return assignments
     }
 
     private suspend fun parseAssignment(response: HttpResponse) : String
