@@ -13,7 +13,6 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.launch
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.HttpStatusCode
 
 class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -24,7 +23,7 @@ class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
         val inputDescription = view.findViewById<EditText>(R.id.inputDescription)
         val buttonSubmit = view.findViewById<Button>(R.id.buttonSubmit)
         val buttonCancel = view.findViewById<Button>(R.id.buttonCancel)
-        val errorMessageTextView = view.findViewById<TextView>(R.id.errorMessageTextView) // ✅ Add error message display
+        val errorMessageTextView = view.findViewById<TextView>(R.id.errorMessageTextView)
 
         var errorText = ""
 
@@ -42,24 +41,20 @@ class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
                     try {
                         val response = httpsService.createCourse(courseName, instructor, description)
 
-                        Log.d("CreateCourse", "Response Status: ${response?.status}")
+                        Log.d("CreateCourse", "Response Status: ${response.status}")
 
-                        if (response != null) {
                             val responseBody = response.bodyAsText()
                             Log.d("CreateCourse", "Response Body: $responseBody")
 
-                            if (response.status == HttpStatusCode.Created) {  // ✅ 201 Created
+                            if (response.status.value == 200) {
                                 Toast.makeText(requireContext(), "Course Created Successfully!", Toast.LENGTH_SHORT).show()
-                                parentFragmentManager.popBackStack() // Navigate back
+                                parentFragmentManager.popBackStack()
                             } else {
                                 errorText = "Failed to create course: $responseBody"
                                 showError(errorMessageTextView, errorText)
                                 clearFields(inputCourseName, inputInstructor, inputDescription)
                             }
-                        } else {
-                            errorText = "No response from server"
-                            showError(errorMessageTextView, errorText)
-                        }
+
                     } catch (e: Exception) {
                         Log.e("CreateCourse", "Error creating course: ${e.message}")
                         errorText = "Error: ${e.message}"
@@ -73,11 +68,10 @@ class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
         }
 
         buttonCancel.setOnClickListener {
-            parentFragmentManager.popBackStack() // Navigate back without creating a course
+            parentFragmentManager.popBackStack()
         }
     }
 
-    // ✅ Function to display error messages in the `TextView`
     private fun showError(errorTextView: TextView, message: String) {
         errorTextView.visibility = View.VISIBLE
         errorTextView.text = message
@@ -86,7 +80,6 @@ class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
         }, 5000)
     }
 
-    // ✅ Function to clear input fields
     private fun clearFields(vararg fields: EditText) {
         fields.forEach { it.text.clear() }
     }
