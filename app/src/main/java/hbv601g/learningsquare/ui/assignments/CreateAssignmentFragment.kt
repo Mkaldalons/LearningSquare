@@ -21,12 +21,14 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
+import hbv601g.learningsquare.ui.courses.CourseFragment
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import java.time.format.DateTimeFormatter
 
 class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
-
+    private var selectedCourseId: Int = -1
 
     private lateinit var assignmentNameEditText: EditText
     private lateinit var dueDateEditText: EditText
@@ -44,7 +46,7 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
         submitAssignmentButton = view.findViewById(R.id.buttonSubmitAssignment)
         questionsContainer = view.findViewById(R.id.linearLayoutQuestions)
 
-        val courseId = arguments?.getInt("courseId") ?: -1 // Ég þarf laga þetta
+        selectedCourseId = arguments?.getInt("selectedCourseId") ?: -1
 
         dueDateEditText.setOnClickListener {
             showDatePickerDialog()
@@ -55,7 +57,14 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
         }
 
         submitAssignmentButton.setOnClickListener {
-            submitAssignment()
+            if (selectedCourseId != -1)
+            {
+                submitAssignment()
+            }
+            else
+            {
+                Toast.makeText(requireContext(), "Failed to create assignment since no courseId was found", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -155,10 +164,14 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
         lifecycleScope.launch {
             val httpsService = HttpsService()
             val assignmentService = AssignmentService(httpsService)
-            val response = assignmentService.createAssignment(assignmentName, 0, false, returnDateString, questionsData)
+            val response = assignmentService.createAssignment(assignmentName, selectedCourseId, false, returnDateString, questionsData)
             if (response != null) {
                 Toast.makeText(requireContext(), "Assignment created successfully", Toast.LENGTH_SHORT).show()
-                // Fara til baka?
+                delay(2000)
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container_view, AssignmentFragment())
+                    .addToBackStack(null)
+                    .commit()
             } else {
                 Toast.makeText(requireContext(), "Failed to create assignment", Toast.LENGTH_SHORT).show()
             }

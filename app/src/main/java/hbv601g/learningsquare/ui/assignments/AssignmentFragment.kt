@@ -7,9 +7,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.AssignmentModel
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 class AssignmentFragment : Fragment(R.layout.fragment_assignment){
     private lateinit var recyclerView: RecyclerView
     private lateinit var assignmentAdapter: AssignmentAdapter
+    private lateinit var noAssignmentFoundMessage: TextView
     private val assignments = mutableListOf<AssignmentModel>()
     private val courses = mutableListOf<CourseModel>()
     private var selectedCourseId: Int = -1
@@ -30,8 +33,9 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
 
         val coursesDropdown = view.findViewById<Spinner>(R.id.coursesDropdown)
         val buttonCreateAssignment = view.findViewById<Button>(R.id.buttonCreateAssignment)
-        // noAssignmentsToShowTextView = view.findViewById<TextView>(R.id.noAssignmentsToShow)
+        noAssignmentFoundMessage = view.findViewById(R.id.noAssignmentsFoundForThisCourseTextView)
         recyclerView = view.findViewById(R.id.recyclerViewAssignments)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         loadCourses(coursesDropdown)
 
@@ -47,7 +51,7 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
                     val selectedCourse = courses[position]
                     selectedCourseId = selectedCourse.courseId
                 }
-                //loadAssignments(selectedCourseId) // Þetta virkar ekki atm
+                loadAssignments(selectedCourseId)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -68,8 +72,13 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
         recyclerView.adapter = assignmentAdapter
 
         buttonCreateAssignment.setOnClickListener {
+            val bundle = Bundle().apply {
+                putInt("selectedCourseId", selectedCourseId)
+            }
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_view, CreateAssignmentFragment().apply { selectedCourseId })
+                .replace(R.id.fragment_container_view, CreateAssignmentFragment().apply {
+                    arguments = bundle
+                })
                 .addToBackStack(null)
                 .commit()
         }
@@ -81,6 +90,8 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
         if (courseId == -1)
         {
             Toast.makeText(requireContext(), "Error: No courseID found", Toast.LENGTH_SHORT).show()
+            assignments.clear()
+            assignmentAdapter.notifyDataSetChanged()
             return
         }
 
@@ -93,16 +104,19 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
 
             if (assignmentList.isNotEmpty())
             {
+                noAssignmentFoundMessage.visibility = View.GONE
                 assignments.clear()
                 assignments.addAll(assignmentList)
                 assignmentAdapter.notifyItemRangeRemoved(0, previousAssignmentListSize)
                 assignmentAdapter.notifyItemRangeInserted(0, assignments.size)
-                //assignmentAdapter.notifyDataSetChanged()
-                //assignmentAdapter.notifyItemRangeInserted(previousAssignmentListSize, assignments.size)
             }
             else
             {
-                Toast.makeText(requireContext(), "No Assignments found for this course", Toast.LENGTH_SHORT).show()
+                assignments.clear()
+                assignmentAdapter.notifyDataSetChanged() // Viljum mögulega nota DiffUtil hér
+                val errorText = "No Assignments to show for course with ID: $courseId"
+                noAssignmentFoundMessage.visibility = View.VISIBLE
+                noAssignmentFoundMessage.text = errorText
             }
         }
 
@@ -122,6 +136,7 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
             val coursesList = httpsService.getCourses(loggedInInstructor)
 
             if (coursesList.isNotEmpty()) {
+                noAssignmentFoundMessage.visibility = View.GONE
                 courses.clear()
                 courses.addAll(coursesList)
 
@@ -131,11 +146,12 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 coursesDropdown.adapter = spinnerAdapter
 
-                coursesDropdown.setSelection(1)
-                selectedCourseId = courses[1].courseId
-
-            } else {
-                Toast.makeText(requireContext(), "No courses found for this instructor", Toast.LENGTH_SHORT).show()
+            }
+            else
+            {
+                val errorText = "No courses to show for: $loggedInInstructor"
+                noAssignmentFoundMessage.visibility = View.VISIBLE
+                noAssignmentFoundMessage.text = errorText
             }
         }
     }
