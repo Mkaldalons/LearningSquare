@@ -43,4 +43,9 @@
     <string name="select_due_date">Select due date</string>
     <string name="due_date">Due Date:</string>
     <string name="enter_assignment_name">Enter assignment name</string>
+    <string name="has_been_published">Has been published: </string>
+    <string name="assignment_details">Assignment Details</string>
+    <string name="published">Published</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="clear_changes">Clear Changes</string>
 </resources>

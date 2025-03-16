@@ -1,11 +1,13 @@
 package hbv601g.learningsquare.services
 
+import android.util.Log
 import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.models.QuestionModel
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toLocalDate
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -47,6 +49,30 @@ class AssignmentService(private val httpsService: HttpsService) {
         val response = httpsService.getAllAssignmentsForCourse(courseId)
         val assignments = json.decodeFromString<List<AssignmentModel>>(response.body())
         return assignments
+    }
+
+    suspend fun editAssignmentDetails(id: Int, name: String, dueDate: String, questionData: List<QuestionModel>, published: Boolean): Boolean
+    {
+        var patchName: String? = null
+        var patchDueDate: LocalDate? = null
+        var patchQuestionList: List<QuestionModel>? = null
+
+        if (name.isNotBlank())
+        {
+            patchName = name
+        }
+        if (dueDate.isNotBlank())
+        {
+            patchDueDate = dueDate.toLocalDate()
+        }
+        if (questionData.isNotEmpty())
+        {
+            patchQuestionList = questionData
+        }
+
+        Log.d("PATCH", "Patching: $id, $patchName, $patchDueDate, $patchQuestionList, $published")
+        val response = httpsService.updateAssignment(id, patchName, patchDueDate, patchQuestionList, published)
+        return response.status.value == 200
     }
 
     private suspend fun parseAssignment(response: HttpResponse) : String
