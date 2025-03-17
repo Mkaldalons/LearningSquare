@@ -13,33 +13,35 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.launch
 import io.ktor.client.statement.bodyAsText
+import android.content.Context
 
 class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val inputCourseName = view.findViewById<EditText>(R.id.inputCourseName)
-        val inputInstructor = view.findViewById<EditText>(R.id.inputInstructor)
         val inputDescription = view.findViewById<EditText>(R.id.inputDescription)
         val buttonSubmit = view.findViewById<Button>(R.id.buttonSubmit)
         val buttonCancel = view.findViewById<Button>(R.id.buttonCancel)
         val errorMessageTextView = view.findViewById<TextView>(R.id.errorMessageTextView)
 
+        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val loggedInInstructor = sharedPref.getString("loggedInInstructor", null)
+
         var errorText = ""
 
         buttonSubmit.setOnClickListener {
             val courseName = inputCourseName.text.toString().trim()
-            val instructor = inputInstructor.text.toString().trim()
             val description = inputDescription.text.toString().trim()
 
-            val textInputs = listOf(courseName, instructor, description)
+            val textInputs = listOf(courseName, description)
 
             if (textInputs.all { it.isNotEmpty() }) {
                 lifecycleScope.launch {
                     val httpsService = HttpsService()
 
                     try {
-                        val response = httpsService.createCourse(courseName, instructor, description)
+                        val response = httpsService.createCourse(courseName, loggedInInstructor!!, description)
 
                         Log.d("CreateCourse", "Response Status: ${response.status}")
 
@@ -52,7 +54,7 @@ class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
                             } else {
                                 errorText = "Failed to create course: $responseBody"
                                 showError(errorMessageTextView, errorText)
-                                clearFields(inputCourseName, inputInstructor, inputDescription)
+                                clearFields(inputCourseName, inputDescription)
                             }
 
                     } catch (e: Exception) {
