@@ -21,7 +21,6 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
-import hbv601g.learningsquare.ui.courses.CourseFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -132,7 +131,7 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
         val javaLocalDate = java.time.LocalDate.parse(assignmentDate, formatter)
         val returnDateString = LocalDate(javaLocalDate.year, javaLocalDate.monthValue, javaLocalDate.dayOfMonth)
 
-        val questionsData = mutableListOf<QuestionModel>()
+        val questionsList = mutableListOf<QuestionModel>()
 
         for (i in 0 until questionsContainer.childCount) {
             val questionView = questionsContainer.getChildAt(i)
@@ -158,13 +157,13 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
                 options = options,
                 correctAnswer = options[correctAnswerIndex]
             )
-            questionsData.add(questionModel)
+            questionsList.add(questionModel)
         }
 
         lifecycleScope.launch {
             val httpsService = HttpsService()
             val assignmentService = AssignmentService(httpsService)
-            val response = assignmentService.createAssignment(assignmentName, selectedCourseId, false, returnDateString, questionsData)
+            val response = assignmentService.createAssignment(assignmentName, selectedCourseId, false, returnDateString, questionsList)
             if (response != null) {
                 Toast.makeText(requireContext(), "Assignment created successfully", Toast.LENGTH_SHORT).show()
                 delay(2000)

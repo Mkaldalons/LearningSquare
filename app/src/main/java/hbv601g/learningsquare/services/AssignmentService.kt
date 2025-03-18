@@ -70,7 +70,6 @@ class AssignmentService(private val httpsService: HttpsService) {
             patchQuestionList = questionData
         }
 
-        Log.d("PATCH", "Patching: $id, $patchName, $patchDueDate, $patchQuestionList, $published")
         val response = httpsService.updateAssignment(id, patchName, patchDueDate, patchQuestionList, published)
         return response.status.value == 200
     }

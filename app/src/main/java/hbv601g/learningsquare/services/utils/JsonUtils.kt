@@ -41,7 +41,6 @@ object JsonUtils {
         published?.let {
             jsonObject.put("published", it)
         }
-        Log.d("AssignmentFragment", "JsonObject is now: $jsonObject")
         return jsonObject.toString()
     }
 

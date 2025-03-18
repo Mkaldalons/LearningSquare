@@ -2,19 +2,18 @@ package hbv601g.learningsquare.ui.assignments
 
 import android.app.DatePickerDialog
 import android.icu.util.Calendar
-import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -25,9 +24,6 @@ import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toLocalDate
-import java.time.format.DateTimeFormatter
 
 class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,56 +31,39 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
 
         val assignmentNameEditText = view.findViewById<EditText>(R.id.editAssignmentName)
         val editAssignmentDueDate = view.findViewById<EditText>(R.id.editTextDueDate)
-        val questionsDropDown = view.findViewById<Spinner>(R.id.questionsDropdown)
         val togglePublish = view.findViewById<SwitchMaterial>(R.id.togglePublish)
         val saveChanges = view.findViewById<Button>(R.id.saveChangesButton)
+        val addQuestion = view.findViewById<Button>(R.id.addQuestionButton)
         val discardChanges = view.findViewById<Button>(R.id.clearChangesButton)
 
         val assignmentId = arguments?.getInt("assignmentId") ?: -1
 
-        Log.d("AssignmentDetails", "Got assignmentId: $assignmentId")
+        fun populateAssignmentDetails() {
+            lifecycleScope.launch {
+                val assignment = getAssignment(assignmentId)
 
-        lifecycleScope.launch {
-            val assignment = getAssignment(assignmentId)
+                if (assignment != null) {
+                    val questions: List<QuestionModel> = assignment.questionRequest
 
-            if (assignment != null)
-            {
-                val questions: List<QuestionModel> = assignment.questionRequest
-                val questionNames = questions.map { it.question }
-
-                assignmentNameEditText.setText(assignment.assignmentName)
-                editAssignmentDueDate.setText(assignment.dueDate.toString())
-                if (assignment.published)
-                {
-                    togglePublish.toggle()
-                }
-
-                val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, questionNames)
-                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-                questionsDropDown.adapter = spinnerAdapter
-
-                questionsDropDown.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        if (position in questions.indices)
-                        {
-                            populateQuestionFields(questions[position])
-                        }
+                    assignmentNameEditText.setText(assignment.assignmentName)
+                    editAssignmentDueDate.setText(assignment.dueDate.toString())
+                    if (assignment.published) {
+                        togglePublish.toggle()
                     }
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                        TODO("Not yet implemented")
-                    }
+                    populateQuestionContainer(questions)
                 }
             }
         }
 
+        populateAssignmentDetails()
+
         editAssignmentDueDate.setOnClickListener {
             showDatePickerDialog(editAssignmentDueDate)
+        }
+
+        addQuestion.setOnClickListener {
+            val questionsContainer = view.findViewById<LinearLayout>(R.id.linearLayoutQuestions)
+            addQuestion(questionsContainer)
         }
 
         saveChanges.setOnClickListener {
@@ -136,9 +115,23 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
 
                 if(response)
                 {
-                    Toast.makeText(requireContext(), "Assignment Modified",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Assignment Modified", Toast.LENGTH_SHORT).show()
+                    delay(2000)
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container_view, AssignmentFragment())
+                        .addToBackStack(null)
+                        .commit()
+                }
+                else
+                {
+                    Toast.makeText(requireContext(), "Failed to modify assignment. Please try again", Toast.LENGTH_SHORT).show()
+                    populateAssignmentDetails()
                 }
             }
+        }
+
+        discardChanges.setOnClickListener {
+            populateAssignmentDetails()
         }
     }
 
@@ -165,45 +158,84 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
         }, year, month, day).show()
     }
 
-    private fun populateQuestionFields(question: QuestionModel) {
-        val questionsContainer = view?.findViewById<LinearLayout>(R.id.linearLayoutQuestions)
+    private fun populateQuestionContainer(questions: List<QuestionModel>) {
+        val container = view?.findViewById<LinearLayout>(R.id.linearLayoutQuestions)
+        container?.removeAllViews()
 
-        questionsContainer?.removeAllViews()
+        for (question in questions) {
+            val questionView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.item_question, container, false)
 
-        val questionView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.item_question, questionsContainer, false)
+            val editTextQuestion = questionView.findViewById<EditText>(R.id.editTextQuestion)
+            val editTextOption1 = questionView.findViewById<EditText>(R.id.editTextOption1)
+            val editTextOption2 = questionView.findViewById<EditText>(R.id.editTextOption2)
+            val editTextOption3 = questionView.findViewById<EditText>(R.id.editTextOption3)
+            val editTextOption4 = questionView.findViewById<EditText>(R.id.editTextOption4)
+            val spinnerCorrectAnswer = questionView.findViewById<Spinner>(R.id.spinnerCorrectAnswer)
 
-        val editTextQuestion = questionView.findViewById<EditText>(R.id.editTextQuestion)
-        val editTextOption1 = questionView.findViewById<EditText>(R.id.editTextOption1)
-        val editTextOption2 = questionView.findViewById<EditText>(R.id.editTextOption2)
-        val editTextOption3 = questionView.findViewById<EditText>(R.id.editTextOption3)
-        val editTextOption4 = questionView.findViewById<EditText>(R.id.editTextOption4)
-        val spinnerCorrectAnswer = questionView.findViewById<Spinner>(R.id.spinnerCorrectAnswer)
+            editTextQuestion.setText(question.question)
+            if (question.options.size >= 4) {
+                editTextOption1.setText(question.options[0])
+                editTextOption2.setText(question.options[1])
+                editTextOption3.setText(question.options[2])
+                editTextOption4.setText(question.options[3])
+            }
 
-        editTextQuestion.setText(question.question)
+            val spinnerAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                question.options
+            )
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerCorrectAnswer.adapter = spinnerAdapter
 
-        if (question.options.size >= 4) {
-            Log.d("AssignmentDetails", "Options: ${question.options}")
-            editTextOption1.setText(question.options[0])
-            editTextOption2.setText(question.options[1])
-            editTextOption3.setText(question.options[2])
-            editTextOption4.setText(question.options[3])
+            val correctIndex = question.options.indexOf(question.correctAnswer)
+            if (correctIndex >= 0) {
+                spinnerCorrectAnswer.setSelection(correctIndex)
+            }
+
+            container?.addView(questionView)
+        }
+    }
+
+    private fun addQuestion(container: LinearLayout)
+    {
+        val questionView = LayoutInflater.from(requireContext()).inflate(R.layout.item_question, container, false)
+
+        val option1EditText = questionView.findViewById<EditText>(R.id.editTextOption1)
+        val option2EditText = questionView.findViewById<EditText>(R.id.editTextOption2)
+        val option3EditText = questionView.findViewById<EditText>(R.id.editTextOption3)
+        val option4EditText = questionView.findViewById<EditText>(R.id.editTextOption4)
+
+        val spinner = questionView.findViewById<Spinner>(R.id.spinnerCorrectAnswer)
+
+        fun updateSpinner() {
+            val o1 = option1EditText.text.toString().trim()
+            val o2 = option2EditText.text.toString().trim()
+            val o3 = option3EditText.text.toString().trim()
+            val o4 = option4EditText.text.toString().trim()
+
+            if (o1.isNotEmpty() && o2.isNotEmpty() && o3.isNotEmpty() && o4.isNotEmpty()) {
+                val options = listOf(o1, o2, o3, o4)
+                val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, options)
+                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner.adapter = spinnerAdapter
+            } else {
+                spinner.adapter = null
+            }
         }
 
-        val spinnerAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            question.options
-        )
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCorrectAnswer.adapter = spinnerAdapter
-
-        val correctIndex = question.options.indexOf(question.correctAnswer)
-        if (correctIndex >= 0) {
-            spinnerCorrectAnswer.setSelection(correctIndex)
+        val watcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { updateSpinner() }
+            override fun afterTextChanged(s: Editable?) {}
         }
 
-        questionsContainer?.addView(questionView)
+        option1EditText.addTextChangedListener(watcher)
+        option2EditText.addTextChangedListener(watcher)
+        option3EditText.addTextChangedListener(watcher)
+        option4EditText.addTextChangedListener(watcher)
 
+        container.addView(questionView)
     }
 }
