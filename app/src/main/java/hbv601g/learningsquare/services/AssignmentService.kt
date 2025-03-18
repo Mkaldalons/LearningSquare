@@ -10,6 +10,8 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toLocalDate
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class AssignmentService(private val httpsService: HttpsService) {
 
@@ -63,7 +65,7 @@ class AssignmentService(private val httpsService: HttpsService) {
         }
         if (dueDate.isNotBlank())
         {
-            patchDueDate = dueDate.toLocalDate()
+            patchDueDate = dueDate.toLocalDateCustom()
         }
         if (questionData.isNotEmpty())
         {
@@ -82,5 +84,11 @@ class AssignmentService(private val httpsService: HttpsService) {
             return id
         }
         return ""
+    }
+
+    private fun String.toLocalDateCustom(): LocalDate {
+        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.US)
+        val javaDate = java.time.LocalDate.parse(this.trim(), formatter)
+        return LocalDate(javaDate.year, javaDate.monthValue, javaDate.dayOfMonth)
     }
 }

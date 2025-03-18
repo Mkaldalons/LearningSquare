@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -25,6 +26,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
     private var selectedCourseId: Int = -1
@@ -127,9 +129,10 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
         val assignmentName = assignmentNameEditText.text.toString().trim()
         val assignmentDate = dueDateEditText.text.toString().trim()
 
-        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.US)
         val javaLocalDate = java.time.LocalDate.parse(assignmentDate, formatter)
         val returnDateString = LocalDate(javaLocalDate.year, javaLocalDate.monthValue, javaLocalDate.dayOfMonth)
+        Log.d("Assignment", "Posting date: $returnDateString")
 
         val questionsList = mutableListOf<QuestionModel>()
 

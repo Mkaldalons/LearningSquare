@@ -22,9 +22,9 @@ object JsonUtils {
         dueDate?.let {
             jsonObject.put("dueDate", it.toString())
         }
-        questionRequest?.let { questions ->
+        if (!questionRequest.isNullOrEmpty()) {
             val jsonArray = JSONArray()
-            for (question in questions) {
+            for (question in questionRequest) {
                 val questionJson = JSONObject()
                 questionJson.put("question", question.question)
 
@@ -41,6 +41,7 @@ object JsonUtils {
         published?.let {
             jsonObject.put("published", it)
         }
+        Log.d("Assignment", "Submitting: $jsonObject")
         return jsonObject.toString()
     }
 
