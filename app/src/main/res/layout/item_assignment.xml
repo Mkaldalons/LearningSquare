@@ -28,12 +28,31 @@
             android:textColor="#2196F3"
             android:text="@string/assignment_due_date"/>
 
-        <TextView
-            android:id="@+id/published"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="#2196F3" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/publishedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#2196F3"
+                android:textStyle="italic"
+                android:text="@string/has_been_published"
+                android:padding="10dp"/>
+
+            <TextView
+                android:id="@+id/published"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2196F3" />
+
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/viewAssignmentButton"

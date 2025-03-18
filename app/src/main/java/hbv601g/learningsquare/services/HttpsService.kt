@@ -9,9 +9,12 @@ import io.ktor.http.contentType
 import kotlinx.serialization.encodeToString
 import android.util.Log
 import hbv601g.learningsquare.models.CourseModel
+import hbv601g.learningsquare.models.QuestionModel
+import hbv601g.learningsquare.services.utils.JsonUtils
 import io.ktor.http.HttpStatusCode
 import io.ktor.client.call.body
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.Json
 
 class HttpsService {
@@ -114,6 +117,25 @@ class HttpsService {
         val url = "$url/assignments/$assignmentId"
 
         val response: HttpResponse = client.get(url)
+        return response
+    }
+
+    suspend fun updateAssignment(assignmentId: Int, name: String?, dueDate: LocalDate?, questionRequest: List<QuestionModel>?, published: Boolean?): HttpResponse
+    {
+        val url = "$url/assignments/$assignmentId"
+
+        val jsonBody = JsonUtils.buildAssignmentPatchJson(
+            name = name,
+            dueDate = dueDate,
+            questionRequest = questionRequest,
+            published = published
+        )
+
+        val response: HttpResponse = client.patch(url)
+        {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
         return response
     }
     

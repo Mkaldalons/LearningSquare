@@ -1,5 +1,6 @@
 package hbv601g.learningsquare
 
+import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
@@ -60,4 +61,5 @@ class AssignmentServiceTest {
         assertNotNull(assignments)
         assertTrue(assignments.size == expectedSize)
     }
+
 }

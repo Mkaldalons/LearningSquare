@@ -24,7 +24,7 @@ class CourseAdapter(private val courses: List<CourseModel>, private val onViewCo
         return CourseViewHolder(view)
     }
 
-    @SuppressLint("SetTextI18n") // Þessi warning er óþolandi
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         val course = courses[position]
         holder.courseName.text = course.courseName

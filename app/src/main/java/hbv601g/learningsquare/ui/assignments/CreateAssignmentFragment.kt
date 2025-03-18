@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -21,11 +22,11 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
-import hbv601g.learningsquare.ui.courses.CourseFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
     private var selectedCourseId: Int = -1
@@ -128,11 +129,12 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
         val assignmentName = assignmentNameEditText.text.toString().trim()
         val assignmentDate = dueDateEditText.text.toString().trim()
 
-        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.US)
         val javaLocalDate = java.time.LocalDate.parse(assignmentDate, formatter)
         val returnDateString = LocalDate(javaLocalDate.year, javaLocalDate.monthValue, javaLocalDate.dayOfMonth)
+        Log.d("Assignment", "Posting date: $returnDateString")
 
-        val questionsData = mutableListOf<QuestionModel>()
+        val questionsList = mutableListOf<QuestionModel>()
 
         for (i in 0 until questionsContainer.childCount) {
             val questionView = questionsContainer.getChildAt(i)
@@ -158,13 +160,13 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
                 options = options,
                 correctAnswer = options[correctAnswerIndex]
             )
-            questionsData.add(questionModel)
+            questionsList.add(questionModel)
         }
 
         lifecycleScope.launch {
             val httpsService = HttpsService()
             val assignmentService = AssignmentService(httpsService)
-            val response = assignmentService.createAssignment(assignmentName, selectedCourseId, false, returnDateString, questionsData)
+            val response = assignmentService.createAssignment(assignmentName, selectedCourseId, false, returnDateString, questionsList)
             if (response != null) {
                 Toast.makeText(requireContext(), "Assignment created successfully", Toast.LENGTH_SHORT).show()
                 delay(2000)
