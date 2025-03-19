@@ -1,6 +1,8 @@
 package hbv601g.learningsquare.services
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.models.QuestionModel
 import io.ktor.client.call.body
@@ -53,6 +55,7 @@ class AssignmentService(private val httpsService: HttpsService) {
         return assignments
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun editAssignmentDetails(id: Int, name: String, dueDate: String, questionData: List<QuestionModel>, published: Boolean): Boolean
     {
         var patchName: String? = null
@@ -86,6 +89,7 @@ class AssignmentService(private val httpsService: HttpsService) {
         return ""
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun String.toLocalDateCustom(): LocalDate {
         val formatter = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.US)
         val javaDate = java.time.LocalDate.parse(this.trim(), formatter)
