@@ -19,7 +19,10 @@ import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.models.CourseModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
+import hbv601g.learningsquare.storage.AppDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AssignmentFragment : Fragment(R.layout.fragment_assignment){
     private lateinit var recyclerView: RecyclerView
@@ -124,15 +127,24 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
     }
 
     private fun loadCourses(coursesDropdown: Spinner) {
-        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val loggedInInstructor = sharedPref.getString("loggedInInstructor", null)
-
-        if (loggedInInstructor == null) {
-            Toast.makeText(requireContext(), "Error: No logged-in user found", Toast.LENGTH_SHORT).show()
-            return
-        }
-
+        //val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        //val loggedInInstructor = sharedPref.getString("loggedInInstructor", null)
+        val db = AppDatabase.getDatabase(requireContext())
+        var loggedInInstructor = ""
         lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val user = db.userDao().getAll()
+                loggedInInstructor = user[0].userName
+
+                if (loggedInInstructor.isEmpty()) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Error: No logged-in user found",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
             val httpsService = HttpsService()
             val coursesList = httpsService.getCourses(loggedInInstructor)
 

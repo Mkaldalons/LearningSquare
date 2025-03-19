@@ -12,6 +12,11 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
 import android.content.Context
+import android.util.Log
+import hbv601g.learningsquare.storage.AppDatabase
+import hbv601g.learningsquare.storage.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -41,10 +46,19 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     val user = userService.loginUser(username, password)
                     if (user != null)
                     {
-                        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                        with(sharedPref.edit()) {
-                            putString("loggedInInstructor", user.userName)
-                            apply()
+                        val userToSave = User(0, user.userName, user.name ,user.email, user.password, user.isInstructor, user.profileImagePath, user.recoveryEmail)
+                        val db = AppDatabase.getDatabase(requireContext())
+                        withContext(Dispatchers.IO) {
+                            db.userDao().insert(userToSave)
+                        }
+//                        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+//                        with(sharedPref.edit()) {
+//                            putString("loggedInInstructor", user.userName)
+//                            apply()
+//                        }
+                        withContext(Dispatchers.IO)
+                        {
+                            Log.d("Login", "Logged in user was saved? ${db.userDao().getByUserName(user.userName)}")
                         }
                         if (user.isInstructor) {
                             parentFragmentManager.beginTransaction()
