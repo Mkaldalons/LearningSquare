@@ -162,9 +162,9 @@ class HttpsService {
         return response
     }
 
-    suspend fun getCourses(instructor: String): List<CourseModel> {
-        val url = "https://hugbo1-6b15.onrender.com/courses/$instructor"
-        Log.d("HttpsService", "Fetching courses for instructor: $instructor")
+    suspend fun getCourses(userName: String): List<CourseModel> {
+        val url = "https://hugbo1-6b15.onrender.com/courses/$userName"
+        Log.d("HttpsService", "Fetching courses for instructor: $userName")
 
         return try {
             val response: HttpResponse = client.get(url)

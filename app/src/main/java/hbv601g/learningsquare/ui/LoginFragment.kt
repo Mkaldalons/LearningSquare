@@ -43,7 +43,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     {
                         val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                         with(sharedPref.edit()) {
-                            putString("loggedInInstructor", user.userName)
+                            putString("loggedInUser", user.userName)
                             apply()
                         }
                         if (user.isInstructor) {
