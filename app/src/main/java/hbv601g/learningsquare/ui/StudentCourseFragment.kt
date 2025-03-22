@@ -2,6 +2,7 @@ package hbv601g.learningsquare.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -25,6 +26,7 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var viewAssignment = view.findViewById<Button>(R.id.viewAssignmentButton)
         noAssignmentFoundMessage = view.findViewById(R.id.noAssignmentsFoundForThisCourseTextView)
         recyclerView = view.findViewById(R.id.recyclerViewAssignments)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -36,7 +38,7 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
                 selectedAssignment.assignmentId?.let { putInt("assignmentId", it) }
             }
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_view, AssignmentDetailsFragment().apply { arguments = bundle })
+                .replace(R.id.fragment_container_view, SubmitAssignmentFragment().apply { arguments = bundle })
                 .addToBackStack(null)
                 .commit()
         }
@@ -44,6 +46,7 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
         recyclerView.adapter = assignmentAdapter
 
         loadAssignments(courseId)
+
     }
 
     private fun loadAssignments(courseId: Int)

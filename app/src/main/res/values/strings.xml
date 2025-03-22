@@ -48,4 +48,5 @@
     <string name="published">Published</string>
     <string name="save_changes">Save Changes</string>
     <string name="clear_changes">Clear Changes</string>
+    <string name="submit_assignment">Submit Assignment</string>
 </resources>
