@@ -16,7 +16,7 @@
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/notandanafn"
+        android:text="@string/Username"
         android:textSize="18sp"
         android:layout_marginTop="16dp"
         android:layout_gravity="center_horizontal"/>
@@ -25,7 +25,7 @@
         android:id="@+id/emailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/netfang"
+        android:text="@string/mail"
         android:textSize="16sp"
         android:layout_marginTop="8dp"
         android:layout_gravity="center_horizontal"/>

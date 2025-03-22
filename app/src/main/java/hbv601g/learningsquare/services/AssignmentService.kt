@@ -1,13 +1,11 @@
 package hbv601g.learningsquare.services
 
-import android.util.Log
 import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.models.QuestionModel
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toLocalDate
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.time.format.DateTimeFormatter

@@ -48,4 +48,8 @@
     <string name="published">Published</string>
     <string name="save_changes">Save Changes</string>
     <string name="clear_changes">Clear Changes</string>
+    <string name="my_info">My Info</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="mail">mail</string>
+    <string name="Username">Username</string>
 </resources>

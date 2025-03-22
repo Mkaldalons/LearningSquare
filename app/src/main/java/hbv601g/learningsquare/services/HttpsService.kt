@@ -14,8 +14,8 @@ import hbv601g.learningsquare.services.utils.JsonUtils
 import io.ktor.http.HttpStatusCode
 import io.ktor.client.call.body
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.Json
+
 
 class HttpsService {
     // private val client = HttpClient(CIO)
@@ -120,7 +120,7 @@ class HttpsService {
         return response
     }
 
-    suspend fun updateAssignment(assignmentId: Int, name: String?, dueDate: LocalDate?, questionRequest: List<QuestionModel>?, published: Boolean?): HttpResponse
+    suspend fun updateAssignment(assignmentId: Int, name: String?, dueDate: kotlinx.datetime.LocalDate?, questionRequest: List<QuestionModel>?, published: Boolean?): HttpResponse
     {
         val url = "$url/assignments/$assignmentId"
 
