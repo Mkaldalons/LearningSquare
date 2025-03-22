@@ -18,7 +18,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.Json
 
 class HttpsService {
-    // private val client = HttpClient(CIO)
     private val client = HttpClient {
         install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
             json(Json {ignoreUnknownKeys = true})

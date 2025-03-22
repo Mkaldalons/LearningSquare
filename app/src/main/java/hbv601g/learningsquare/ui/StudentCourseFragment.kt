@@ -59,7 +59,7 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
         lifecycleScope.launch {
             val httpsService = HttpsService()
             val assignmentService = AssignmentService(httpsService)
-            val assignmentList = assignmentService.getAllAssignmentsForCourse(courseId)
+            val assignmentList = assignmentService.getPublishedAssignmentsForStudent(courseId)
 
             val previousAssignmentListSize = assignments.size
 
@@ -75,7 +75,7 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
             {
                 assignments.clear()
                 assignmentAdapter.notifyDataSetChanged() // Viljum mögulega nota DiffUtil hér
-                val errorText = "No Assignments to show for course with ID: $courseId"
+                val errorText = "No Published Assignments to show for course with ID: $courseId"
                 noAssignmentFoundMessage.visibility = View.VISIBLE
                 noAssignmentFoundMessage.text = errorText
             }
