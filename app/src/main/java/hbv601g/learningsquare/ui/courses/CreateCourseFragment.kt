@@ -26,7 +26,7 @@ class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
         val errorMessageTextView = view.findViewById<TextView>(R.id.errorMessageTextView)
 
         val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val loggedInInstructor = sharedPref.getString("loggedInInstructor", null)
+        val loggedInInstructor = sharedPref.getString("loggedInUser", null)
 
         var errorText = ""
 
