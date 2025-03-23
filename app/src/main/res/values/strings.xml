@@ -52,4 +52,12 @@
     <string name="delete_account">Delete Account</string>
     <string name="mail">mail</string>
     <string name="Username">Username</string>
+    <string name="old_password">old_password</string>
+    <string name="new_password">new_password</string>
+    <string name="recovery_email">recovery_email</string>
+    <string name="submit_changes">submit_changes</string>
+    <string name="update_Password">update password</string>
+    <string name="Set_Recovery_Button">Recovery Email</string>
+    <string name="change_password">Change Password</string>
+    <string name="update_recovery_email">confirm</string>
 </resources>
