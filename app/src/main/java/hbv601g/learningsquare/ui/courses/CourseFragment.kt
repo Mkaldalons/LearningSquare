@@ -53,7 +53,7 @@ class CourseFragment : Fragment(R.layout.fragment_course) {
 
     private fun loadCourses() {
         val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val loggedInInstructor = sharedPref.getString("loggedInInstructor", null)
+        val loggedInInstructor = sharedPref.getString("loggedInUser", null)
 
         if (loggedInInstructor == null) {
             Toast.makeText(requireContext(), "Error: No logged-in user found", Toast.LENGTH_SHORT).show()

@@ -23,7 +23,6 @@ import io.ktor.client.request.forms.*
 
 
 class HttpsService {
-    // private val client = HttpClient(CIO)
     private val client = HttpClient {
         install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -172,9 +171,9 @@ class HttpsService {
         return response
     }
 
-    suspend fun getCourses(instructor: String): List<CourseModel> {
-        val url = "https://hugbo1-6b15.onrender.com/courses/$instructor"
-        Log.d("HttpsService", "Fetching courses for instructor: $instructor")
+    suspend fun getCourses(userName: String): List<CourseModel> {
+        val url = "https://hugbo1-6b15.onrender.com/courses/$userName"
+        Log.d("HttpsService", "Fetching courses for instructor: $userName")
 
         return try {
             val response: HttpResponse = client.get(url)
