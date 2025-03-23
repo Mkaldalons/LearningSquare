@@ -60,4 +60,6 @@
     <string name="Set_Recovery_Button">Recovery Email</string>
     <string name="change_password">Change Password</string>
     <string name="update_recovery_email">confirm</string>
+    <string name="take_profile_picture">Take Profile Picture</string>
+    <string name="profilepic">profilepic</string>
 </resources>

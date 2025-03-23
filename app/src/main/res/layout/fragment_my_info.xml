@@ -9,6 +9,7 @@
         android:id="@+id/profileImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:contentDescription="@string/profilepic"
         android:src="@drawable/ic_profile_placeholder"
         android:layout_gravity="center_horizontal"/>
 
@@ -29,6 +30,30 @@
         android:textSize="16sp"
         android:layout_marginTop="8dp"
         android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:id="@+id/UpdatePasswordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/update_Password"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:id="@+id/SetRecoveryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Set_Recovery_Button"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:id="@+id/takePictureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/take_profile_picture"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/deleteAccountButton"

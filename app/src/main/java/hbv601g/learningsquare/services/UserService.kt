@@ -1,13 +1,16 @@
 package hbv601g.learningsquare.services
 
+import android.util.Log
 import hbv601g.learningsquare.models.UserModel
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import java.io.File
 
 
 class UserService(private val httpsService: HttpsService) {
@@ -16,8 +19,7 @@ class UserService(private val httpsService: HttpsService) {
      *  @param userName
      *  @return UserModel The user if it exists, otherwise null
      */
-    suspend fun getUser(userName: String): UserModel?
-    {
+    suspend fun getUser(userName: String): UserModel? {
         val response = httpsService.getUser(userName)
 
         val user = parseUserResponse(response)
@@ -30,12 +32,10 @@ class UserService(private val httpsService: HttpsService) {
      *  @param password
      *  @return UserModel The user if the login was successful, otherwise null
      */
-    suspend fun loginUser(userName: String, password: String): UserModel?
-    {
+    suspend fun loginUser(userName: String, password: String): UserModel? {
         val response = httpsService.loginUser(userName, password)
         val isInstructor = parseLoginResponse(response)
-        if (isInstructor != null)
-        {
+        if (isInstructor != null) {
             return getUser(userName)
         }
         return null
@@ -49,12 +49,16 @@ class UserService(private val httpsService: HttpsService) {
      * @param isInstructor
      * @return UserModel The user if it was successfully registered, otherwise null
      */
-    suspend fun signupUser(userName: String, name: String, email: String, password: String, isInstructor: Boolean): UserModel?
-    {
+    suspend fun signupUser(
+        userName: String,
+        name: String,
+        email: String,
+        password: String,
+        isInstructor: Boolean
+    ): UserModel? {
         val httpsResponse = httpsService.registerUser(userName, name, email, password, isInstructor)
         val user = parseUserResponse(httpsResponse)
-        if(user != null)
-        {
+        if (user != null) {
             return user
         }
         return null
@@ -75,9 +79,8 @@ class UserService(private val httpsService: HttpsService) {
      * @param response
      * @return UserModel Return a user if HttpResponse value is 200, otherwise null
      */
-    private suspend fun parseUserResponse(response: HttpResponse): UserModel?
-    {
-        return if(response.status.value == 200) {
+    private suspend fun parseUserResponse(response: HttpResponse): UserModel? {
+        return if (response.status.value == 200) {
             Json.decodeFromString<UserModel>(response.body())
         } else {
             null
@@ -88,11 +91,10 @@ class UserService(private val httpsService: HttpsService) {
      *  @param response
      *  @return Boolean? Return true/false based on the type of user, return null if none is found
      */
-    private suspend fun parseLoginResponse(response: HttpResponse): Boolean?
-    {
-        val jsonObject = Json{ ignoreUnknownKeys = true }
+    private suspend fun parseLoginResponse(response: HttpResponse): Boolean? {
+        val jsonObject = Json { ignoreUnknownKeys = true }
         val returnResponse = jsonObject.decodeFromString<JsonObject>(response.body())
-        return if(response.status.value == 200) {
+        return if (response.status.value == 200) {
             returnResponse["isInstructor"]?.jsonPrimitive?.booleanOrNull ?: false
         } else {
             null
@@ -103,8 +105,28 @@ class UserService(private val httpsService: HttpsService) {
      * @param response
      * @return Boolean Return true if the status value is 200, otherwise false
      */
-    private fun parseDeleteResponse(response: HttpResponse): Boolean
-    {
+    private fun parseDeleteResponse(response: HttpResponse): Boolean {
+        return response.status.value == 200
+    }
+
+    suspend fun changePassword(username: String, oldPassword: String, newPassword: String): Boolean {
+        val response = httpsService.changePassword(username, oldPassword, newPassword)
+        val responseBody = response.bodyAsText()
+        Log.d("UserService", "Password update response: $responseBody")
+        return response.status.value == 200
+    }
+
+    suspend fun updateRecoveryEmail(username: String, recoveryEmail: String): Boolean {
+        val response = httpsService.updateRecoveryEmail(username, recoveryEmail)
+        val responseBody = response.bodyAsText()
+        Log.d("UserService", "Recovery email update response: $responseBody")
+        return response.status.value == 200
+    }
+
+    suspend fun uploadProfileImage(userName: String, file: File): Boolean {
+        val response = httpsService.uploadProfileImage(userName, file)
+        val responseBody = response.bodyAsText()
+        Log.d("UserService", "Upload profile image response: $responseBody")
         return response.status.value == 200
     }
 }

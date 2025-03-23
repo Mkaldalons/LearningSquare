@@ -13,15 +13,25 @@ import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.utils.JsonUtils
 import io.ktor.http.HttpStatusCode
 import io.ktor.client.call.body
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import java.io.File
+import io.ktor.client.request.forms.*
 
 
 class HttpsService {
     // private val client = HttpClient(CIO)
     private val client = HttpClient {
         install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
-            json(Json {ignoreUnknownKeys = true})
+            json(Json { ignoreUnknownKeys = true })
+        }
+        install(io.ktor.client.plugins.HttpTimeout) {
+            requestTimeoutMillis = 30000 // 30 seconds
+            connectTimeoutMillis = 15000
+            socketTimeoutMillis = 30000
         }
     }
     private val url = "https://hugbo1-6b15.onrender.com"
@@ -213,5 +223,53 @@ class HttpsService {
         val response: HttpResponse = client.get(url)
 
         return response
+    }
+
+    suspend fun changePassword(username: String, oldPassword: String, newPassword: String): HttpResponse {
+        // PATCH request to https://hugbo1-6b15.onrender.com/users/{userName}
+        val urlWithUser = "$url/users/$username"
+        val jsonBody = """{"oldPassword": "$oldPassword", "newPassword": "$newPassword"}"""
+        return client.patch(urlWithUser) {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
+    }
+
+    suspend fun updateRecoveryEmail(username: String, recoveryEmail: String): HttpResponse {
+        // Combined payload: send empty strings for password fields so that the backend doesn't crash
+        val urlWithUser = "$url/users/$username"
+        val jsonBody = """{"oldPassword": "", "newPassword": "", "recoveryEmail": "$recoveryEmail"}"""
+        return client.patch(urlWithUser) {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
+    }
+
+    suspend fun uploadProfileImage(userName: String, file: File): HttpResponse {
+        val urlWithUser = "$url/users/$userName"
+        return client.patch(urlWithUser) {
+            setBody(
+                MultiPartFormDataContent(
+                    formData {
+                        // Append the profile image file:
+                        append(
+                            key = "profileImage",
+                            value = file.readBytes(),
+                            headers = Headers.build {
+                                append(HttpHeaders.ContentType, "image/jpeg")
+                                append(
+                                    HttpHeaders.ContentDisposition,
+                                    "form-data; name=\"profileImage\"; filename=\"${file.name}\""
+                                )
+                            }
+                        )
+                        // Append empty fields for password and recoveryEmail
+                        append("oldPassword", "")
+                        append("newPassword", "")
+                        append("recoveryEmail", "")
+                    }
+                )
+            )
+        }
     }
 }
