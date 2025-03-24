@@ -23,6 +23,8 @@
         android:id="@+id/coursesDropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@id/recyclerViewAssignments"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -37,7 +39,7 @@
         android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@id/noAssignmentsFoundForThisCourseTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/coursesDropdown"
         app:layout_constraintVertical_bias="1.0" />
