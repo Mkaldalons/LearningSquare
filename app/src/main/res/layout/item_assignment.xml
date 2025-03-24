@@ -1,95 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="12dp"
-    android:padding="16dp"
-    app:cardElevation="8dp"
-    android:radius="16dp"
-    android:backgroundTint="#FAFAFA">
+    android:layout_margin="8dp"
+    android:padding="12dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:divider="?android:attr/dividerHorizontal"
-        android:showDividers="middle"
-        android:dividerPadding="8dp">
+        android:orientation="vertical">
 
-        <!-- Assignment Name -->
         <TextView
             android:id="@+id/assignmentName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#1E88E5"
-            android:text="@string/assignment_name" />
+            android:textColor="#2196F3"
+            android:text="@string/assignment_name"/>
 
-        <!-- Info Row: Due Date + Published + View Button -->
+        <TextView
+            android:id="@+id/assignmentDueDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#2196F3"
+            android:text="@string/assignment_due_date"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="8dp"
-            android:weightSum="1">
+            android:orientation="horizontal">
 
-            <!-- View Button on Right -->
-            <LinearLayout
-                android:layout_width="179dp"
+            <TextView
+                android:id="@+id/publishedLabel"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.7"
-                android:orientation="vertical"
-                tools:ignore="InefficientWeight">
+                android:textSize="14sp"
+                android:textColor="#2196F3"
+                android:textStyle="italic"
+                android:text="@string/has_been_published"
+                android:padding="10dp"/>
 
-                <TextView
-                    android:id="@+id/assignmentDueDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/assignment_due_date"
-                    android:textColor="#555"
-                    android:textSize="14sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/publishedLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/has_been_published"
-                        android:textColor="#777"
-                        android:textSize="14sp"
-                        android:textStyle="italic" />
-
-                    <TextView
-                        android:id="@+id/published"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:text="@string/published_yes"
-                        android:textColor="@android:color/holo_green_dark"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/viewAssignmentButton"
-                android:layout_width="122dp"
+            <TextView
+                android:id="@+id/published"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:background="@drawable/button_primary"
-                android:text="@string/view_assignment"
-                android:textColor="@android:color/white" />
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2196F3" />
+
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/gradeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/gradeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#2196F3"
+                android:textStyle="italic"
+                android:text="@string/grade"
+                android:padding="10dp"/>
+
+            <TextView
+                android:id="@+id/grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2196F3" />
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/viewAssignmentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view_assignment" />
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
