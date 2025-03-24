@@ -1,8 +1,10 @@
 package hbv601g.learningsquare.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -13,9 +15,11 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
+import hbv601g.learningsquare.services.StudentService
 import hbv601g.learningsquare.ui.assignments.AssignmentAdapter
 import hbv601g.learningsquare.ui.assignments.AssignmentDetailsFragment
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class StudentCourseFragment : Fragment(R.layout.student_course_layout){
     private lateinit var recyclerView: RecyclerView
@@ -26,7 +30,6 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var viewAssignment = view.findViewById<Button>(R.id.viewAssignmentButton)
         noAssignmentFoundMessage = view.findViewById(R.id.noAssignmentsFoundForThisCourseTextView)
         recyclerView = view.findViewById(R.id.recyclerViewAssignments)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -45,11 +48,14 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
 
         recyclerView.adapter = assignmentAdapter
 
-        loadAssignments(courseId)
+        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val loggedInUser = sharedPref.getString("loggedInUser", null)
+
+        loadAssignments(courseId, loggedInUser!!)
 
     }
 
-    private fun loadAssignments(courseId: Int)
+    private fun loadAssignments(courseId: Int, userName: String)
     {
         if (courseId == -1)
         {
@@ -62,6 +68,7 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
         lifecycleScope.launch {
             val httpsService = HttpsService()
             val assignmentService = AssignmentService(httpsService)
+            val studentService = StudentService(httpsService)
             val assignmentList = assignmentService.getPublishedAssignmentsForStudent(courseId)
 
             val previousAssignmentListSize = assignments.size
@@ -73,6 +80,15 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
                 assignments.addAll(assignmentList)
                 assignmentAdapter.notifyItemRangeRemoved(0, previousAssignmentListSize)
                 assignmentAdapter.notifyItemRangeInserted(0, assignments.size)
+
+                for (i in assignments.indices) {
+                    val grade = studentService.getAssignmentGrade(assignments[i].assignmentId!!, userName)
+                    if(grade != null)
+                    {
+                        assignments[i] = assignments[i].copy(grade = grade)
+                        assignmentAdapter.notifyItemChanged(i)
+                    }
+                }
             }
             else
             {

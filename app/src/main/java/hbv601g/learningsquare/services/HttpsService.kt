@@ -16,6 +16,7 @@ import io.ktor.client.call.body
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.Json
+import org.json.JSONArray
 
 class HttpsService {
     private val client = HttpClient {
@@ -209,6 +210,36 @@ class HttpsService {
     suspend fun getAllAssignmentsForCourse(courseId: Int): HttpResponse
     {
         val url = "$url/assignments/courses/$courseId"
+        val response: HttpResponse = client.get(url)
+
+        return response
+    }
+
+    suspend fun submitAssignment(assignmentId: Int, userName: String, answers: List<String>): HttpResponse
+    {
+        val url = "$url/submissions"
+
+        val answersJson = JSONArray(answers).toString()
+        val jsonBody = """
+            {
+                "assignmentId": "$assignmentId",
+                "userName": "$userName",
+                "answers": $answersJson
+            }
+        """.trimIndent()
+        val response: HttpResponse = client.post(url)
+        {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
+        Log.d("Submit", "Body: $response")
+
+        return response
+    }
+
+    suspend fun getAssignmentGrade(assignmentId: Int, userName: String): HttpResponse
+    {
+        val url = "$url/students/grade/$userName/$assignmentId"
         val response: HttpResponse = client.get(url)
 
         return response

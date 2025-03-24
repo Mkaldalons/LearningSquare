@@ -53,6 +53,33 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/gradeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/gradeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#2196F3"
+                android:textStyle="italic"
+                android:text="@string/grade"
+                android:padding="10dp"/>
+
+            <TextView
+                android:id="@+id/grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2196F3" />
+
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/viewAssignmentButton"

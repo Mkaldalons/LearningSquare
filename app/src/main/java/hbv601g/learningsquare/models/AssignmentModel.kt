@@ -12,5 +12,6 @@ data class AssignmentModel(
     val courseId: Int,
     val dueDate: LocalDate,
     val questionRequest: List<QuestionModel>,
-    val published: Boolean
+    val published: Boolean,
+    val grade: Double? = null
 )

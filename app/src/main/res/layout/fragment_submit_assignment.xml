@@ -24,22 +24,45 @@
                 android:id="@+id/assignmentName"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="44dp"
+                android:layout_marginTop="10dp"
                 android:padding="5dp"
                 android:textColor="#2196F3"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/assignmentGradeLabel"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/linearLayoutGrade"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="52dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/assignmentName">
 
-            </TextView>
+                <TextView
+                    android:id="@+id/assignmentGradeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textColor="#2196F3"
+                    android:textSize="14sp"
+                    android:layout_marginEnd="120dp"
+                    android:text="@string/grade"/>
+
+                <TextView
+                    android:id="@+id/assignmentGrade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textColor="#2196F3"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:text="@string/no_grade_available"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayoutQuestions"
@@ -48,7 +71,7 @@
                 android:layout_marginTop="52dp"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/assignmentName" />
+                app:layout_constraintTop_toTopOf="@id/linearLayoutGrade" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -69,7 +92,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/saveChangesButton"
+            android:id="@+id/submitAssignment"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
