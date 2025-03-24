@@ -43,7 +43,7 @@
     <string name="select_due_date">Select due date</string>
     <string name="due_date">Due Date:</string>
     <string name="enter_assignment_name">Enter assignment name</string>
-    <string name="has_been_published">Has been published: </string>
+    <string name="Status">Status: </string>
     <string name="assignment_details">Assignment Details</string>
     <string name="published">Published</string>
     <string name="save_changes">Save Changes</string>
@@ -51,4 +51,6 @@
     <string name="submit_assignment">Submit Assignment</string>
     <string name="grade">Grade:</string>
     <string name="no_grade_available">No Grade available</string>
+    <string name="published_yes">Yes</string>
+    <string name="assignments_for">Assignments for %1$s</string>
 </resources>

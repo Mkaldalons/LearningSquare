@@ -32,7 +32,14 @@ class AssignmentAdapter(private val assignments: List<AssignmentModel>, private 
             val assignment = assignments[position]
             holder.assignmentName.text = assignment.assignmentName
             holder.assignmentDueDate.text = assignment.dueDate.toString()
-            holder.assignmentPublished.text = assignment.published.toString()
+            holder.assignmentPublished.text =
+                if (assignment.published) "Published" else "Not Published"
+            val publishedColor = if (assignment.published) {
+                android.graphics.Color.parseColor("#2E7D32") // Green
+            } else {
+                android.graphics.Color.parseColor("#B71C1C") // Red-ish
+            }
+            holder.assignmentPublished.setTextColor(publishedColor)
             if (assignment.grade != null) {
                 holder.gradeLayout.visibility = View.VISIBLE
                 holder.grade.text = assignment.grade.toString()
