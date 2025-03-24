@@ -25,7 +25,6 @@ class CourseFragment : Fragment(R.layout.fragment_course) {
         recyclerView = view.findViewById(R.id.recyclerViewCourses)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Initialize Adapter
         courseAdapter = CourseAdapter(courses) { selectedCourse ->
             val bundle = Bundle().apply {
                 putInt("courseId", selectedCourse.courseId)

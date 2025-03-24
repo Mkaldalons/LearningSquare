@@ -1,6 +1,5 @@
 package hbv601g.learningsquare
 
-import hbv601g.learningsquare.models.StudentModel
 import hbv601g.learningsquare.services.CourseService
 import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.runBlocking
