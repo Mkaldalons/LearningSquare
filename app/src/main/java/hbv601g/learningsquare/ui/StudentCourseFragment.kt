@@ -3,8 +3,6 @@ package hbv601g.learningsquare.ui
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -17,9 +15,7 @@ import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.StudentService
 import hbv601g.learningsquare.ui.assignments.AssignmentAdapter
-import hbv601g.learningsquare.ui.assignments.AssignmentDetailsFragment
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class StudentCourseFragment : Fragment(R.layout.student_course_layout){
     private lateinit var recyclerView: RecyclerView

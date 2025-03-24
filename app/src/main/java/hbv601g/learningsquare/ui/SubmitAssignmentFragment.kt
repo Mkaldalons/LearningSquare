@@ -19,7 +19,6 @@ import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.StudentService
-import hbv601g.learningsquare.ui.assignments.AssignmentFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

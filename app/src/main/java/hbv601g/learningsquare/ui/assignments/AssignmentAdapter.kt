@@ -1,6 +1,5 @@
 package hbv601g.learningsquare.ui.assignments
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.AssignmentModel
-import hbv601g.learningsquare.models.CourseModel
+
 
 class AssignmentAdapter(private val assignments: List<AssignmentModel>, private val onViewAssignmentClick: (AssignmentModel) -> Unit) : RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder>() {
 
