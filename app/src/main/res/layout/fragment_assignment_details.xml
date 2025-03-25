@@ -48,18 +48,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/welcomeText" />
 
-        <EditText
-            android:id="@+id/editAssignmentName"
-            android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="44dp"
-            android:padding="5dp"
-            android:textColor="#2196F3"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/assignmentNameLabel" />
+                <EditText
+                    android:id="@+id/editAssignmentName"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/edit_text_box"
+                    android:padding="12dp"
+                    android:textColor="#2196F3"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toBottomOf="@id/assignmentNameLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/dueDateLabel"
