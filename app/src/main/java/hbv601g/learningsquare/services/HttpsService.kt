@@ -17,6 +17,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.Json
 import org.json.JSONArray
+import org.json.JSONObject
 
 class HttpsService {
     private val client = HttpClient {
@@ -243,5 +244,24 @@ class HttpsService {
         val response: HttpResponse = client.get(url)
 
         return response
+    }
+    suspend fun getAssignmentAverageGrade(assignmentId: Int): Double {
+        val url = "$url/submissions/average/$assignmentId"
+        val response: HttpResponse = client.get(url)
+        val responseText = response.bodyAsText()
+
+        return responseText.toDouble()
+    }
+    suspend fun getStudentAverage(userName: String): Double {
+        val url = "$url/students/average/$userName"
+        val response: HttpResponse = client.get(url)
+        val json = JSONObject(response.bodyAsText())
+        return json.getDouble("averageGrade")
+    }
+    suspend fun getCourseAverage(courseId: Int): Double {
+        val url = "$url/students/average/course/$courseId"
+        val response: HttpResponse = client.get(url)
+        val json = JSONObject(response.bodyAsText())
+        return json.getDouble("averageGrade")
     }
 }
