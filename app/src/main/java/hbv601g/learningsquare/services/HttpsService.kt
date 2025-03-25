@@ -252,16 +252,12 @@ class HttpsService {
 
         return responseText.toDouble()
     }
-    suspend fun getStudentAverage(userName: String): Double {
-        val url = "$url/students/average/$userName"
+
+    suspend fun getStudentAverage(courseId: Int, userName: String): Double {
+        val url = "$url/students/average/course/$courseId?userName=$userName"
         val response: HttpResponse = client.get(url)
-        val json = JSONObject(response.bodyAsText())
-        return json.getDouble("averageGrade")
-    }
-    suspend fun getCourseAverage(courseId: Int): Double {
-        val url = "$url/students/average/course/$courseId"
-        val response: HttpResponse = client.get(url)
-        val json = JSONObject(response.bodyAsText())
-        return json.getDouble("averageGrade")
+        val responseText = response.bodyAsText()
+
+        return responseText.toDouble()
     }
 }

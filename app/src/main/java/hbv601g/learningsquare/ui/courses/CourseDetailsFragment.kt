@@ -92,21 +92,30 @@ class CourseDetailsFragment : Fragment(R.layout.fragment_course_details) {
         }
     }
 
-    private fun getStudentList(courseId: Int)
-    {
+    private fun getStudentList(courseId: Int) {
         lifecycleScope.launch {
             val httpsService = HttpsService()
             val courseService = CourseService(httpsService)
+
             val studentsInCourse = courseService.getRegisteredStudents(courseId)
+            val updatedStudents = mutableListOf<StudentModel>()
 
-            val previousStudentListSize = students.size
+            for (student in studentsInCourse) {
+                val avg = try {
+                    httpsService.getStudentAverage(courseId, student.userName)
+                } catch (e: Exception) {
+                    null
+                }
 
-            if(studentsInCourse.isNotEmpty())
-            {
-                students.clear()
-                students.addAll(studentsInCourse)
-                studentAdapter.notifyItemRangeInserted(previousStudentListSize, students.size)
+                val studentWithAverage = student.copy(averageGrade = avg)
+                updatedStudents.add(studentWithAverage)
             }
+
+            students.clear()
+            students.addAll(
+                updatedStudents.sortedBy { it.averageGrade ?: Double.MAX_VALUE }
+            )
+            studentAdapter.notifyDataSetChanged()
         }
     }
 }

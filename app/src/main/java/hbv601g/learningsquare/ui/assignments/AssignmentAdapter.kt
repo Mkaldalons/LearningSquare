@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 
 
 class AssignmentAdapter(
@@ -66,15 +67,9 @@ class AssignmentAdapter(
                 try {
                     val avg = httpsService.getAssignmentAverageGrade(assignment.assignmentId!!)
                     withContext(Dispatchers.Main) {
-                        val context = holder.itemView.context
-                        if (avg > 0.0) {
-                            holder.averageGrade.visibility = View.VISIBLE
-                            holder.averageGrade.text = context.getString(R.string.average_grade_label, avg)
-                        } else {
-                            holder.averageGrade.visibility = View.VISIBLE
-                            holder.averageGrade.text = context.getString(R.string.average_grade_label, 0.0)
-                            // Or use a fallback message like: "No submissions yet"
-                        }
+                        val formattedGrade = String.format(Locale.US, "%.1f", avg) // 1 decimal, e.g. 9.5
+                        holder.averageGrade.visibility = View.VISIBLE
+                        holder.averageGrade.text = holder.itemView.context.getString(R.string.average_grade_label, avg)
                     }
                 } catch (e: Exception) {
                     Log.e("Adapter", "Error fetching average grade", e)
