@@ -1,37 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:padding="12dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_margin="12dp"
+    android:elevation="4dp"
+    android:radius="12dp"
+    android:backgroundTint="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:background="@android:color/white">
 
+        <!-- Assignment Title -->
         <TextView
             android:id="@+id/assignmentName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="#2196F3"
-            android:text="@string/assignment_name"/>
+            android:text="@string/assignment_name" />
 
+        <!-- Due Date -->
         <TextView
             android:id="@+id/assignmentDueDate"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textColor="#2196F3"
-            android:text="@string/assignment_due_date"/>
+            android:layout_marginTop="4dp"
+            android:text="@string/assignment_due_date" />
 
+        <!-- Published Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
 
             <TextView
                 android:id="@+id/publishedLabel"
@@ -40,8 +49,8 @@
                 android:textSize="14sp"
                 android:textColor="#2196F3"
                 android:textStyle="italic"
-                android:text="@string/has_been_published"
-                android:padding="10dp"/>
+                android:text="@string/Status"
+                android:paddingEnd="4dp"/>
 
             <TextView
                 android:id="@+id/published"
@@ -50,15 +59,54 @@
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="#2196F3" />
-
         </LinearLayout>
 
-
-        <Button
-            android:id="@+id/viewAssignmentButton"
-            android:layout_width="wrap_content"
+        <!-- Grade Row (Visible for students) -->
+        <LinearLayout
+            android:id="@+id/gradeLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/view_assignment" />
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/gradeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#2196F3"
+                android:textStyle="italic"
+                android:text="@string/grade"
+                android:paddingEnd="4dp" />
+
+            <TextView
+                android:id="@+id/grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2196F3" />
+        </LinearLayout>
+
+        <!-- View Button Right-Aligned -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="12dp">
+
+            <Button
+                android:id="@+id/viewAssignmentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/view_assignment"
+                android:textColor="#2196F3"
+                android:backgroundTint="#E3F2FD"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+        </LinearLayout>
 
     </LinearLayout>
 

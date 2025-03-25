@@ -20,7 +20,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import java.io.File
 import io.ktor.client.request.forms.*
-
+import org.json.JSONArray
 
 class HttpsService {
     private val client = HttpClient {
@@ -28,9 +28,9 @@ class HttpsService {
             json(Json { ignoreUnknownKeys = true })
         }
         install(io.ktor.client.plugins.HttpTimeout) {
-            requestTimeoutMillis = 30000 // 30 seconds
-            connectTimeoutMillis = 15000
-            socketTimeoutMillis = 30000
+            requestTimeoutMillis = 60000 // 60 seconds
+            connectTimeoutMillis = 30000
+            socketTimeoutMillis = 60000
         }
     }
     private val url = "https://hugbo1-6b15.onrender.com"
@@ -271,4 +271,36 @@ class HttpsService {
             )
         }
     }
-}
+
+        suspend fun submitAssignment(
+            assignmentId: Int,
+            userName: String,
+            answers: List<String>
+        ): HttpResponse {
+            val url = "$url/submissions"
+
+            val answersJson = JSONArray(answers).toString()
+            val jsonBody = """
+            {
+                "assignmentId": "$assignmentId",
+                "userName": "$userName",
+                "answers": $answersJson
+            }
+        """.trimIndent()
+            val response: HttpResponse = client.post(url)
+            {
+                contentType(ContentType.Application.Json)
+                setBody(jsonBody)
+            }
+            Log.d("Submit", "Body: $response")
+
+            return response
+        }
+
+        suspend fun getAssignmentGrade(assignmentId: Int, userName: String): HttpResponse {
+            val url = "$url/students/grade/$userName/$assignmentId"
+            val response: HttpResponse = client.get(url)
+
+            return response
+        }
+    }

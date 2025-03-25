@@ -51,6 +51,8 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
                 {
                     val selectedCourse = courses[position]
                     selectedCourseId = selectedCourse.courseId
+                    val header = requireView().findViewById<TextView>(R.id.assignmentHeader)
+                    header.text = getString(R.string.assignments_for, selectedCourse.courseName)
                 }
                 loadAssignments(selectedCourseId)
             }
