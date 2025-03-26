@@ -25,13 +25,15 @@ class HttpsService {
         }
     }
     private val url = "https://hugbo1-6b15.onrender.com"
+    //private val url = "http://10.0.2.2:8080" // Nota þetta til að keyra locally með emulator
+    //private val url = "http://localhost:8080" // Nota þetta til að keyra test locally
 
     /** Get the User by userName
      * Return the User
      */
     suspend fun getUser(userName: String): HttpResponse
     {
-        val url = "https://hugbo1-6b15.onrender.com/users/${userName}"
+        val url = "$url/users/${userName}"
         val response: HttpResponse = client.get(url)
         return response
     }
@@ -43,7 +45,7 @@ class HttpsService {
      */
     suspend fun loginUser(userName: String, password: String): HttpResponse
     {
-        val url = "https://hugbo1-6b15.onrender.com/login"
+        val url = "$url/login"
         val jsonBody = """{"username": "$userName", "password": "$password"}"""
 
         val response: HttpResponse = client.post(url)
@@ -90,7 +92,7 @@ class HttpsService {
      */
     suspend fun deleteUser(userName: String): HttpResponse
     {
-        val url = "https://hugbo1-6b15.onrender.com/users/${userName}"
+        val url = "$url/users/${userName}"
         val response: HttpResponse = client.delete(url)
 
         return response
@@ -144,7 +146,7 @@ class HttpsService {
      */
     suspend fun createCourse(courseName: String, instructor: String, description: String): HttpResponse
     {
-        val url = "https://hugbo1-6b15.onrender.com/courses" 
+        val url = "$url/courses"
         val jsonBody = """
             {
                 "courseName": "$courseName",
@@ -163,7 +165,7 @@ class HttpsService {
     }
 
     suspend fun getCourses(userName: String): List<CourseModel> {
-        val url = "https://hugbo1-6b15.onrender.com/courses/$userName"
+        val url = "$url/courses/$userName"
         Log.d("HttpsService", "Fetching courses for instructor: $userName")
 
         return try {
@@ -240,6 +242,19 @@ class HttpsService {
     suspend fun getAssignmentGrade(assignmentId: Int, userName: String): HttpResponse
     {
         val url = "$url/students/grade/$userName/$assignmentId"
+        val response: HttpResponse = client.get(url)
+
+        return response
+    }
+    suspend fun getAssignmentAverageGrade(assignmentId: Int): HttpResponse {
+        val url = "$url/submissions/average/$assignmentId"
+        val response: HttpResponse = client.get(url)
+
+        return response
+    }
+
+    suspend fun getStudentAverage(courseId: Int, userName: String): HttpResponse {
+        val url = "$url/students/average/course/$courseId?userName=$userName"
         val response: HttpResponse = client.get(url)
 
         return response
