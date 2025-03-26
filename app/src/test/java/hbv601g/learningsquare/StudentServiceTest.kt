@@ -19,4 +19,22 @@ class StudentServiceTest {
 
         assertTrue(response == 10.0)
     }
+
+    @Test
+    fun testGetStudentAverage(): Unit = runBlocking {
+        // Test user with no submissions, thus no average
+        val userName = "tedi"
+        val courseId = 0
+
+        val response = studentService.getStudentAverage(courseId, userName)
+
+        assertNull(response)
+
+        // Test user with submissions
+        val userNameWithAverage = "mariaros"
+
+        val responseWithAverage = studentService.getStudentAverage(courseId, userNameWithAverage)
+
+        assertEquals(5.0, responseWithAverage)
+    }
 }

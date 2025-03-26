@@ -14,6 +14,7 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.StudentModel
 import hbv601g.learningsquare.services.CourseService
 import hbv601g.learningsquare.services.HttpsService
+import hbv601g.learningsquare.services.StudentService
 import hbv601g.learningsquare.ui.StudentAdapter
 import kotlinx.coroutines.launch
 
@@ -102,11 +103,11 @@ class CourseDetailsFragment : Fragment(R.layout.fragment_course_details) {
 
             for (student in studentsInCourse) {
                 val avg = try {
-                    httpsService.getStudentAverage(courseId, student.userName)
+                    val studentService = StudentService(httpsService)
+                    studentService.getStudentAverage(courseId, student.userName)
                 } catch (e: Exception) {
                     null
                 }
-
                 val studentWithAverage = student.copy(averageGrade = avg)
                 updatedStudents.add(studentWithAverage)
             }

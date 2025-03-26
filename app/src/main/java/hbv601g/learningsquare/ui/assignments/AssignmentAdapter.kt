@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.services.HttpsService
+import hbv601g.learningsquare.services.StudentService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Locale
 
 
 class AssignmentAdapter(
@@ -65,11 +65,20 @@ class AssignmentAdapter(
         if (isInstructor && assignment.assignmentId != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val avg = httpsService.getAssignmentAverageGrade(assignment.assignmentId!!)
+                    val studentService = StudentService(httpsService)
+                    val avg = studentService.getAssignmentAverageGrade(assignment.assignmentId!!)
                     withContext(Dispatchers.Main) {
-                        val formattedGrade = String.format(Locale.US, "%.1f", avg) // 1 decimal, e.g. 9.5
-                        holder.averageGrade.visibility = View.VISIBLE
-                        holder.averageGrade.text = holder.itemView.context.getString(R.string.average_grade_label, avg)
+                        if (avg != null)
+                        {
+                            holder.averageGrade.visibility = View.VISIBLE
+                            holder.averageGrade.text = holder.itemView.context.getString(R.string.average_grade_label, avg)
+                        }
+                        else
+                        {
+                            holder.averageGrade.visibility = View.VISIBLE
+                            val noSubmissions = "No submissions"
+                            holder.averageGrade.text = noSubmissions
+                        }
                     }
                 } catch (e: Exception) {
                     Log.e("Adapter", "Error fetching average grade", e)
