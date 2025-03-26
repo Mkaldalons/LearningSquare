@@ -6,59 +6,63 @@
     android:layout_margin="12dp"
     android:elevation="4dp"
     android:radius="12dp"
+    android:visibility="visible"
     android:backgroundTint="#FFFFFF">
 
+
+    <!-- Average Grade (Visible for instructors) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:background="@android:color/white"
         android:orientation="vertical"
-        android:background="@android:color/white">
+        android:padding="16dp">
 
         <!-- Assignment Title -->
         <TextView
             android:id="@+id/assignmentName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:text="@string/assignment_name"
             android:textColor="#2196F3"
-            android:text="@string/assignment_name" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <!-- Due Date -->
         <TextView
             android:id="@+id/assignmentDueDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="#2196F3"
             android:layout_marginTop="4dp"
-            android:text="@string/assignment_due_date" />
+            android:text="@string/assignment_due_date"
+            android:textColor="#2196F3"
+            android:textSize="14sp" />
 
         <!-- Published Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/publishedLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#2196F3"
-                android:textStyle="italic"
+                android:paddingEnd="4dp"
                 android:text="@string/Status"
-                android:paddingEnd="4dp"/>
+                android:textColor="#2196F3"
+                android:textSize="14sp"
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/published"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#2196F3"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#2196F3" />
+                android:textStyle="bold" />
+
         </LinearLayout>
 
         <!-- Grade Row (Visible for students) -->
@@ -66,46 +70,67 @@
             android:id="@+id/gradeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="4dp"
+            android:orientation="horizontal"
             android:visibility="gone">
 
             <TextView
                 android:id="@+id/gradeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#2196F3"
-                android:textStyle="italic"
+                android:paddingEnd="4dp"
                 android:text="@string/grade"
-                android:paddingEnd="4dp" />
+                android:textColor="#2196F3"
+                android:textSize="14sp"
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/grade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#2196F3"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/averageGradeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/averageGrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Average Grade: -"
+                android:textColor="#2196F3"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="#2196F3" />
+                android:paddingEnd="10dp"/>
         </LinearLayout>
 
         <!-- View Button Right-Aligned -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="0dp"
             android:gravity="end"
-            android:layout_marginTop="12dp">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/viewAssignmentButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/view_assignment"
-                android:textColor="#2196F3"
                 android:backgroundTint="#E3F2FD"
                 android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
+                android:paddingEnd="16dp"
+                android:text="@string/view_assignment"
+                android:textColor="#2196F3" />
+
         </LinearLayout>
 
     </LinearLayout>

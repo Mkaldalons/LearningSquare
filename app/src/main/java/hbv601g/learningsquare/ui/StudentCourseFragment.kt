@@ -17,7 +17,7 @@ import hbv601g.learningsquare.services.StudentService
 import hbv601g.learningsquare.ui.assignments.AssignmentAdapter
 import kotlinx.coroutines.launch
 
-class StudentCourseFragment : Fragment(R.layout.student_course_layout){
+class StudentCourseFragment : Fragment(R.layout.student_course_layout) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var assignmentAdapter: AssignmentAdapter
     private lateinit var noAssignmentFoundMessage: TextView
@@ -32,29 +32,37 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
 
         val courseId = arguments?.getInt("courseId") ?: -1
 
-        assignmentAdapter = AssignmentAdapter(assignments) { selectedAssignment ->
-            val bundle = Bundle().apply {
-                selectedAssignment.assignmentId?.let { putInt("assignmentId", it) }
-            }
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_view, SubmitAssignmentFragment().apply { arguments = bundle })
-                .addToBackStack(null)
-                .commit()
-        }
-
-        recyclerView.adapter = assignmentAdapter
-
         val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val loggedInUser = sharedPref.getString("loggedInUser", null)
 
-        loadAssignments(courseId, loggedInUser!!)
+        if (loggedInUser != null) {
+            val httpsService = HttpsService()
 
+            assignmentAdapter = AssignmentAdapter(
+                assignments,
+                onViewAssignmentClick = { selectedAssignment ->
+                    val bundle = Bundle().apply {
+                        selectedAssignment.assignmentId?.let { putInt("assignmentId", it) }
+                    }
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container_view, SubmitAssignmentFragment().apply { arguments = bundle })
+                        .addToBackStack(null)
+                        .commit()
+                },
+                httpsService = httpsService,
+                isInstructor = false // This is the student view
+            )
+
+            recyclerView.adapter = assignmentAdapter
+
+            loadAssignments(courseId, loggedInUser, httpsService)
+        } else {
+            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private fun loadAssignments(courseId: Int, userName: String)
-    {
-        if (courseId == -1)
-        {
+    private fun loadAssignments(courseId: Int, userName: String, httpsService: HttpsService) {
+        if (courseId == -1) {
             Toast.makeText(requireContext(), "Error: No courseID found", Toast.LENGTH_SHORT).show()
             assignments.clear()
             assignmentAdapter.notifyDataSetChanged()
@@ -62,15 +70,13 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
         }
 
         lifecycleScope.launch {
-            val httpsService = HttpsService()
             val assignmentService = AssignmentService(httpsService)
             val studentService = StudentService(httpsService)
             val assignmentList = assignmentService.getPublishedAssignmentsForStudent(courseId)
 
             val previousAssignmentListSize = assignments.size
 
-            if (assignmentList.isNotEmpty())
-            {
+            if (assignmentList.isNotEmpty()) {
                 noAssignmentFoundMessage.visibility = View.GONE
                 assignments.clear()
                 assignments.addAll(assignmentList)
@@ -79,22 +85,18 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout){
 
                 for (i in assignments.indices) {
                     val grade = studentService.getAssignmentGrade(assignments[i].assignmentId!!, userName)
-                    if(grade != null)
-                    {
+                    if (grade != null) {
                         assignments[i] = assignments[i].copy(grade = grade)
                         assignmentAdapter.notifyItemChanged(i)
                     }
                 }
-            }
-            else
-            {
+            } else {
                 assignments.clear()
-                assignmentAdapter.notifyDataSetChanged() // Viljum mögulega nota DiffUtil hér
+                assignmentAdapter.notifyDataSetChanged()
                 val errorText = "No Published Assignments to show for course with ID: $courseId"
                 noAssignmentFoundMessage.visibility = View.VISIBLE
                 noAssignmentFoundMessage.text = errorText
             }
         }
-
     }
 }

@@ -62,7 +62,11 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
             }
         }
 
-        assignmentAdapter = AssignmentAdapter(assignments) { selectedAssignment ->
+        val httpsService = HttpsService() // or inject it if you're using DI
+
+        assignmentAdapter = AssignmentAdapter(
+            assignments,
+            onViewAssignmentClick = { selectedAssignment ->
                 val bundle = Bundle().apply {
                     selectedAssignment.assignmentId?.let { putInt("assignmentId", it) }
                 }
@@ -70,7 +74,10 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
                     .replace(R.id.fragment_container_view, AssignmentDetailsFragment().apply { arguments = bundle })
                     .addToBackStack(null)
                     .commit()
-        }
+            },
+            httpsService = httpsService,
+            isInstructor = true
+        )
 
         recyclerView.adapter = assignmentAdapter
 

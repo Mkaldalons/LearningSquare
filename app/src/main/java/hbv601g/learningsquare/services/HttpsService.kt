@@ -13,34 +13,27 @@ import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.utils.JsonUtils
 import io.ktor.http.HttpStatusCode
 import io.ktor.client.call.body
-import io.ktor.client.request.forms.MultiPartFormDataContent
-import io.ktor.http.Headers
-import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.Json
-import java.io.File
-import io.ktor.client.request.forms.*
 import org.json.JSONArray
 
 class HttpsService {
     private val client = HttpClient {
         install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
-            json(Json { ignoreUnknownKeys = true })
-        }
-        install(io.ktor.client.plugins.HttpTimeout) {
-            requestTimeoutMillis = 60000 // 60 seconds
-            connectTimeoutMillis = 30000
-            socketTimeoutMillis = 60000
+            json(Json {ignoreUnknownKeys = true})
         }
     }
     private val url = "https://hugbo1-6b15.onrender.com"
+    //private val url = "http://10.0.2.2:8080" // Nota þetta til að keyra locally með emulator
+    //private val url = "http://localhost:8080" // Nota þetta til að keyra test locally
 
     /** Get the User by userName
      * Return the User
      */
     suspend fun getUser(userName: String): HttpResponse
     {
-        val url = "https://hugbo1-6b15.onrender.com/users/${userName}"
+        val url = "$url/users/${userName}"
         val response: HttpResponse = client.get(url)
         return response
     }
@@ -52,7 +45,7 @@ class HttpsService {
      */
     suspend fun loginUser(userName: String, password: String): HttpResponse
     {
-        val url = "https://hugbo1-6b15.onrender.com/login"
+        val url = "$url/login"
         val jsonBody = """{"username": "$userName", "password": "$password"}"""
 
         val response: HttpResponse = client.post(url)
@@ -99,7 +92,7 @@ class HttpsService {
      */
     suspend fun deleteUser(userName: String): HttpResponse
     {
-        val url = "https://hugbo1-6b15.onrender.com/users/${userName}"
+        val url = "$url/users/${userName}"
         val response: HttpResponse = client.delete(url)
 
         return response
@@ -129,7 +122,7 @@ class HttpsService {
         return response
     }
 
-    suspend fun updateAssignment(assignmentId: Int, name: String?, dueDate: kotlinx.datetime.LocalDate?, questionRequest: List<QuestionModel>?, published: Boolean?): HttpResponse
+    suspend fun updateAssignment(assignmentId: Int, name: String?, dueDate: LocalDate?, questionRequest: List<QuestionModel>?, published: Boolean?): HttpResponse
     {
         val url = "$url/assignments/$assignmentId"
 
@@ -153,7 +146,7 @@ class HttpsService {
      */
     suspend fun createCourse(courseName: String, instructor: String, description: String): HttpResponse
     {
-        val url = "https://hugbo1-6b15.onrender.com/courses" 
+        val url = "$url/courses"
         val jsonBody = """
             {
                 "courseName": "$courseName",
@@ -172,7 +165,7 @@ class HttpsService {
     }
 
     suspend fun getCourses(userName: String): List<CourseModel> {
-        val url = "https://hugbo1-6b15.onrender.com/courses/$userName"
+        val url = "$url/courses/$userName"
         Log.d("HttpsService", "Fetching courses for instructor: $userName")
 
         return try {
@@ -224,83 +217,46 @@ class HttpsService {
         return response
     }
 
-    suspend fun changePassword(username: String, oldPassword: String, newPassword: String): HttpResponse {
-        // PATCH request to https://hugbo1-6b15.onrender.com/users/{userName}
-        val urlWithUser = "$url/users/$username"
-        val jsonBody = """{"oldPassword": "$oldPassword", "newPassword": "$newPassword"}"""
-        return client.patch(urlWithUser) {
-            contentType(ContentType.Application.Json)
-            setBody(jsonBody)
-        }
-    }
+    suspend fun submitAssignment(assignmentId: Int, userName: String, answers: List<String>): HttpResponse
+    {
+        val url = "$url/submissions"
 
-    suspend fun updateRecoveryEmail(username: String, recoveryEmail: String): HttpResponse {
-        // Combined payload: send empty strings for password fields so that the backend doesn't crash
-        val urlWithUser = "$url/users/$username"
-        val jsonBody = """{"oldPassword": "", "newPassword": "", "recoveryEmail": "$recoveryEmail"}"""
-        return client.patch(urlWithUser) {
-            contentType(ContentType.Application.Json)
-            setBody(jsonBody)
-        }
-    }
-
-    suspend fun uploadProfileImage(userName: String, file: File): HttpResponse {
-        val urlWithUser = "$url/users/$userName"
-        return client.patch(urlWithUser) {
-            setBody(
-                MultiPartFormDataContent(
-                    formData {
-                        // Append the profile image file:
-                        append(
-                            key = "profileImage",
-                            value = file.readBytes(),
-                            headers = Headers.build {
-                                append(HttpHeaders.ContentType, "image/jpeg")
-                                append(
-                                    HttpHeaders.ContentDisposition,
-                                    "form-data; name=\"profileImage\"; filename=\"${file.name}\""
-                                )
-                            }
-                        )
-                        // Append empty fields for password and recoveryEmail
-                        append("oldPassword", "")
-                        append("newPassword", "")
-                        append("recoveryEmail", "")
-                    }
-                )
-            )
-        }
-    }
-
-        suspend fun submitAssignment(
-            assignmentId: Int,
-            userName: String,
-            answers: List<String>
-        ): HttpResponse {
-            val url = "$url/submissions"
-
-            val answersJson = JSONArray(answers).toString()
-            val jsonBody = """
+        val answersJson = JSONArray(answers).toString()
+        val jsonBody = """
             {
                 "assignmentId": "$assignmentId",
                 "userName": "$userName",
                 "answers": $answersJson
             }
         """.trimIndent()
-            val response: HttpResponse = client.post(url)
-            {
-                contentType(ContentType.Application.Json)
-                setBody(jsonBody)
-            }
-            Log.d("Submit", "Body: $response")
-
-            return response
+        val response: HttpResponse = client.post(url)
+        {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
         }
+        Log.d("Submit", "Body: $response")
 
-        suspend fun getAssignmentGrade(assignmentId: Int, userName: String): HttpResponse {
-            val url = "$url/students/grade/$userName/$assignmentId"
-            val response: HttpResponse = client.get(url)
-
-            return response
-        }
+        return response
     }
+
+    suspend fun getAssignmentGrade(assignmentId: Int, userName: String): HttpResponse
+    {
+        val url = "$url/students/grade/$userName/$assignmentId"
+        val response: HttpResponse = client.get(url)
+
+        return response
+    }
+    suspend fun getAssignmentAverageGrade(assignmentId: Int): HttpResponse {
+        val url = "$url/submissions/average/$assignmentId"
+        val response: HttpResponse = client.get(url)
+
+        return response
+    }
+
+    suspend fun getStudentAverage(courseId: Int, userName: String): HttpResponse {
+        val url = "$url/students/average/course/$courseId?userName=$userName"
+        val response: HttpResponse = client.get(url)
+
+        return response
+    }
+}
