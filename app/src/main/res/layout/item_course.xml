@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:padding="12dp">
+    android:layout_margin="12dp"
+    android:padding="16dp"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="6dp"
+    android:backgroundTint="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,33 +17,43 @@
 
         <TextView
             android:id="@+id/courseName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:layout_marginBottom="4dp"
+            android:gravity="center_horizontal"
+            android:text="@string/course_name"
             android:textColor="#2196F3"
-            android:text="@string/course_name"/>
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/courseDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="#2196F3"
-            android:text="@string/course_description"/>
+            android:gravity="center_horizontal"
+            android:textSize="16sp"
+            android:textColor="#37474F"
+            android:text="@string/course_description"
+            android:layout_marginBottom="4dp" />
 
         <TextView
             android:id="@+id/courseId"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:textSize="14sp"
-            android:textColor="#2196F3" />
+            android:textColor="#607D8B"
+            android:layout_marginBottom="12dp" />
 
         <Button
             android:id="@+id/viewCoursesButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/view_course" />
-    </LinearLayout>
+            android:text="@string/view_course"
+            android:textColor="#ffffff"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="#2196F3"
+            android:layout_marginTop="8dp" />
 
+    </LinearLayout>
 </androidx.cardview.widget.CardView>
