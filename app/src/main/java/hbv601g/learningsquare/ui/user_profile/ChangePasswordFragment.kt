@@ -1,4 +1,4 @@
-package hbv601g.learningsquare.ui
+package hbv601g.learningsquare.ui.user_profile
 
 import android.content.Context
 import android.os.Bundle
@@ -29,7 +29,7 @@ class ChangePasswordFragment : Fragment(R.layout.fragment_change_password) {
         userService = UserService(httpsService)
 
         val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val username = sharedPref.getString("loggedInInstructor", null)
+        val username = sharedPref.getString("loggedInUser", null)
 
         changePasswordButton.setOnClickListener {
             if (username == null) {

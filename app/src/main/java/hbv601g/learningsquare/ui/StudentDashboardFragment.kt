@@ -3,6 +3,7 @@ package hbv601g.learningsquare.ui
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +13,7 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.CourseModel
 import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.ui.courses.CourseAdapter
+import hbv601g.learningsquare.ui.user_profile.MyInfoFragment
 import kotlinx.coroutines.launch
 
 class StudentDashboardFragment : Fragment(R.layout.fragment_student_dashboard) {
@@ -22,6 +24,7 @@ class StudentDashboardFragment : Fragment(R.layout.fragment_student_dashboard) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val myCourses = view.findViewById<Button>(R.id.myInfoButton)
         recyclerView = view.findViewById(R.id.recyclerViewCourses)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -39,6 +42,12 @@ class StudentDashboardFragment : Fragment(R.layout.fragment_student_dashboard) {
 
         loadCourses()
 
+        myCourses.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, MyInfoFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     private fun loadCourses() {

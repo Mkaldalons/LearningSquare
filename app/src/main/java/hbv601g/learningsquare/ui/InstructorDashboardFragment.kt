@@ -8,6 +8,7 @@ import hbv601g.learningsquare.R
 import android.widget.Button
 import hbv601g.learningsquare.ui.assignments.AssignmentFragment
 import hbv601g.learningsquare.ui.courses.CourseFragment
+import hbv601g.learningsquare.ui.user_profile.MyInfoFragment
 
 class InstructorDashboardFragment : Fragment(R.layout.fragment_instructor_layout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

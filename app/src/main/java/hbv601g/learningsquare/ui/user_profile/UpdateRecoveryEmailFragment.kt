@@ -1,4 +1,4 @@
-package hbv601g.learningsquare.ui
+package hbv601g.learningsquare.ui.user_profile
 
 import android.content.Context
 import android.os.Bundle
@@ -29,7 +29,7 @@ class UpdateRecoveryEmailFragment : Fragment(R.layout.fragment_update_recovery_e
         userService = UserService(httpsService)
 
         val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val username = sharedPref.getString("loggedInInstructor", null)
+        val username = sharedPref.getString("loggedInUser", null)
 
         updateRecoveryEmailButton.setOnClickListener {
             if (username == null) {
@@ -39,13 +39,11 @@ class UpdateRecoveryEmailFragment : Fragment(R.layout.fragment_update_recovery_e
 
             val recoveryEmail = recoveryEmailEditText.text?.toString()?.trim()
 
-            // ✅ Extra null + empty protection
             if (recoveryEmail.isNullOrEmpty()) {
                 Toast.makeText(requireContext(), "Please enter a recovery email", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
-            // ✅ Email format validation
             if (!Patterns.EMAIL_ADDRESS.matcher(recoveryEmail).matches()) {
                 Toast.makeText(requireContext(), "Please enter a valid email address", Toast.LENGTH_LONG).show()
                 return@setOnClickListener

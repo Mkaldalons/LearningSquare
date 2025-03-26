@@ -259,4 +259,37 @@ class HttpsService {
 
         return response
     }
+
+    suspend fun changePassword(userName: String, oldPassword: String, newPassword: String): HttpResponse
+    {
+        val url = "$url/users/$userName"
+        val jsonBody = """
+            {
+                "oldPassword": "$oldPassword",
+                "newPassword": "$newPassword"
+            }
+        """.trimIndent()
+        val response: HttpResponse = client.patch(url)
+        {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
+        return response
+    }
+
+    suspend fun updateRecoveryEmail(userName: String, recoveryEmail: String): HttpResponse
+    {
+        val url = "$url/users/$userName"
+        val jsonBody = """
+            {
+                "recoveryEmail": "$recoveryEmail"
+            }
+        """.trimIndent()
+        val response: HttpResponse = client.post(url)
+        {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
+        return response
+    }
 }
