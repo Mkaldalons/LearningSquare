@@ -60,23 +60,36 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                 .replace(R.id.fragment_container_view, InstructorDashboardFragment())
                                 .addToBackStack(null)
                                 .commit()
-                        } else {
+                        }
+                        else
+                        {
                             parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_container_view, StudentDashboardFragment())
                                 .addToBackStack(null)
                                 .commit()
                         }
-                    } else {
-                        Log.d("LOGIN_DEBUG", "User is null - invalid credentials?")
+                    }
+                    else {
+                        errorTextString = "Wrong username or password"
                         errorTextView.visibility = View.VISIBLE
-                        errorTextView.text = "Wrong username or password"
+                        errorTextView.text = errorTextString
+                        errorTextView.text = errorTextString
+                        errorTextView.postDelayed({
+                            errorTextView.visibility = View.GONE
+                        }, 5_000)
                         inputUsername.text.clear()
                         inputPassword.text.clear()
                     }
                 }
-            } else {
-                errorTextView.text = "Please enter username and password"
+            }
+            else {
+                errorTextString = "Please enter username and password"
                 errorTextView.visibility = View.VISIBLE
+                errorTextView.text = errorTextString
+                errorTextView.text = errorTextString
+                errorTextView.postDelayed({
+                    errorTextView.visibility = View.GONE
+                }, 5_000)
             }
         }
         signupButton.setOnClickListener {
