@@ -46,7 +46,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                             putString("loggedInUser", user.userName)
                             apply()
                         }
-                        if (user.isInstructor) {
+                        if (user.instructor) {
                             parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_container_view, InstructorDashboardFragment())
                                 .addToBackStack(null)
