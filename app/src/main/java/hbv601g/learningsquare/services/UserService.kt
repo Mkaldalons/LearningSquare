@@ -1,5 +1,6 @@
 package hbv601g.learningsquare.services
 
+import android.util.Log
 import hbv601g.learningsquare.models.UserModel
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse

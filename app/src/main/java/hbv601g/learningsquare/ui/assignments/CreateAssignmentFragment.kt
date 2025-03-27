@@ -1,6 +1,7 @@
 package hbv601g.learningsquare.ui.assignments
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.icu.util.Calendar
 import android.os.Build
 import android.os.Bundle
@@ -9,12 +10,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -22,9 +18,12 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
+import hbv601g.learningsquare.ui.utils.AssignmentReminderScheduler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -134,6 +133,10 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
         val returnDateString = LocalDate(javaLocalDate.year, javaLocalDate.monthValue, javaLocalDate.dayOfMonth)
         Log.d("Assignment", "Posting date: $returnDateString")
 
+        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val loggedInUser = sharedPref.getString("loggedInUser", null)
+        Log.d("AUTH_DEBUG", "CreateAssignment: loggedInUser = $loggedInUser")
+
         val questionsList = mutableListOf<QuestionModel>()
 
         for (i in 0 until questionsContainer.childCount) {
@@ -168,6 +171,13 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
             val assignmentService = AssignmentService(httpsService)
             val response = assignmentService.createAssignment(assignmentName, selectedCourseId, false, returnDateString, questionsList)
             if (response != null) {
+                val deadlineDateTime = LocalDateTime.of(javaLocalDate, LocalTime.MIDNIGHT)
+                AssignmentReminderScheduler.scheduleReminder(
+                    context = requireContext(),
+                    deadline = deadlineDateTime,
+                    assignmentName = assignmentName
+                )
+
                 Toast.makeText(requireContext(), "Assignment created successfully", Toast.LENGTH_SHORT).show()
                 delay(2000)
                 parentFragmentManager.beginTransaction()
