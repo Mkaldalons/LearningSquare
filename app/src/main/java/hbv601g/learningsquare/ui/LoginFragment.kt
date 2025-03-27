@@ -12,6 +12,7 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
 import android.content.Context
+import android.util.Log
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -33,54 +34,49 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             val username = inputUsername?.text.toString()
             val password = inputPassword?.text.toString()
 
+            Log.d("LOGIN_DEBUG", "Trying to login with username=$username, password=$password")
+
             if (username.isNotBlank() && password.isNotBlank()) {
                 lifecycleScope.launch {
                     val httpsService = HttpsService()
                     val userService = UserService(httpsService)
+                    Log.d("LOGIN_DEBUG", "Login response: $username")
 
                     val user = userService.loginUser(username, password)
-                    if (user != null)
-                    {
+
+
+                    Log.d("LOGIN_DEBUG", "Login response: $user")
+
+                    if (user != null) {
                         val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                         with(sharedPref.edit()) {
                             putString("loggedInUser", user.userName)
                             apply()
                         }
+                        Log.d("LOGIN_DEBUG", "Saved username: ${user.userName}")
+
                         if (user.isInstructor) {
                             parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_container_view, InstructorDashboardFragment())
                                 .addToBackStack(null)
                                 .commit()
-                        }
-                        else
-                        {
+                        } else {
                             parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_container_view, StudentDashboardFragment())
                                 .addToBackStack(null)
                                 .commit()
                         }
-                    }
-                    else {
-                        errorTextString = "Wrong username or password"
+                    } else {
+                        Log.d("LOGIN_DEBUG", "User is null - invalid credentials?")
                         errorTextView.visibility = View.VISIBLE
-                        errorTextView.text = errorTextString
-                        errorTextView.text = errorTextString
-                        errorTextView.postDelayed({
-                            errorTextView.visibility = View.GONE
-                        }, 5_000)
+                        errorTextView.text = "Wrong username or password"
                         inputUsername.text.clear()
                         inputPassword.text.clear()
                     }
                 }
-            }
-            else {
-                errorTextString = "Please enter username and password"
+            } else {
+                errorTextView.text = "Please enter username and password"
                 errorTextView.visibility = View.VISIBLE
-                errorTextView.text = errorTextString
-                errorTextView.text = errorTextString
-                errorTextView.postDelayed({
-                    errorTextView.visibility = View.GONE
-                }, 5_000)
             }
         }
         signupButton.setOnClickListener {
