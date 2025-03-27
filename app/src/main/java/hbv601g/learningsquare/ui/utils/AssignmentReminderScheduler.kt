@@ -6,27 +6,27 @@ import androidx.annotation.RequiresApi
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import java.time.Duration
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
-import java.util.concurrent.TimeUnit
-
-
 
 object AssignmentReminderScheduler {
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun scheduleReminder(context: Context, deadline: LocalDateTime, assignmentName: String) {
-        val now = LocalDateTime.now()
-        val triggerAtMillis = ChronoUnit.MILLIS.between(now, deadline.minusHours(24))
+        val reminderTime = deadline.minusHours(24)
+        val durationUntilReminder = Duration.between(LocalDateTime.now(), reminderTime).seconds
 
-        if (triggerAtMillis <= 0) return
+        if (durationUntilReminder <= 0) {
+            return
+        }
 
         val data = workDataOf("assignmentName" to assignmentName)
 
-        val request = OneTimeWorkRequestBuilder<AssignmentReminderWorker>()
-            .setInitialDelay(triggerAtMillis, TimeUnit.MILLISECONDS)
+        val reminderRequest = OneTimeWorkRequestBuilder<AssignmentReminderWorker>()
+            .setInitialDelay(durationUntilReminder, java.util.concurrent.TimeUnit.SECONDS)
             .setInputData(data)
             .build()
 
-        WorkManager.getInstance(context).enqueue(request)
+        WorkManager.getInstance(context).enqueue(reminderRequest)
     }
 }

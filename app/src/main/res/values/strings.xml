@@ -68,4 +68,6 @@
     <string name="published_yes">Yes</string>
     <string name="assignments_for">Assignments for %1$s</string>
     <string name="average_grade_label">Average Grade: %1$.1f</string>
+    <string name="due_time">Due Time</string>
+    <string name="select_due_time">Select Due Time</string>
 </resources>
