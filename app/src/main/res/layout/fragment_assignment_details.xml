@@ -20,33 +20,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/welcomeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/assignment_details"
-            android:textColor="#2196F3"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/welcomeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:text="@string/assignment_details"
+                    android:textColor="#2196F3"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/assignmentNameLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:padding="10dp"
-            android:text="@string/assignment_name"
-            android:textColor="#2196F3"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/welcomeText" />
+                <TextView
+                    android:id="@+id/assignmentNameLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="76dp"
+                    android:padding="10dp"
+                    android:text="@string/assignment_name"
+                    android:textColor="#2196F3"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/welcomeText" />
 
                 <EditText
                     android:id="@+id/editAssignmentName"
@@ -74,32 +74,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/editAssignmentName" />
 
-        <EditText
-            android:id="@+id/editTextDueDate"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="56dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:textColor="#2196F3"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.386"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/editAssignmentName" />
+                <EditText
+                    android:id="@+id/editTextDueDate"
+                    android:layout_width="308dp"
+                    android:layout_height="41dp"
+                    android:layout_marginTop="52dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textColor="#2196F3"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.844"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/editAssignmentName" />
 
-        <TextView
-            android:id="@+id/toggleLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="68dp"
-            android:padding="5dp"
-            android:text="@string/published"
-            android:textColor="#2196F3"
-            app:layout_constraintStart_toStartOf="@id/dueDateLabel"
-            app:layout_constraintTop_toTopOf="@id/dueDateLabel" />
+                <TextView
+                    android:id="@+id/toggleLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="64dp"
+                    android:padding="5dp"
+                    android:text="@string/published"
+                    android:textColor="#2196F3"
+                    app:layout_constraintStart_toStartOf="@id/dueDateLabel"
+                    app:layout_constraintTop_toTopOf="@id/dueDateLabel" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+                <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/togglePublish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -128,22 +128,14 @@
 
                 <Button
                     android:id="@+id/addQuestionButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginTop="13dp"
-                    android:layout_marginEnd="320dp"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="#2196F3"
                     android:text="@string/add_question"
-                    android:textColor="#2196F3"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayoutQuestions"
-                    app:layout_constraintVertical_bias="1.0">
-
-                </Button>
+                    android:textColor="#FFFFFF"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="412dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -171,7 +163,7 @@
                     android:backgroundTint="@color/white"
                     android:padding="8dp"
                     android:text="@string/save_changes"
-                    android:textColor="#2196F3" />
+                    android:textColor="#008000" />
 
                 <Button
                     android:id="@+id/clearChangesButton"
@@ -181,7 +173,7 @@
                     android:backgroundTint="@color/white"
                     android:padding="8dp"
                     android:text="@string/clear_changes"
-                    android:textColor="#2196F3" />
+                    android:textColor="#f01e2c" />
 
         </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
