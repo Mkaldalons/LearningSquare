@@ -51,7 +51,7 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
                         if(user != null)
                         {
                             Log.d("SignupFragment", "The user ${user.userName} has been created")
-                            if (user.isInstructor) {
+                            if (user.instructor) {
                                 parentFragmentManager.beginTransaction()
                                     .replace(R.id.fragment_container_view, InstructorDashboardFragment())
                                     .addToBackStack(null)

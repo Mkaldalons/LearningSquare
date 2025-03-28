@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -10,9 +11,11 @@
         android:id="@+id/inputCourseName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
         android:hint="Course Name"
         android:inputType="text"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="7dp" />
 
     <EditText
         android:id="@+id/inputDescription"
@@ -42,6 +45,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Create Course"
+        android:backgroundTint="#2196F3"
+        android:textColor="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@+id/errorMessageTextView"
         android:layout_marginTop="24dp"/>
 
@@ -50,6 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cancel"
+        android:backgroundTint="#ff7F7f"
+        android:textColor="#FFfFFF"
         app:layout_constraintTop_toBottomOf="@id/buttonSubmit"
         android:layout_marginTop="12dp"/>
 
