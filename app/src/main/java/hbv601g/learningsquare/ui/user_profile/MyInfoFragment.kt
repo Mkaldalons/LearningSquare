@@ -25,6 +25,7 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
         profileImageView = view.findViewById(R.id.profileImageView)
         val usernameTextView = view.findViewById<TextView>(R.id.usernameTextView)
         val emailTextView = view.findViewById<TextView>(R.id.emailTextView)
+        val profileImageView = view.findViewById<ImageView>(R.id.profileImageView)
 
         httpsService = HttpsService()
         userService = UserService(httpsService)
@@ -47,5 +48,7 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
         } else {
             usernameTextView.text = "No user logged in"
         }
+
+
     }
 }
