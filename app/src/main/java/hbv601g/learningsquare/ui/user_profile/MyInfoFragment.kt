@@ -1,10 +1,12 @@
 package hbv601g.learningsquare.ui.user_profile
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -19,6 +21,7 @@ import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import hbv601g.learningsquare.models.UserModel
+import java.io.ByteArrayOutputStream
 
 class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
 
@@ -39,6 +42,24 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap: Bitmap? ->
+        if (bitmap != null)
+        {
+            newProfileImageData = getByteArrayFromBitmap(bitmap)
+            val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            val loggedInUser = sharedPref.getString("loggedInUser", null)
+
+            if (loggedInUser != null) {
+                uploadAndDisplayImage(loggedInUser)
+            }
+        }
+        else
+        {
+            Toast.makeText(requireContext(), "No photo captured", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private var newProfileImageData: ByteArray? = null
 
@@ -55,6 +76,7 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
         val usernameTextView = view.findViewById<TextView>(R.id.usernameTextView)
         val emailTextView = view.findViewById<TextView>(R.id.emailTextView)
         val uploadProfilePicture = view.findViewById<Button>(R.id.uploadPictureButton)
+        val capturePicture = view.findViewById<Button>(R.id.takePictureButton)
 
         httpsService = HttpsService()
         userService = UserService(httpsService)
@@ -81,6 +103,11 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
         uploadProfilePicture.setOnClickListener {
             getContentLauncher.launch("image/*")
         }
+
+        capturePicture.setOnClickListener {
+            cameraLauncher.launch(null)
+        }
+
     }
 
     private fun displayProfileImage(user: UserModel)
@@ -107,6 +134,13 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
         return context.contentResolver.openInputStream(uri)?.use { inputStream ->
             inputStream.readBytes()
         }
+    }
+
+    private fun getByteArrayFromBitmap(bitmap: Bitmap): ByteArray
+    {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        return stream.toByteArray()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
