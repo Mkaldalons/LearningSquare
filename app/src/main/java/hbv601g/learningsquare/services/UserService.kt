@@ -1,13 +1,17 @@
 package hbv601g.learningsquare.services
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import hbv601g.learningsquare.models.UserModel
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import org.json.JSONObject
 
 class UserService(private val httpsService: HttpsService) {
 
@@ -122,5 +126,32 @@ class UserService(private val httpsService: HttpsService) {
     {
         val response = httpsService.updateRecoveryEmail(username, recoveryEmail)
         return response.status.value == 200
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun uploadProfileImage(userName: String, imageByteArray: ByteArray): ByteArray?
+    {
+        val response = httpsService.uploadProfileImage(userName, imageByteArray)
+        if (response.status.value == 200)
+        {
+            val jsonObject = JSONObject(response.bodyAsText())
+            val base64Image = jsonObject.getString("status")
+
+            return android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT)
+        }
+        return null
+    }
+
+    suspend fun getProfilePicture(userName: String): ByteArray?
+    {
+        val response = httpsService.getProfileImage(userName)
+        if(response.status.value == 200)
+        {
+            val jsonObject = JSONObject(response.bodyAsText())
+            val base64Image = jsonObject.getString("imagePath")
+
+            return android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT)
+        }
+        return null
     }
 }

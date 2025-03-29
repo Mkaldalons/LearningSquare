@@ -1,5 +1,6 @@
 package hbv601g.learningsquare.services
 
+import android.os.Build
 import hbv601g.learningsquare.models.AssignmentModel
 import io.ktor.client.*
 import io.ktor.client.request.*
@@ -8,6 +9,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.serialization.encodeToString
 import android.util.Log
+import androidx.annotation.RequiresApi
 import hbv601g.learningsquare.models.CourseModel
 import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.utils.JsonUtils
@@ -17,6 +19,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.Json
 import org.json.JSONArray
+import java.util.Base64
 
 class HttpsService {
     private val client = HttpClient {
@@ -26,7 +29,7 @@ class HttpsService {
     }
     private val url = "https://hugbo1-6b15.onrender.com"
     //private val url = "http://10.0.2.2:8080" // Nota þetta til að keyra locally með emulator
-    //private val url = "http://localhost:8080" // Nota þetta til að keyra test locally
+    //private val url = "http://192.168.224.138" // Nota þetta til að keyra test locally
 
     /** Get the User by userName
      * Return the User
@@ -290,6 +293,35 @@ class HttpsService {
             contentType(ContentType.Application.Json)
             setBody(jsonBody)
         }
+        return response
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun uploadProfileImage(userName: String, imageByteArray: ByteArray): HttpResponse
+    {
+        val url = "$url/users/$userName"
+        val encodedImage = Base64.getEncoder().encodeToString(imageByteArray)
+
+        val jsonBody = """
+            {
+                "profileImageData": "$encodedImage"
+            }
+        """.trimIndent()
+
+        val response: HttpResponse = client.patch(url)
+        {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
+        Log.d("MyInfo", "Returning response: $response")
+        return response
+    }
+
+    suspend fun getProfileImage(userName: String): HttpResponse
+    {
+        val url = "$url/users/$userName/profileImage"
+
+        val response: HttpResponse = client.get(url)
         return response
     }
 }
