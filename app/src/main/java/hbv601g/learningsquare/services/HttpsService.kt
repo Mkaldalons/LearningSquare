@@ -14,7 +14,6 @@ import hbv601g.learningsquare.services.utils.JsonUtils
 import io.ktor.http.HttpStatusCode
 import io.ktor.client.call.body
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.Json
 import org.json.JSONArray
@@ -25,8 +24,8 @@ class HttpsService {
             json(Json {ignoreUnknownKeys = true})
         }
     }
-    //private val url = "https://hugbo1-6b15.onrender.com"
-    private val url = "http://10.0.2.2:8080" // Nota þetta til að keyra locally með emulator
+    private val url = "https://hugbo1-6b15.onrender.com"
+    //private val url = "http://10.0.2.2:8080" // Nota þetta til að keyra locally með emulator
     //private val url = "http://localhost:8080" // Nota þetta til að keyra test locally
 
     /** Get the User by userName
@@ -133,7 +132,7 @@ class HttpsService {
             questionRequest = questionRequest,
             published = published
         )
-
+        Log.d("Assignment", "Patching with: $jsonBody")
         val response: HttpResponse = client.patch(url)
         {
             contentType(ContentType.Application.Json)

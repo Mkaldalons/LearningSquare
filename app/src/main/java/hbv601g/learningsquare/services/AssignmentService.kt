@@ -7,7 +7,6 @@ import hbv601g.learningsquare.models.QuestionModel
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
-import kotlinx.datetime.LocalDate
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -15,11 +14,13 @@ class AssignmentService(private val httpsService: HttpsService) {
 
     suspend fun createAssignment(assignmentName: String, courseId: Int, published: Boolean, dueDate: String, questionData: List<QuestionModel>) : Int?
     {
+        val isoDueDate = dueDate.replace(" ", "T")
+
         val assignment = AssignmentModel(
             assignmentName = assignmentName,
             courseId = courseId,
             published = published,
-            dueDate = kotlinx.datetime.LocalDateTime.parse(dueDate),
+            dueDate = kotlinx.datetime.LocalDateTime.parse(isoDueDate),
             questionRequest = questionData
         )
 

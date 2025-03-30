@@ -2,7 +2,6 @@ package hbv601g.learningsquare.ui.assignments
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.icu.util.Calendar
 import android.os.Build
 import android.os.Bundle
@@ -22,7 +21,6 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.ui.utils.AssignmentReminderScheduler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -124,7 +122,7 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
         val calendar = Calendar.getInstance()
         DatePickerDialog(
             requireContext(), { _, year, month, day ->
-                val formattedDate = "$day/${month + 1}/$year"
+                val formattedDate = "$year-${month + 1}-$day"
                 dueDateEditText.setText(formattedDate)
             },
             calendar.get(Calendar.YEAR),
@@ -150,6 +148,7 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
     private fun submitAssignment() {
         val assignmentName = assignmentNameEditText.text.toString().trim()
         val assignmentDate = dueDateEditText.text.toString().trim()
+        Log.d("Assignment", "Date String: $assignmentDate")
         val assignmentTime = dueTimeEditText.text.toString().trim()
 
         if (assignmentDate.isEmpty() || assignmentTime.isEmpty()) {
@@ -158,7 +157,7 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
             return
         }
 
-        val dateFormatter = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.US)
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-dd", Locale.US)
         val timeFormatter = DateTimeFormatter.ofPattern("H:mm", Locale.US)
 
         val javaLocalDate = java.time.LocalDate.parse(assignmentDate, dateFormatter)
@@ -195,7 +194,6 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
             questionsList.add(questionModel)
         }
 
-        // Continue clearly with your existing logic:
         lifecycleScope.launch {
             val httpsService = HttpsService()
             val assignmentService = AssignmentService(httpsService)
@@ -210,7 +208,7 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
             if (response != null) {
                 AssignmentReminderScheduler.scheduleReminder(
                     requireContext(),
-                    java.time.LocalDateTime.parse(returnDateString),
+                    returnDateString,
                     assignmentName
                 )
 

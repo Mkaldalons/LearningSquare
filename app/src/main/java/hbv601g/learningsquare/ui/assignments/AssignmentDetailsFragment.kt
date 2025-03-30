@@ -29,7 +29,6 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.ui.utils.AssignmentReminderScheduler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDateTime
 import java.util.Locale
 
 class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details) {
@@ -91,7 +90,7 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
                     return@launch
                 }
 
-                val formatterDate = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.US)
+                val formatterDate = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.US)
                 val formatterTime = DateTimeFormatter.ofPattern("H:mm", Locale.US)
 
                 val javaLocalDate = java.time.LocalDate.parse(date, formatterDate)
@@ -141,8 +140,15 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
                 val response = assignmentService.editAssignmentDetails(assignmentId, name, returnDateString, questionsList, published)
 
                 if (response) {
-                    AssignmentReminderScheduler.scheduleReminder(requireContext(), deadlineDateTime, name)
-
+                    if (returnDateString.isEmpty())
+                    {
+                        Log.d("Assignment", "String is empty, submitting: ${originalAssignment?.dueDate.toString()}")
+                        AssignmentReminderScheduler.scheduleReminder(requireContext(), originalAssignment?.dueDate.toString(), name)
+                    }
+                    else
+                    {
+                        AssignmentReminderScheduler.scheduleReminder(requireContext(), returnDateString, name)
+                    }
                     Toast.makeText(requireContext(), "Assignment Modified", Toast.LENGTH_SHORT).show()
                     delay(2000)
                     parentFragmentManager.beginTransaction()
@@ -179,7 +185,7 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-            val formattedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+            val formattedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
             editTextDueDate.setText(formattedDate)
         }, year, month, day).show()
     }

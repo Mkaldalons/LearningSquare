@@ -12,8 +12,10 @@ import java.time.LocalDateTime
 object AssignmentReminderScheduler {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun scheduleReminder(context: Context, deadline: LocalDateTime, assignmentName: String) {
-        val reminderTime = deadline.minusHours(24)
+    fun scheduleReminder(context: Context, deadline: String, assignmentName: String) {
+        val isoDate = deadline.replace(" ", "T")
+        val dateTimeIso = LocalDateTime.parse(isoDate)
+        val reminderTime = dateTimeIso.minusHours(24)
         val durationUntilReminder = Duration.between(LocalDateTime.now(), reminderTime).seconds
 
         if (durationUntilReminder <= 0) {
