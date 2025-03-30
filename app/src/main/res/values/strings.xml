@@ -71,4 +71,5 @@
     <string name="due_time">Due Time</string>
     <string name="select_due_time">Select Due Time</string>
     <string name="due_at">Due at</string>
+    <string name="upload_profile_picture">Upload Profile Picture</string>
 </resources>
