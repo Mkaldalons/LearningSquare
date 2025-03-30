@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.androidx.material)
     implementation(libs.firebase.crashlytics.buildtools) // Material Components for UI
     implementation(libs.kotlinx.datetime)
+    implementation(libs.androidx.work.runtime.ktx)
     implementation ("androidx.activity:activity-ktx:1.10.1")
 
     testImplementation(libs.junit)
@@ -58,4 +59,5 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.core.ktx)
 }

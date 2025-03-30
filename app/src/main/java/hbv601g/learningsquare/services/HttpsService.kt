@@ -16,7 +16,7 @@ import hbv601g.learningsquare.services.utils.JsonUtils
 import io.ktor.http.HttpStatusCode
 import io.ktor.client.call.body
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.Json
 import org.json.JSONArray
 import java.util.Base64
@@ -125,7 +125,7 @@ class HttpsService {
         return response
     }
 
-    suspend fun updateAssignment(assignmentId: Int, name: String?, dueDate: LocalDate?, questionRequest: List<QuestionModel>?, published: Boolean?): HttpResponse
+    suspend fun updateAssignment(assignmentId: Int, name: String?, dueDate: LocalDateTime?, questionRequest: List<QuestionModel>?, published: Boolean?): HttpResponse
     {
         val url = "$url/assignments/$assignmentId"
 
@@ -135,7 +135,7 @@ class HttpsService {
             questionRequest = questionRequest,
             published = published
         )
-
+        Log.d("Assignment", "Patching with: $jsonBody")
         val response: HttpResponse = client.patch(url)
         {
             contentType(ContentType.Application.Json)

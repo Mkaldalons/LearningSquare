@@ -7,21 +7,20 @@ import hbv601g.learningsquare.models.QuestionModel
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
-import kotlinx.datetime.LocalDate
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 class AssignmentService(private val httpsService: HttpsService) {
 
-    suspend fun createAssignment(assignmentName: String, courseId: Int, published: Boolean, dueDate: LocalDate, questionData: List<QuestionModel>) : Int?
+    suspend fun createAssignment(assignmentName: String, courseId: Int, published: Boolean, dueDate: String, questionData: List<QuestionModel>) : Int?
     {
+        val isoDueDate = dueDate.replace(" ", "T")
+
         val assignment = AssignmentModel(
             assignmentName = assignmentName,
             courseId = courseId,
             published = published,
-            dueDate = dueDate,
+            dueDate = kotlinx.datetime.LocalDateTime.parse(isoDueDate),
             questionRequest = questionData
         )
 
@@ -73,8 +72,10 @@ class AssignmentService(private val httpsService: HttpsService) {
     suspend fun editAssignmentDetails(id: Int, name: String, dueDate: String, questionData: List<QuestionModel>, published: Boolean): Boolean
     {
         var patchName: String? = null
-        var patchDueDate: LocalDate? = null
+        var patchDueDate: kotlinx.datetime.LocalDateTime? = null
         var patchQuestionList: List<QuestionModel>? = null
+
+        val isoDueDate = dueDate.replace(" ", "T")
 
         if (name.isNotBlank())
         {
@@ -82,7 +83,7 @@ class AssignmentService(private val httpsService: HttpsService) {
         }
         if (dueDate.isNotBlank())
         {
-            patchDueDate = dueDate.toLocalDateCustom()
+            patchDueDate = kotlinx.datetime.LocalDateTime.parse(isoDueDate)
         }
         if (questionData.isNotEmpty())
         {
@@ -101,12 +102,5 @@ class AssignmentService(private val httpsService: HttpsService) {
             return id
         }
         return ""
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun String.toLocalDateCustom(): LocalDate {
-        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.US)
-        val javaDate = java.time.LocalDate.parse(this.trim(), formatter)
-        return LocalDate(javaDate.year, javaDate.monthValue, javaDate.dayOfMonth)
     }
 }

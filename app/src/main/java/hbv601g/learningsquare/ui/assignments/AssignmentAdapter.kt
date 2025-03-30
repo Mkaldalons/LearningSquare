@@ -28,6 +28,7 @@ class AssignmentAdapter(
     class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val assignmentName: TextView = itemView.findViewById(R.id.assignmentName)
         val assignmentDueDate: TextView = itemView.findViewById(R.id.assignmentDueDate)
+        val dueAt: TextView = itemView.findViewById(R.id.dueAt)
         val assignmentPublished: TextView = itemView.findViewById(R.id.published)
         val viewAssignmentButton: Button = itemView.findViewById(R.id.viewAssignmentButton)
         val gradeLayout: LinearLayout = itemView.findViewById(R.id.gradeLayout)
@@ -44,7 +45,9 @@ class AssignmentAdapter(
         val assignment = assignments[position]
 
         holder.assignmentName.text = assignment.assignmentName
-        holder.assignmentDueDate.text = assignment.dueDate.toString()
+        holder.assignmentDueDate.text = assignment.dueDate.date.toString()
+        holder.dueAt.text = assignment.dueDate.time.toString()
+
 
         holder.assignmentPublished.text = if (assignment.published) "Published" else "Not Published"
         val publishedColor = if (assignment.published) {

@@ -1,6 +1,7 @@
 package hbv601g.learningsquare.ui.assignments
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.icu.util.Calendar
 import android.os.Build
 import android.os.Bundle
@@ -9,12 +10,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -22,9 +18,9 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
+import hbv601g.learningsquare.ui.utils.AssignmentReminderScheduler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -36,6 +32,7 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
     private lateinit var questionsContainer: LinearLayout
     private lateinit var addQuestionButton: Button
     private lateinit var submitAssignmentButton: Button
+    private lateinit var dueTimeEditText: EditText
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,6 +43,8 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
         addQuestionButton = view.findViewById(R.id.buttonAddQuestion)
         submitAssignmentButton = view.findViewById(R.id.buttonSubmitAssignment)
         questionsContainer = view.findViewById(R.id.linearLayoutQuestions)
+        dueTimeEditText = view.findViewById(R.id.editTextDueTime)
+
 
         selectedCourseId = arguments?.getInt("selectedCourseId") ?: -1
 
@@ -53,25 +52,30 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
             showDatePickerDialog()
         }
 
+        dueTimeEditText.setOnClickListener {
+            showTimePickerDialog()
+        }
+
         addQuestionButton.setOnClickListener {
             addQuestion(questionsContainer)
         }
 
         submitAssignmentButton.setOnClickListener {
-            if (selectedCourseId != -1)
-            {
+            if (selectedCourseId != -1) {
                 submitAssignment()
-            }
-            else
-            {
-                Toast.makeText(requireContext(), "Failed to create assignment since no courseId was found", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to create assignment since no courseId was found",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
-    private fun addQuestion(container: LinearLayout)
-    {
-        val questionView = LayoutInflater.from(requireContext()).inflate(R.layout.item_question, container, false)
+    private fun addQuestion(container: LinearLayout) {
+        val questionView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.item_question, container, false)
 
         val option1EditText = questionView.findViewById<EditText>(R.id.editTextOption1)
         val option2EditText = questionView.findViewById<EditText>(R.id.editTextOption2)
@@ -88,7 +92,8 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
 
             if (o1.isNotEmpty() && o2.isNotEmpty() && o3.isNotEmpty() && o4.isNotEmpty()) {
                 val options = listOf(o1, o2, o3, o4)
-                val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, options)
+                val spinnerAdapter =
+                    ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, options)
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinner.adapter = spinnerAdapter
             } else {
@@ -98,7 +103,10 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
 
         val watcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { updateSpinner() }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateSpinner()
+            }
+
             override fun afterTextChanged(s: Editable?) {}
         }
 
@@ -110,29 +118,52 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
         container.addView(questionView)
     }
 
-    private fun showDatePickerDialog()
-    {
+    private fun showDatePickerDialog() {
         val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        DatePickerDialog(
+            requireContext(), { _, year, month, day ->
+                val formattedDate = "$year-${month + 1}-$day"
+                dueDateEditText.setText(formattedDate)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
+    }
 
-        DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-            val formattedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-            dueDateEditText.setText(formattedDate)
-        }, year, month, day).show()
+    private fun showTimePickerDialog() {
+        val calendar = Calendar.getInstance()
+        TimePickerDialog(
+            requireContext(), { _, hour, minute ->
+                val formattedTime = String.format(Locale.US, "%02d:%02d", hour, minute)
+                dueTimeEditText.setText(formattedTime)
+            },
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            true
+        ).show()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun submitAssignment()
-    {
+    private fun submitAssignment() {
         val assignmentName = assignmentNameEditText.text.toString().trim()
         val assignmentDate = dueDateEditText.text.toString().trim()
+        Log.d("Assignment", "Date String: $assignmentDate")
+        val assignmentTime = dueTimeEditText.text.toString().trim()
 
-        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy", Locale.US)
-        val javaLocalDate = java.time.LocalDate.parse(assignmentDate, formatter)
-        val returnDateString = LocalDate(javaLocalDate.year, javaLocalDate.monthValue, javaLocalDate.dayOfMonth)
-        Log.d("Assignment", "Posting date: $returnDateString")
+        if (assignmentDate.isEmpty() || assignmentTime.isEmpty()) {
+            Toast.makeText(requireContext(), "Please select both date and time", Toast.LENGTH_SHORT)
+                .show()
+            return
+        }
+
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-dd", Locale.US)
+        val timeFormatter = DateTimeFormatter.ofPattern("H:mm", Locale.US)
+
+        val javaLocalDate = java.time.LocalDate.parse(assignmentDate, dateFormatter)
+        val javaLocalTime = java.time.LocalTime.parse(assignmentTime, timeFormatter)
+        val returnDateTime = javaLocalDate.atTime(javaLocalTime)
+        val returnDateString = returnDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US))
 
         val questionsList = mutableListOf<QuestionModel>()
 
@@ -166,16 +197,34 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
         lifecycleScope.launch {
             val httpsService = HttpsService()
             val assignmentService = AssignmentService(httpsService)
-            val response = assignmentService.createAssignment(assignmentName, selectedCourseId, false, returnDateString, questionsList)
+            val response = assignmentService.createAssignment(
+                assignmentName,
+                selectedCourseId,
+                false,
+                returnDateString,
+                questionsList
+            )
+
             if (response != null) {
-                Toast.makeText(requireContext(), "Assignment created successfully", Toast.LENGTH_SHORT).show()
+                AssignmentReminderScheduler.scheduleReminder(
+                    requireContext(),
+                    returnDateString,
+                    assignmentName
+                )
+
+                Toast.makeText(
+                    requireContext(),
+                    "Assignment created successfully",
+                    Toast.LENGTH_SHORT
+                ).show()
                 delay(2000)
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container_view, AssignmentFragment())
                     .addToBackStack(null)
                     .commit()
             } else {
-                Toast.makeText(requireContext(), "Failed to create assignment", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Failed to create assignment", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

@@ -3,6 +3,7 @@ package hbv601g.learningsquare.services.utils
 import android.util.Log
 import hbv601g.learningsquare.models.QuestionModel
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -10,7 +11,7 @@ object JsonUtils {
 
     fun buildAssignmentPatchJson(
         name: String?,
-        dueDate: LocalDate?,
+        dueDate: LocalDateTime?,
         questionRequest: List<QuestionModel>?,
         published: Boolean?
     ): String {

@@ -9,7 +9,7 @@
         android:id="@+id/profileImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:contentDescription="@string/profilepic"
+        android:contentDescription="@string/profile_pic"
         android:src="@drawable/ic_profile_placeholder"
         android:layout_gravity="center_horizontal"/>
 
