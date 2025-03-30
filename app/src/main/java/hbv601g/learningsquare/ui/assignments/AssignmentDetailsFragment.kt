@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -28,6 +29,7 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.ui.utils.AssignmentReminderScheduler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
 import java.util.Locale
 
 class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details) {
@@ -57,7 +59,8 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
                     val questions: List<QuestionModel> = assignment.questionRequest
 
                     assignmentNameEditText.setText(assignment.assignmentName)
-                    editAssignmentDueDate.setText(assignment.dueDate.toString())
+                    editAssignmentDueDate.setText(assignment.dueDate.date.toString())
+                    editAssignmentDueTime.setText(assignment.dueDate.time.toString())
                     if (assignment.published) {
                         togglePublish.toggle()
                     }
@@ -79,7 +82,7 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
 
         saveChanges.setOnClickListener {
             lifecycleScope.launch {
-                val name = assignmentNameEditText.text.toString()
+                var name = assignmentNameEditText.text.toString()
                 val date = editAssignmentDueDate.text.toString()
                 val time = editAssignmentDueTime.text.toString()
 
@@ -94,6 +97,7 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
                 val javaLocalDate = java.time.LocalDate.parse(date, formatterDate)
                 val javaLocalTime = java.time.LocalTime.parse(time, formatterTime)
                 val deadlineDateTime = java.time.LocalDateTime.of(javaLocalDate, javaLocalTime)
+                var returnDateString = deadlineDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US))
 
                 val published = togglePublish.isChecked
                 val originalAssignment = getAssignment(assignmentId)
@@ -115,13 +119,26 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
                     }
                 }
 
-                val response = AssignmentService(HttpsService()).editAssignmentDetails(
-                    assignmentId,
-                    name,
-                    date, // you might combine date and time backend-side or clearly send both separately
-                    questionsList,
-                    published
-                )
+                val originalDate = originalAssignment?.dueDate?.date.toString()
+                val originalTime = originalAssignment?.dueDate?.time.toString()
+
+                if((name == originalAssignment?.assignmentName) || name.isBlank())
+                {
+                    name = ""
+                }
+                if( (date == originalDate && time == originalTime) || (date.isEmpty() && time.isEmpty()) )
+                {
+                    returnDateString = ""
+                }
+                if((questionsList == originalAssignment?.questionRequest))
+                {
+                    questionsList.clear()
+                }
+
+               val httpsService = HttpsService()
+               val assignmentService = AssignmentService(httpsService)
+
+                val response = assignmentService.editAssignmentDetails(assignmentId, name, returnDateString, questionsList, published)
 
                 if (response) {
                     AssignmentReminderScheduler.scheduleReminder(requireContext(), deadlineDateTime, name)

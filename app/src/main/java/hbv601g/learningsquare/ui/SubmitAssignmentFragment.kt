@@ -113,11 +113,6 @@ class SubmitAssignmentFragment : Fragment(R.layout.fragment_submit_assignment) {
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerCorrectAnswer.adapter = spinnerAdapter
 
-            //val correctIndex = question.options.indexOf(question.correctAnswer)
-            //if (correctIndex >= 0) {
-            //    spinnerCorrectAnswer.setSelection(correctIndex)
-            //}
-
             container?.addView(questionView)
         }
     }

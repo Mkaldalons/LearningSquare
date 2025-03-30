@@ -22,9 +22,7 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.ui.utils.AssignmentReminderScheduler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
+import kotlinx.datetime.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -165,15 +163,9 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
 
         val javaLocalDate = java.time.LocalDate.parse(assignmentDate, dateFormatter)
         val javaLocalTime = java.time.LocalTime.parse(assignmentTime, timeFormatter)
-        val deadlineDateTime = LocalDateTime.of(javaLocalDate, javaLocalTime)
+        val returnDateTime = javaLocalDate.atTime(javaLocalTime)
+        val returnDateString = returnDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US))
 
-        val returnDateString = LocalDate(
-            javaLocalDate.year,
-            javaLocalDate.monthValue,
-            javaLocalDate.dayOfMonth
-        )
-
-        // Clearly build the questionsList from questionsContainer
         val questionsList = mutableListOf<QuestionModel>()
 
         for (i in 0 until questionsContainer.childCount) {
@@ -218,7 +210,7 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
             if (response != null) {
                 AssignmentReminderScheduler.scheduleReminder(
                     requireContext(),
-                    deadlineDateTime,
+                    java.time.LocalDateTime.parse(returnDateString),
                     assignmentName
                 )
 
