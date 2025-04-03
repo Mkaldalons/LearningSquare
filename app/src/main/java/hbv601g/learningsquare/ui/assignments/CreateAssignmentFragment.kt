@@ -157,7 +157,7 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
             return
         }
 
-        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-dd", Locale.US)
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.US)
         val timeFormatter = DateTimeFormatter.ofPattern("H:mm", Locale.US)
 
         val javaLocalDate = java.time.LocalDate.parse(assignmentDate, dateFormatter)
