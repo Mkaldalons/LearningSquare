@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -120,10 +119,16 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
 
                 val originalDate = originalAssignment?.dueDate?.date.toString()
                 val originalTime = originalAssignment?.dueDate?.time.toString()
+                var submitName = ""
 
                 if((name == originalAssignment?.assignmentName) || name.isBlank())
                 {
                     name = ""
+                    submitName = originalAssignment?.assignmentName.toString()
+                }
+                else
+                {
+                    submitName = name
                 }
                 if( (date == originalDate && time == originalTime) || (date.isEmpty() && time.isEmpty()) )
                 {
@@ -142,12 +147,11 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
                 if (response) {
                     if (returnDateString.isEmpty())
                     {
-                        Log.d("Assignment", "String is empty, submitting: ${originalAssignment?.dueDate.toString()}")
-                        AssignmentReminderScheduler.scheduleReminder(requireContext(), originalAssignment?.dueDate.toString(), name)
+                        AssignmentReminderScheduler.scheduleReminder(requireContext(), originalAssignment?.dueDate.toString(), submitName)
                     }
                     else
                     {
-                        AssignmentReminderScheduler.scheduleReminder(requireContext(), returnDateString, name)
+                        AssignmentReminderScheduler.scheduleReminder(requireContext(), returnDateString, submitName)
                     }
                     Toast.makeText(requireContext(), "Assignment Modified", Toast.LENGTH_SHORT).show()
                     delay(2000)
