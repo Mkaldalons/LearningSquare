@@ -7,28 +7,28 @@
     tools:context=".ui.assignments.AssignmentFragment">
 
     <TextView
-        android:id="@+id/welcomeText"
+        android:id="@+id/assignmentHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/welcome_to_assignments"
+        android:text="Assignments"
         android:textSize="24sp"
         android:textColor="#2196F3"
         android:textStyle="bold"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Spinner
         android:id="@+id/coursesDropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/recyclerViewAssignments"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        android:minHeight="48dp"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/assignmentHeader"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/welcomeText"
-        app:layout_constraintVertical_bias="1.0"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/recyclerViewAssignments" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAssignments"
@@ -37,7 +37,7 @@
         android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@id/noAssignmentsFoundForThisCourseTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/coursesDropdown"
         app:layout_constraintVertical_bias="1.0" />
@@ -58,12 +58,17 @@
 
     <Button
         android:id="@+id/buttonCreateAssignment"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="#4CAF50"
         android:text="@string/create_new_assignment"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="20dp"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

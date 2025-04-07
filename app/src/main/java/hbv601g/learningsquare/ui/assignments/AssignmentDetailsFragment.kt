@@ -1,11 +1,12 @@
 package hbv601g.learningsquare.ui.assignments
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.icu.util.Calendar
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -14,6 +15,8 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import java.time.format.DateTimeFormatter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -22,10 +25,13 @@ import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
+import hbv601g.learningsquare.ui.utils.AssignmentReminderScheduler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details) {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -35,6 +41,11 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
         val saveChanges = view.findViewById<Button>(R.id.saveChangesButton)
         val addQuestion = view.findViewById<Button>(R.id.addQuestionButton)
         val discardChanges = view.findViewById<Button>(R.id.clearChangesButton)
+        val editAssignmentDueTime = view.findViewById<EditText>(R.id.editTextDueTime)
+
+        editAssignmentDueTime.setOnClickListener {
+            showTimePickerDialog(editAssignmentDueTime)
+        }
 
         val assignmentId = arguments?.getInt("assignmentId") ?: -1
 
@@ -46,7 +57,8 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
                     val questions: List<QuestionModel> = assignment.questionRequest
 
                     assignmentNameEditText.setText(assignment.assignmentName)
-                    editAssignmentDueDate.setText(assignment.dueDate.toString())
+                    editAssignmentDueDate.setText(assignment.dueDate.date.toString())
+                    editAssignmentDueTime.setText(assignment.dueDate.time.toString())
                     if (assignment.published) {
                         togglePublish.toggle()
                     }
@@ -68,17 +80,28 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
 
         saveChanges.setOnClickListener {
             lifecycleScope.launch {
-                val httpsService = HttpsService()
-                val assignmentService = AssignmentService(httpsService)
                 var name = assignmentNameEditText.text.toString()
-                var dueDate = editAssignmentDueDate.text.toString()
-                val published = togglePublish.isChecked
+                val date = editAssignmentDueDate.text.toString()
+                val time = editAssignmentDueTime.text.toString()
 
+                if (date.isEmpty() || time.isEmpty()) {
+                    Toast.makeText(requireContext(), "Please select both date and time", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+
+                val formatterDate = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.US)
+                val formatterTime = DateTimeFormatter.ofPattern("H:mm", Locale.US)
+
+                val javaLocalDate = java.time.LocalDate.parse(date, formatterDate)
+                val javaLocalTime = java.time.LocalTime.parse(time, formatterTime)
+                val deadlineDateTime = java.time.LocalDateTime.of(javaLocalDate, javaLocalTime)
+                var returnDateString = deadlineDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US))
+
+                val published = togglePublish.isChecked
                 val originalAssignment = getAssignment(assignmentId)
 
-                val questionsContainer = view.findViewById<LinearLayout>(R.id.linearLayoutQuestions)
                 val questionsList = mutableListOf<QuestionModel>()
-
+                val questionsContainer = view.findViewById<LinearLayout>(R.id.linearLayoutQuestions)
                 if (questionsContainer != null) {
                     for (i in 0 until questionsContainer.childCount) {
                         val questionView = questionsContainer.getChildAt(i)
@@ -90,40 +113,53 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
                         val spinner = questionView.findViewById<Spinner>(R.id.spinnerCorrectAnswer)
                         val correctAnswer = spinner.adapter?.getItem(spinner.selectedItemPosition)?.toString() ?: ""
 
-                        val questionModel = QuestionModel(
-                            question = questionText,
-                            options = listOf(option1, option2, option3, option4),
-                            correctAnswer = correctAnswer
-                        )
-                        questionsList.add(questionModel)
+                        questionsList.add(QuestionModel(questionText, listOf(option1, option2, option3, option4), correctAnswer))
                     }
                 }
+
+                val originalDate = originalAssignment?.dueDate?.date.toString()
+                val originalTime = originalAssignment?.dueDate?.time.toString()
+                var submitName = ""
 
                 if((name == originalAssignment?.assignmentName) || name.isBlank())
                 {
                     name = ""
+                    submitName = originalAssignment?.assignmentName.toString()
                 }
-                if((dueDate == originalAssignment?.dueDate.toString()) || dueDate.isBlank())
+                else
                 {
-                    dueDate = ""
+                    submitName = name
+                }
+                if( (date == originalDate && time == originalTime) || (date.isEmpty() && time.isEmpty()) )
+                {
+                    returnDateString = ""
                 }
                 if((questionsList == originalAssignment?.questionRequest))
                 {
                     questionsList.clear()
                 }
-                val response = assignmentService.editAssignmentDetails(assignmentId, name, dueDate, questionsList, published)
 
-                if(response)
-                {
+               val httpsService = HttpsService()
+               val assignmentService = AssignmentService(httpsService)
+
+                val response = assignmentService.editAssignmentDetails(assignmentId, name, returnDateString, questionsList, published)
+
+                if (response) {
+                    if (returnDateString.isEmpty())
+                    {
+                        AssignmentReminderScheduler.scheduleReminder(requireContext(), originalAssignment?.dueDate.toString(), submitName)
+                    }
+                    else
+                    {
+                        AssignmentReminderScheduler.scheduleReminder(requireContext(), returnDateString, submitName)
+                    }
                     Toast.makeText(requireContext(), "Assignment Modified", Toast.LENGTH_SHORT).show()
                     delay(2000)
                     parentFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container_view, AssignmentFragment())
                         .addToBackStack(null)
                         .commit()
-                }
-                else
-                {
+                } else {
                     Toast.makeText(requireContext(), "Failed to modify assignment. Please try again", Toast.LENGTH_SHORT).show()
                     populateAssignmentDetails()
                 }
@@ -153,9 +189,21 @@ class AssignmentDetailsFragment : Fragment(R.layout.fragment_assignment_details)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-            val formattedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+            val formattedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
             editTextDueDate.setText(formattedDate)
         }, year, month, day).show()
+    }
+
+    private fun showTimePickerDialog(editText: EditText) {
+        val calendar = Calendar.getInstance()
+        TimePickerDialog(requireContext(), { _, hour, minute ->
+            val formattedTime = String.format(Locale.US, "%02d:%02d", hour, minute)
+            editText.setText(formattedTime)
+        },
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            true
+        ).show()
     }
 
     private fun populateQuestionContainer(questions: List<QuestionModel>) {

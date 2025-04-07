@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 data class StudentModel(
     val studentId: Int,
     val userName: String,
-    val name: String
+    val name: String,
+    val averageGrade: Double? = null
 )
 {
 }

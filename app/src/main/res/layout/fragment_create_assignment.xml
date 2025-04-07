@@ -1,46 +1,83 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ui.assignments.CreateAssignmentFragment">
+    tools:context="ui.assignments.CreateAssignmentFragment"
+    android:background="#FAFAFA">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp">
 
+        <!-- Assignment Name -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/assignment_name" />
+            android:text="@string/assignment_name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
         <EditText
             android:id="@+id/editTextAssignmentName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_assignment_name" />
+            android:hint="@string/enter_assignment_name"
+            android:padding="12dp"
+            android:background="@drawable/rounded_edittext" />
 
+        <!-- Due Date -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/due_date"
-            android:layout_marginTop="16dp" />
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp" />
 
         <EditText
             android:id="@+id/editTextDueDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/select_due_date"
-            android:focusable="false"
-            android:clickable="true" />
+            android:focusable="true"
+            android:clickable="true"
+            android:padding="12dp"
+            android:background="@drawable/rounded_edittext" />
 
+        <!-- Due Time -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/due_time"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextDueTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_due_time"
+            android:focusable="false"
+            android:clickable="true"
+            android:padding="12dp"
+            android:background="@drawable/rounded_edittext" />
+
+        <!-- Questions -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/questions"
-            android:layout_marginTop="16dp" />
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp" />
 
         <LinearLayout
             android:id="@+id/linearLayoutQuestions"
@@ -48,19 +85,27 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
+        <!-- Add Question Button -->
         <Button
             android:id="@+id/buttonAddQuestion"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/add_question"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#2196F3"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/rounded_button" />
 
+        <!-- Submit Button -->
         <Button
             android:id="@+id/buttonSubmitAssignment"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/create_assignment"
-            android:layout_marginTop="24dp" />
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#4CAF50"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/rounded_button" />
 
     </LinearLayout>
 </ScrollView>

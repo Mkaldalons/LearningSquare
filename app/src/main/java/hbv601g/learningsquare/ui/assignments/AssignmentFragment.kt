@@ -2,7 +2,6 @@ package hbv601g.learningsquare.ui.assignments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -19,10 +18,7 @@ import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.models.CourseModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
-import hbv601g.learningsquare.storage.AppDatabase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class AssignmentFragment : Fragment(R.layout.fragment_assignment){
     private lateinit var recyclerView: RecyclerView
@@ -54,6 +50,8 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
                 {
                     val selectedCourse = courses[position]
                     selectedCourseId = selectedCourse.courseId
+                    val header = requireView().findViewById<TextView>(R.id.assignmentHeader)
+                    header.text = getString(R.string.assignments_for, selectedCourse.courseName)
                 }
                 loadAssignments(selectedCourseId)
             }
@@ -63,7 +61,11 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
             }
         }
 
-        assignmentAdapter = AssignmentAdapter(assignments) { selectedAssignment ->
+        val httpsService = HttpsService() // or inject it if you're using DI
+
+        assignmentAdapter = AssignmentAdapter(
+            assignments,
+            onViewAssignmentClick = { selectedAssignment ->
                 val bundle = Bundle().apply {
                     selectedAssignment.assignmentId?.let { putInt("assignmentId", it) }
                 }
@@ -71,7 +73,10 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
                     .replace(R.id.fragment_container_view, AssignmentDetailsFragment().apply { arguments = bundle })
                     .addToBackStack(null)
                     .commit()
-        }
+            },
+            httpsService = httpsService,
+            isInstructor = true
+        )
 
         recyclerView.adapter = assignmentAdapter
 
@@ -127,24 +132,15 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
     }
 
     private fun loadCourses(coursesDropdown: Spinner) {
-        //val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        //val loggedInInstructor = sharedPref.getString("loggedInInstructor", null)
-        val db = AppDatabase.getDatabase(requireContext())
-        var loggedInInstructor = ""
+        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val loggedInInstructor = sharedPref.getString("loggedInUser", null)
+
+        if (loggedInInstructor == null) {
+            Toast.makeText(requireContext(), "Error: No logged-in user found", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                val user = db.userDao().getAll()
-                loggedInInstructor = user[0].userName
-
-                if (loggedInInstructor.isEmpty()) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Error: No logged-in user found",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
             val httpsService = HttpsService()
             val coursesList = httpsService.getCourses(loggedInInstructor)
 

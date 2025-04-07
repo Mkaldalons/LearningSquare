@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     kotlin("plugin.serialization") version "1.9.0"
-    kotlin("kapt")
 }
 
 android {
@@ -48,6 +47,8 @@ dependencies {
     implementation(libs.androidx.material)
     implementation(libs.firebase.crashlytics.buildtools) // Material Components for UI
     implementation(libs.kotlinx.datetime)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation ("androidx.activity:activity-ktx:1.10.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -58,11 +59,5 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.kotlinx.serialization.json)
-
-    //val room_version = "2.6.1"
-    annotationProcessor(libs.androidx.room.compiler)
-    kapt(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    testImplementation(libs.androidx.room.testing)
+    implementation(libs.androidx.core.ktx)
 }

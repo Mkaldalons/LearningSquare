@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <!-- Recovery Email Input -->
+        <EditText
+            android:id="@+id/recoveryEmailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="your email"
+            android:hint="@string/recovery_email"
+            android:inputType="textEmailAddress" />
+
+        <!-- Update Recovery Email Button -->
+        <Button
+            android:id="@+id/updateRecoveryEmailButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/update_recovery_email"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+</ScrollView>

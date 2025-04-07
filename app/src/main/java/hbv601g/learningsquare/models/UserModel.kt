@@ -8,8 +8,8 @@ data class UserModel(
     val name: String,
     val email: String,
     val password: String,
-    val isInstructor: Boolean,
-    val profileImagePath: String?,
+    val instructor: Boolean,
+    val profileImageData: String?,
     val recoveryEmail: String?
     )
 {
