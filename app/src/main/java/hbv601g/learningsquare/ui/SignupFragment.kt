@@ -30,7 +30,7 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
         val confirmSignupButton = view.findViewById<Button>(R.id.confirmSignupButton)
         val errorMessageTextView = view.findViewById<TextView>(R.id.errorMessageTextView)
 
-        var errorText = ""
+        var errorText: String
 
         confirmSignupButton.setOnClickListener{
             val textInputs = mutableListOf(inputUsername.text.toString(), nameInput.text.toString(),

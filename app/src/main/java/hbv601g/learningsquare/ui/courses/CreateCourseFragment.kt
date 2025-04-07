@@ -28,7 +28,7 @@ class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
         val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val loggedInInstructor = sharedPref.getString("loggedInUser", null)
 
-        var errorText = ""
+        var errorText: String
 
         buttonSubmit.setOnClickListener {
             val courseName = inputCourseName.text.toString().trim()

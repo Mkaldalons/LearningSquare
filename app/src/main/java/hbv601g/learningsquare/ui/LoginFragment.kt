@@ -27,7 +27,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         val errorTextView = view.findViewById<TextView>(R.id.errorTextView)
         val signupButton = view.findViewById<Button>(R.id.signupButton)
 
-        var errorTextString = ""
+        var errorTextString: String
 
         loginButton.setOnClickListener {
             val username = inputUsername?.text.toString()
