@@ -9,5 +9,3 @@ data class StudentModel(
     val name: String,
     val averageGrade: Double? = null
 )
-{
-}

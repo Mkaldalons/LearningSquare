@@ -25,7 +25,9 @@
             android:id="@+id/editTextAssignmentName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="Assignment name"
             android:hint="@string/enter_assignment_name"
+            android:inputType="text"
             android:padding="12dp"
             android:background="@drawable/rounded_edittext" />
 
@@ -43,9 +45,11 @@
             android:id="@+id/editTextDueDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="Select due date"
             android:hint="@string/select_due_date"
             android:focusable="true"
             android:clickable="true"
+            android:inputType="date"
             android:padding="12dp"
             android:background="@drawable/rounded_edittext" />
 
@@ -63,9 +67,11 @@
             android:id="@+id/editTextDueTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="Select due time"
             android:hint="@string/select_due_time"
-            android:focusable="false"
+            android:focusable="true"
             android:clickable="true"
+            android:inputType="time"
             android:padding="12dp"
             android:background="@drawable/rounded_edittext" />
 

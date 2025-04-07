@@ -19,7 +19,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
     versionCatalogs {
-        // Your version catalog configuration
     }
 }
 

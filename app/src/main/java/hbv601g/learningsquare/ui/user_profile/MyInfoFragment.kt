@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -81,6 +80,8 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
         httpsService = HttpsService()
         userService = UserService(httpsService)
 
+        var errorText: String
+
         val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val loggedInUser = sharedPref.getString("loggedInUser", null)
 
@@ -93,11 +94,13 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
                     displayProfileImage(user)
                 }
                 else {
-                    usernameTextView.text = "User not found"
+                    errorText = "User not found"
+                    usernameTextView.text = errorText
                 }
             }
         } else {
-            usernameTextView.text = "No user logged in"
+            errorText = "No user logged in"
+            usernameTextView.text = errorText
         }
 
         uploadProfilePicture.setOnClickListener {

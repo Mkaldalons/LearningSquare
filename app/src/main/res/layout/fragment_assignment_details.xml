@@ -60,7 +60,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/select_due_date"
                             android:clickable="true"
-                            android:focusable="false"
+                            android:focusable="true"
                             android:padding="12dp" />
 
                         <TextView
@@ -78,7 +78,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/select_due_time"
                             android:clickable="true"
-                            android:focusable="false"
+                            android:focusable="true"
                             android:padding="12dp" />
 
                         <LinearLayout
