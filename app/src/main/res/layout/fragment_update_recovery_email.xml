@@ -1,31 +1,67 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:orientation="vertical">
+    <!-- Scrollable content -->
+    <ScrollView
+        android:id="@+id/recoveryScrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Recovery Email Input -->
-        <EditText
-            android:id="@+id/recoveryEmailEditText"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="your email"
-            android:hint="@string/recovery_email"
-            android:inputType="textEmailAddress" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <!-- Update Recovery Email Button -->
+            <!-- Recovery Email Input -->
+            <EditText
+                android:id="@+id/recoveryEmailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="emailAddress"
+                android:hint="@string/recovery_email"
+                android:inputType="textEmailAddress" />
+
+            <!-- Update Recovery Email Button -->
+            <Button
+                android:id="@+id/updateRecoveryEmailButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/update_recovery_email"
+                android:layout_marginTop="24dp"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Fixed Bottom Nav Bar -->
+    <LinearLayout
+        android:id="@+id/bottomNavBar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="@color/black"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
         <Button
-            android:id="@+id/updateRecoveryEmailButton"
+            android:id="@+id/buttonMyInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/update_recovery_email"
-            android:layout_marginTop="24dp"
-            android:layout_gravity="center_horizontal" />
+            android:text="@string/my_info"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#2196F3"
+            style="?android:attr/buttonBarButtonStyle"
+            android:padding="8dp"/>
     </LinearLayout>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
