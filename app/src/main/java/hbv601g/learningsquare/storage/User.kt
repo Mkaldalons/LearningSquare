@@ -12,6 +12,6 @@ data class User (
     @ColumnInfo val email: String,
     @ColumnInfo val password: String,
     @ColumnInfo val isInstructor: Boolean,
-    @ColumnInfo val profileImagePath: String?,
+    @ColumnInfo val profileImageData: String?,
     @ColumnInfo val recoveryEmail: String?
 )

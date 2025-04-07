@@ -13,11 +13,19 @@ import hbv601g.learningsquare.models.CourseModel
 import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.launch
 import android.content.Context
+import android.util.Log
+import hbv601g.learningsquare.storage.AppDatabase
+import hbv601g.learningsquare.storage.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class CourseFragment : Fragment(R.layout.fragment_course) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var courseAdapter: CourseAdapter
-    private val courses = mutableListOf<CourseModel>() // List to store courses
+    private val courses = mutableListOf<CourseModel>()
+
+    private lateinit var db: AppDatabase
+    private lateinit var userList: List<User>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,10 +45,8 @@ class CourseFragment : Fragment(R.layout.fragment_course) {
 
         recyclerView.adapter = courseAdapter
 
-        // Load courses from API
         loadCourses()
 
-        // Button to Create a New Course
         val buttonCreateCourse = view.findViewById<Button>(R.id.buttonCreateCourse)
         buttonCreateCourse.setOnClickListener {
             parentFragmentManager.beginTransaction()
@@ -51,22 +57,23 @@ class CourseFragment : Fragment(R.layout.fragment_course) {
     }
 
     private fun loadCourses() {
-        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val loggedInInstructor = sharedPref.getString("loggedInUser", null)
-
-        if (loggedInInstructor == null) {
-            Toast.makeText(requireContext(), "Error: No logged-in user found", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         lifecycleScope.launch {
+            withContext(Dispatchers.IO)
+            {
+                db = AppDatabase.getDatabase(requireContext())
+                userList = db.userDao().getAll()
+            }
+
             val httpsService = HttpsService()
-            val coursesList = httpsService.getCourses(loggedInInstructor)
+            val coursesList = httpsService.getCourses(userList[0].userName)
 
             if (coursesList.isNotEmpty()) {
+                val oldSize = courses.size
+                Log.d("Courses", "$coursesList")
                 courses.clear()
                 courses.addAll(coursesList)
-                courseAdapter.notifyDataSetChanged()
+                courseAdapter.notifyItemRangeRemoved(0, oldSize)
+                courseAdapter.notifyItemRangeInserted(0, coursesList.size)
             } else {
                 Toast.makeText(requireContext(), "No courses found for this instructor", Toast.LENGTH_SHORT).show()
             }
