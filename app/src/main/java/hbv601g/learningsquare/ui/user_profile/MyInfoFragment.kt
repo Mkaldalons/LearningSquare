@@ -23,8 +23,6 @@ import androidx.lifecycle.lifecycleScope
 import hbv601g.learningsquare.storage.AppDatabase
 import hbv601g.learningsquare.storage.User
 import hbv601g.learningsquare.ui.LoginFragment
-import hbv601g.learningsquare.ui.assignments.AssignmentFragment
-import hbv601g.learningsquare.ui.courses.CourseFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
