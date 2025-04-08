@@ -52,14 +52,14 @@
     <string name="delete_account">Delete Account</string>
     <string name="mail">mail</string>
     <string name="Username">Username</string>
-    <string name="old_password">old_password</string>
-    <string name="new_password">new_password</string>
-    <string name="recovery_email">recovery_email</string>
-    <string name="submit_changes">submit_changes</string>
-    <string name="update_Password">update password</string>
+    <string name="old_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="recovery_email">Recovery email</string>
+    <string name="submit_changes">Submit_changes</string>
+    <string name="update_Password">Update password</string>
     <string name="Set_Recovery_Button">Recovery Email</string>
     <string name="change_password">Change Password</string>
-    <string name="update_recovery_email">Confirm</string>
+    <string name="update_recovery_email">Update recovery email</string>
     <string name="take_profile_picture">Take Profile Picture</string>
     <string name="profile_pic">Profile Picture</string>
     <string name="submit_assignment">Submit Assignment</string>
@@ -76,4 +76,5 @@
     <string name="create_course">Create Course</string>
     <string name="cancel">Cancel</string>
     <string name="average_grade_n_a">Average Grade: N/A</string>
+    <string name="welcome_to_courses">Welcome to Courses</string>
 </resources>

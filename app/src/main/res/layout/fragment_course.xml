@@ -12,7 +12,7 @@
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome to Courses"
+        android:text="@string/welcome_to_courses"
         android:textSize="24sp"
         android:textColor="@color/black"
         android:textStyle="bold"

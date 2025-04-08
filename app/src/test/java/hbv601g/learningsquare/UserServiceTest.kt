@@ -59,13 +59,25 @@ class UserServiceTest {
         assertEquals(userName, user?.userName)
     }
 
-    // Could delete this or create a user and then delete the user to test this separately
-//    @Test
-//    fun testDeleteUserEndpoint(): Unit = runBlocking {
-//        val userName = "testApp"
-//
-//        val isDeleted = userService.deleteUser(userName)
-//
-//        assertTrue(isDeleted)
-//    }
+
+    @Test
+    fun testSetRecoveryEmail(): Unit = runBlocking {
+        val userName = "kennari"
+        val newRecoveryEmail = "testRecovery@email.com"
+
+        val success = userService.updateRecoveryEmail(userName, newRecoveryEmail)
+
+        assertTrue(success)
+    }
+
+    @Test
+    fun testChangePassword(): Unit = runBlocking {
+        val userName = "kennari"
+        val oldPassword = "lykilord"
+        val newPassword = "lykilord123"
+
+        val success = userService.changePassword(userName, oldPassword, newPassword)
+
+        assertTrue(success)
+    }
 }

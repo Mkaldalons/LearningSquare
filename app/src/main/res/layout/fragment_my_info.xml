@@ -10,7 +10,6 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:contentDescription="@string/profile_pic"
-        android:src="@drawable/ic_profile_placeholder"
         android:layout_gravity="center_horizontal"/>
 
     <TextView
@@ -32,18 +31,24 @@
         android:layout_gravity="center_horizontal"/>
 
     <Button
-        android:id="@+id/UpdatePasswordButton"
+        android:id="@+id/updatePasswordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/update_Password"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="#4CAF50"
+        android:textColor="@android:color/white"
         android:layout_marginTop="24dp"
         android:layout_gravity="center_horizontal"/>
 
     <Button
-        android:id="@+id/SetRecoveryButton"
+        android:id="@+id/updateRecoveryEmailButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Set_Recovery_Button"
+        android:text="@string/update_recovery_email"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="#4CAF50"
+        android:textColor="@android:color/white"
         android:layout_marginTop="24dp"
         android:layout_gravity="center_horizontal"/>
 
@@ -52,6 +57,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/upload_profile_picture"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="#2196F3"
+        android:textColor="@android:color/white"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp" />
 
@@ -60,6 +68,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/take_profile_picture"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="#2196F3"
+        android:textColor="@android:color/white"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp" />
 
@@ -68,8 +79,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/delete_account"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:textColor="@android:color/white"
         android:layout_marginTop="24dp"
-        android:layout_gravity="center_horizontal"
-        android:backgroundTint="@android:color/holo_red_light" />
-
+        android:layout_gravity="center_horizontal"/>
 </LinearLayout>

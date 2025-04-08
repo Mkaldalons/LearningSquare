@@ -10,22 +10,33 @@
         android:padding="16dp"
         android:orientation="vertical">
 
-        <!-- Recovery Email Input -->
-        <EditText
-            android:id="@+id/recoveryEmailEditText"
+        <TextView
+            android:id="@+id/currentRecovery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="your email"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"
+            android:padding="4dp">
+        </TextView>
+
+        <EditText
+            android:id="@+id/recoveryEmailEditText"
+            style="@style/InputField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="Recovery email"
             android:hint="@string/recovery_email"
             android:inputType="textEmailAddress" />
 
-        <!-- Update Recovery Email Button -->
         <Button
             android:id="@+id/updateRecoveryEmailButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/update_recovery_email"
-            android:layout_marginTop="24dp"
-            android:layout_gravity="center_horizontal" />
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="#4CAF50"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp" />
     </LinearLayout>
 </ScrollView>
