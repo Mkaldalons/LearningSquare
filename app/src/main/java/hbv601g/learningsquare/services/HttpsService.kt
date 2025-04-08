@@ -29,7 +29,7 @@ class HttpsService {
     }
     private val url = "https://hugbo1-6b15.onrender.com"
     //private val url = "http://10.0.2.2:8080" // Nota þetta til að keyra locally með emulator
-    //private val url = "http://192.168.224.138" // Nota þetta til að keyra test locally
+    //private val url = "http://localhost:8080" // Nota þetta til að keyra test locally
 
     /** Get the User by userName
      * Return the User
@@ -288,7 +288,7 @@ class HttpsService {
                 "recoveryEmail": "$recoveryEmail"
             }
         """.trimIndent()
-        val response: HttpResponse = client.post(url)
+        val response: HttpResponse = client.patch(url)
         {
             contentType(ContentType.Application.Json)
             setBody(jsonBody)

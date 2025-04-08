@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import hbv601g.learningsquare.R
 import hbv601g.learningsquare.services.HttpsService
@@ -21,7 +22,9 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import hbv601g.learningsquare.storage.AppDatabase
 import hbv601g.learningsquare.storage.User
+import hbv601g.learningsquare.ui.LoginFragment
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
@@ -92,6 +95,10 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
         val uploadProfilePicture = view.findViewById<Button>(R.id.uploadPictureButton)
         val capturePicture = view.findViewById<Button>(R.id.takePictureButton)
 
+        val updatePasswordButton = view.findViewById<Button>(R.id.updatePasswordButton)
+        val updateRecoveryEmailButton = view.findViewById<Button>(R.id.updateRecoveryEmailButton)
+        val deleteAccountButton = view.findViewById<Button>(R.id.deleteAccountButton)
+
         httpsService = HttpsService()
         userService = UserService(httpsService)
 
@@ -123,6 +130,24 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
 
         capturePicture.setOnClickListener {
             cameraLauncher.launch(null)
+        }
+
+        updatePasswordButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, ChangePasswordFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        updateRecoveryEmailButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, UpdateRecoveryEmailFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        deleteAccountButton.setOnClickListener {
+            showDeleteAccountDialog()
         }
 
     }
@@ -171,6 +196,47 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
                 } else {
                     Toast.makeText(requireContext(), "Could not upload photo", Toast.LENGTH_SHORT).show()
                 }
+            }
+        }
+    }
+
+    private fun showDeleteAccountDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Account")
+            .setMessage("Are you sure you want to delete your account ${userList[0].userName}?")
+            .setPositiveButton("Confirm") { dialog, _ ->
+                deleteAccount()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+
+    private fun deleteAccount()
+    {
+        lifecycleScope.launch {
+            val deleted = userService.deleteUser(userList[0].userName)
+
+            if(deleted)
+            {
+                withContext(Dispatchers.IO) {
+                    db.userDao().delete(userList[0])
+                }
+
+                Toast.makeText(requireContext(), "Account Deleted. Redirecting to homepage", Toast.LENGTH_SHORT).show()
+                delay(2000)
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container_view, LoginFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+            else
+            {
+                Toast.makeText(requireContext(), "Could not delete account! Please email us.",
+                    Toast.LENGTH_SHORT).show()
             }
         }
     }

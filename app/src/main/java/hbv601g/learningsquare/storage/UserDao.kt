@@ -17,6 +17,12 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: User)
 
+    @Query("UPDATE users SET recoveryEmail = :valueToSet WHERE userName = :userName")
+    fun updateRecoveryEmail(valueToSet: String, userName: String)
+
+    @Query("UPDATE users SET password = :valueToSet WHERE userName = :userName")
+    fun updatePassword(valueToSet: String, userName: String)
+
     @Delete
     fun delete(user: User)
 }

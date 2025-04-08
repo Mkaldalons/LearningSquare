@@ -5,6 +5,7 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import hbv601g.learningsquare.R
@@ -28,6 +29,29 @@ class UpdateRecoveryEmailFragment : Fragment(R.layout.fragment_update_recovery_e
 
         val recoveryEmailEditText = view.findViewById<EditText>(R.id.recoveryEmailEditText)
         val updateRecoveryEmailButton = view.findViewById<Button>(R.id.updateRecoveryEmailButton)
+        val currentRecovery = view.findViewById<TextView>(R.id.currentRecovery)
+
+        var currentRecoveryText: String
+
+        lifecycleScope.launch {
+
+            withContext(Dispatchers.IO)
+            {
+                db = AppDatabase.getDatabase(requireContext())
+                userList = db.userDao().getAll()
+            }
+
+            if (userList[0].recoveryEmail.isNullOrEmpty())
+            {
+                currentRecoveryText = "No recovery email yet"
+                currentRecovery.text = currentRecoveryText
+            }
+            else
+            {
+                currentRecoveryText = "Current recovery email: ${userList[0].recoveryEmail.toString()}"
+                currentRecovery.text = currentRecoveryText
+            }
+        }
 
         updateRecoveryEmailButton.setOnClickListener {
 
@@ -45,16 +69,15 @@ class UpdateRecoveryEmailFragment : Fragment(R.layout.fragment_update_recovery_e
 
             lifecycleScope.launch {
 
-                withContext(Dispatchers.IO)
-                {
-                    db = AppDatabase.getDatabase(requireContext())
-                    userList = db.userDao().getAll()
-                }
-
                 httpsService = HttpsService()
                 userService = UserService(httpsService)
 
                 val success = userService.updateRecoveryEmail(userList[0].userName, recoveryEmail)
+
+                withContext(Dispatchers.IO) {
+                    db.userDao().updateRecoveryEmail(recoveryEmail, userList[0].userName)
+                }
+
                 if (success) {
                     Toast.makeText(requireContext(), "Recovery email updated successfully", Toast.LENGTH_LONG).show()
                     parentFragmentManager.popBackStack()
