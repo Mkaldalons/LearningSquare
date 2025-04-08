@@ -43,7 +43,7 @@
         android:layout_marginBottom="32dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="#4CAF50"
-        android:text="Create New Course"
+        android:text="@string/create_new_course"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
