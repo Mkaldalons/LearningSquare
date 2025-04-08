@@ -21,6 +21,8 @@ import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import hbv601g.learningsquare.models.UserModel
+import hbv601g.learningsquare.ui.assignments.AssignmentFragment
+import hbv601g.learningsquare.ui.courses.CourseFragment
 import java.io.ByteArrayOutputStream
 
 class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
@@ -106,6 +108,23 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
 
         capturePicture.setOnClickListener {
             cameraLauncher.launch(null)
+        }
+
+        val buttonAssignments = view.findViewById<Button>(R.id.buttonAssignments)
+        val buttonCourses = view.findViewById<Button>(R.id.buttonCourses)
+
+        buttonAssignments.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, AssignmentFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        buttonCourses.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, CourseFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
     }

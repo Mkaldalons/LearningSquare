@@ -12,6 +12,7 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
+import hbv601g.learningsquare.ui.assignments.AssignmentFragment
 
 class ChangePasswordFragment : Fragment(R.layout.fragment_change_password) {
 
@@ -54,6 +55,14 @@ class ChangePasswordFragment : Fragment(R.layout.fragment_change_password) {
                     Toast.makeText(requireContext(), "Password update failed", Toast.LENGTH_LONG).show()
                 }
             }
+        }
+        val buttonMyInfo = view.findViewById<Button>(R.id.buttonMyInfo)
+
+        buttonMyInfo?.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, MyInfoFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 }

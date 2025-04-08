@@ -13,6 +13,8 @@ import hbv601g.learningsquare.models.CourseModel
 import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.launch
 import android.content.Context
+import hbv601g.learningsquare.ui.assignments.AssignmentFragment
+import hbv601g.learningsquare.ui.user_profile.MyInfoFragment
 
 class CourseFragment : Fragment(R.layout.fragment_course) {
     private lateinit var recyclerView: RecyclerView
@@ -45,6 +47,23 @@ class CourseFragment : Fragment(R.layout.fragment_course) {
         buttonCreateCourse.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_view, CreateCourseFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        val buttonAssignments = view.findViewById<Button>(R.id.buttonAssignments)
+        val buttonMyInfo = view.findViewById<Button>(R.id.myInfoButton)
+
+        buttonAssignments.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, AssignmentFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        buttonMyInfo.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, MyInfoFragment())
                 .addToBackStack(null)
                 .commit()
         }

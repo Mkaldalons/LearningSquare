@@ -13,6 +13,7 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
+import hbv601g.learningsquare.ui.courses.CourseFragment
 
 class UpdateRecoveryEmailFragment : Fragment(R.layout.fragment_update_recovery_email) {
 
@@ -58,6 +59,14 @@ class UpdateRecoveryEmailFragment : Fragment(R.layout.fragment_update_recovery_e
                     Toast.makeText(requireContext(), "Recovery email update failed", Toast.LENGTH_LONG).show()
                 }
             }
+        }
+        val buttonMyInfo = view.findViewById<Button>(R.id.buttonMyInfo)
+
+        buttonMyInfo.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, MyInfoFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 }

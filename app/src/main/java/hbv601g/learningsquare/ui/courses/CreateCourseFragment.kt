@@ -14,6 +14,7 @@ import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.launch
 import io.ktor.client.statement.bodyAsText
 import android.content.Context
+import hbv601g.learningsquare.ui.assignments.AssignmentFragment
 
 class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,6 +72,15 @@ class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
 
         buttonCancel.setOnClickListener {
             parentFragmentManager.popBackStack()
+        }
+
+        val buttonCourses = view.findViewById<Button>(R.id.buttonCourses)
+
+        buttonCourses.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, CourseFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 

@@ -18,6 +18,7 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
+import hbv601g.learningsquare.ui.courses.CourseFragment
 import hbv601g.learningsquare.ui.utils.AssignmentReminderScheduler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -70,6 +71,14 @@ class CreateAssignmentFragment : Fragment(R.layout.fragment_create_assignment) {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+        val buttonAssignments = view.findViewById<Button>(R.id.buttonAssignments)
+
+        buttonAssignments?.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, AssignmentFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 
