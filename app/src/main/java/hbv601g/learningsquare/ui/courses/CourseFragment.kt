@@ -12,8 +12,6 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.CourseModel
 import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.launch
-import android.content.Context
-import android.util.Log
 import hbv601g.learningsquare.storage.AppDatabase
 import hbv601g.learningsquare.storage.User
 import kotlinx.coroutines.Dispatchers

@@ -1,6 +1,5 @@
 package hbv601g.learningsquare.ui.assignments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
