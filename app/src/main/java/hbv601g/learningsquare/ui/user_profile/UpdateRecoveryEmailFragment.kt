@@ -13,11 +13,16 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
+import hbv601g.learningsquare.storage.AppDatabase
+import hbv601g.learningsquare.storage.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class UpdateRecoveryEmailFragment : Fragment(R.layout.fragment_update_recovery_email) {
-
     private lateinit var userService: UserService
     private lateinit var httpsService: HttpsService
+    private lateinit var db: AppDatabase
+    private lateinit var userList: List<User>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -25,17 +30,7 @@ class UpdateRecoveryEmailFragment : Fragment(R.layout.fragment_update_recovery_e
         val recoveryEmailEditText = view.findViewById<EditText>(R.id.recoveryEmailEditText)
         val updateRecoveryEmailButton = view.findViewById<Button>(R.id.updateRecoveryEmailButton)
 
-        httpsService = HttpsService()
-        userService = UserService(httpsService)
-
-        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val username = sharedPref.getString("loggedInUser", null)
-
         updateRecoveryEmailButton.setOnClickListener {
-            if (username == null) {
-                Toast.makeText(requireContext(), "No logged in user", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
 
             val recoveryEmail = recoveryEmailEditText.text?.toString()?.trim()
 
@@ -50,7 +45,17 @@ class UpdateRecoveryEmailFragment : Fragment(R.layout.fragment_update_recovery_e
             }
 
             lifecycleScope.launch {
-                val success = userService.updateRecoveryEmail(username, recoveryEmail)
+
+                withContext(Dispatchers.IO)
+                {
+                    db = AppDatabase.getDatabase(requireContext())
+                    userList = db.userDao().getAll()
+                }
+
+                httpsService = HttpsService()
+                userService = UserService(httpsService)
+
+                val success = userService.updateRecoveryEmail(userList[0].userName, recoveryEmail)
                 if (success) {
                     Toast.makeText(requireContext(), "Recovery email updated successfully", Toast.LENGTH_LONG).show()
                     parentFragmentManager.popBackStack()

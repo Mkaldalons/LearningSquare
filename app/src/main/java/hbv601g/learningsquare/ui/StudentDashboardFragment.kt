@@ -12,14 +12,21 @@ import androidx.recyclerview.widget.RecyclerView
 import hbv601g.learningsquare.R
 import hbv601g.learningsquare.models.CourseModel
 import hbv601g.learningsquare.services.HttpsService
+import hbv601g.learningsquare.storage.AppDatabase
+import hbv601g.learningsquare.storage.User
 import hbv601g.learningsquare.ui.courses.CourseAdapter
 import hbv601g.learningsquare.ui.user_profile.MyInfoFragment
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class StudentDashboardFragment : Fragment(R.layout.fragment_student_dashboard) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var courseAdapter: CourseAdapter
     private val courses = mutableListOf<CourseModel>()
+    private lateinit var db: AppDatabase
+    private lateinit var userList: List<User>
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,22 +58,21 @@ class StudentDashboardFragment : Fragment(R.layout.fragment_student_dashboard) {
     }
 
     private fun loadCourses() {
-        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val loggedInUser = sharedPref.getString("loggedInUser", null)
-
-        if (loggedInUser == null) {
-            Toast.makeText(requireContext(), "Error: No logged-in user found", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         lifecycleScope.launch {
+
+            withContext(Dispatchers.IO)
+            {
+                db = AppDatabase.getDatabase(requireContext())
+                userList = db.userDao().getAll()
+            }
+
             val httpsService = HttpsService()
-            val coursesList = httpsService.getCourses(loggedInUser)
+            val coursesList = httpsService.getCourses(userList[0].userName)
 
             if (coursesList.isNotEmpty()) {
                 courses.clear()
                 courses.addAll(coursesList)
-                courseAdapter.notifyDataSetChanged()
+                courseAdapter.notifyItemRangeChanged(0, courses.size)
             } else {
                 Toast.makeText(requireContext(), "No courses found for this user", Toast.LENGTH_SHORT).show()
             }

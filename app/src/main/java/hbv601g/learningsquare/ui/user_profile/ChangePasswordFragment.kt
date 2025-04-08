@@ -12,11 +12,16 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
+import hbv601g.learningsquare.storage.AppDatabase
+import hbv601g.learningsquare.storage.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ChangePasswordFragment : Fragment(R.layout.fragment_change_password) {
-
     private lateinit var userService: UserService
     private lateinit var httpsService: HttpsService
+    private lateinit var db: AppDatabase
+    private lateinit var userList: List<User>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -25,17 +30,7 @@ class ChangePasswordFragment : Fragment(R.layout.fragment_change_password) {
         val newPasswordEditText = view.findViewById<EditText>(R.id.newPasswordEditText)
         val changePasswordButton = view.findViewById<Button>(R.id.changePasswordButton)
 
-        httpsService = HttpsService()
-        userService = UserService(httpsService)
-
-        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val username = sharedPref.getString("loggedInUser", null)
-
         changePasswordButton.setOnClickListener {
-            if (username == null) {
-                Toast.makeText(requireContext(), "No logged in user", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
 
             val oldPassword = oldPasswordEditText.text.toString().trim()
             val newPassword = newPasswordEditText.text.toString().trim()
@@ -46,10 +41,19 @@ class ChangePasswordFragment : Fragment(R.layout.fragment_change_password) {
             }
 
             lifecycleScope.launch {
-                val success = userService.changePassword(username, oldPassword, newPassword)
+
+                withContext(Dispatchers.IO) {
+                    db = AppDatabase.getDatabase(requireContext())
+                    userList = db.userDao().getAll()
+                }
+
+                httpsService = HttpsService()
+                userService = UserService(httpsService)
+
+                val success = userService.changePassword(userList[0].userName, oldPassword, newPassword)
                 if (success) {
                     Toast.makeText(requireContext(), "Password updated successfully", Toast.LENGTH_LONG).show()
-                    parentFragmentManager.popBackStack()  // or navigate as needed
+                    parentFragmentManager.popBackStack()
                 } else {
                     Toast.makeText(requireContext(), "Password update failed", Toast.LENGTH_LONG).show()
                 }

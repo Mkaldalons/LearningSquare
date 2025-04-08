@@ -69,7 +69,6 @@ class CourseFragment : Fragment(R.layout.fragment_course) {
 
             if (coursesList.isNotEmpty()) {
                 val oldSize = courses.size
-                Log.d("Courses", "$coursesList")
                 courses.clear()
                 courses.addAll(coursesList)
                 courseAdapter.notifyItemRangeRemoved(0, oldSize)

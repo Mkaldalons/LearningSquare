@@ -19,10 +19,17 @@ import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.StudentService
+import hbv601g.learningsquare.storage.AppDatabase
+import hbv601g.learningsquare.storage.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SubmitAssignmentFragment : Fragment(R.layout.fragment_submit_assignment) {
+    private lateinit var db: AppDatabase
+    private lateinit var userList: List<User>
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -30,17 +37,21 @@ class SubmitAssignmentFragment : Fragment(R.layout.fragment_submit_assignment) {
         val submitAssignmentButton = view.findViewById<Button>(R.id.submitAssignment)
         val assignmentGrade = view.findViewById<TextView>(R.id.assignmentGrade)
 
-        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val loggedInUser = sharedPref.getString("loggedInUser", null)
-
         var assignment: AssignmentModel?
         val assignmentId = arguments?.getInt("assignmentId") ?: -1
 
         lifecycleScope.launch {
+
+            withContext(Dispatchers.IO)
+            {
+                db = AppDatabase.getDatabase(requireContext())
+                userList = db.userDao().getAll()
+            }
+
             assignment = getAssignment(assignmentId)
             if (assignment != null)
             {
-                val grade = getAssignmentGrade(assignmentId, loggedInUser!!)
+                val grade = getAssignmentGrade(assignmentId, userList[0].userName)
                 if(grade != null)
                 {
                     assignmentGrade.text = grade
@@ -66,7 +77,7 @@ class SubmitAssignmentFragment : Fragment(R.layout.fragment_submit_assignment) {
                 }
                 val httpsService = HttpsService()
                 val studentService = StudentService(httpsService)
-                val response = studentService.submitAssignment(assignmentId, loggedInUser!!, answersList)
+                val response = studentService.submitAssignment(assignmentId, userList[0].userName, answersList)
                 Log.d("Submit", "Grade: $response")
                 if (response >= 0.0)
                 {
