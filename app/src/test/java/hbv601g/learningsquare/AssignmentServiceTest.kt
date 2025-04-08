@@ -1,6 +1,5 @@
 package hbv601g.learningsquare
 
-import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.models.QuestionModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
@@ -21,7 +20,7 @@ class AssignmentServiceTest {
         val assignmentName = "Test Assignment endpoint Again"
         val courseId = 0
         val published = false
-        val dueDate = LocalDate(2025, 3, 9)
+        val dueDate = LocalDate(2025, 3, 9).toString()
         val question = "Who am I?"
         val options: List<String> = listOf("a", "b", "c")
         val correctAnswer = "a"

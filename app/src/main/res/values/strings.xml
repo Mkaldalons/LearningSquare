@@ -72,4 +72,8 @@
     <string name="select_due_time">Select Due Time</string>
     <string name="due_at">Due at</string>
     <string name="upload_profile_picture">Upload Profile Picture</string>
+    <string name="description">Description</string>
+    <string name="create_course">Create Course</string>
+    <string name="cancel">Cancel</string>
+    <string name="average_grade_n_a">Average Grade: N/A</string>
 </resources>

@@ -1,7 +1,6 @@
 package hbv601g.learningsquare.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
@@ -12,7 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import hbv601g.learningsquare.R
 import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
+import hbv601g.learningsquare.storage.AppDatabase
+import hbv601g.learningsquare.storage.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
     override fun onViewCreated(
@@ -30,7 +33,7 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
         val confirmSignupButton = view.findViewById<Button>(R.id.confirmSignupButton)
         val errorMessageTextView = view.findViewById<TextView>(R.id.errorMessageTextView)
 
-        var errorText = ""
+        var errorText: String
 
         confirmSignupButton.setOnClickListener{
             val textInputs = mutableListOf(inputUsername.text.toString(), nameInput.text.toString(),
@@ -50,7 +53,12 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
 
                         if(user != null)
                         {
-                            Log.d("SignupFragment", "The user ${user.userName} has been created")
+                            val userToSave = User(0, user.userName, user.name ,user.email, user.password, user.instructor, user.profileImageData, user.recoveryEmail)
+                            val db = AppDatabase.getDatabase(requireContext())
+                            withContext(Dispatchers.IO) {
+                                db.userDao().insert(userToSave)
+                            }
+
                             if (user.instructor) {
                                 parentFragmentManager.beginTransaction()
                                     .replace(R.id.fragment_container_view, InstructorDashboardFragment())

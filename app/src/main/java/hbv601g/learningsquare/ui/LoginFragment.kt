@@ -11,7 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
-import android.content.Context
+import hbv601g.learningsquare.storage.AppDatabase
+import hbv601g.learningsquare.storage.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import android.util.Log
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -27,7 +31,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         val errorTextView = view.findViewById<TextView>(R.id.errorTextView)
         val signupButton = view.findViewById<Button>(R.id.signupButton)
 
-        var errorTextString = ""
+        var errorTextString: String
 
         loginButton.setOnClickListener {
             val username = inputUsername?.text.toString()
@@ -41,11 +45,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     val user = userService.loginUser(username, password)
                     if (user != null)
                     {
-                        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                        with(sharedPref.edit()) {
-                            putString("loggedInUser", user.userName)
-                            apply()
+                        Log.d("Login", "Saving ${user.userName} to database")
+                        val userToSave = User(0, user.userName, user.name ,user.email, user.password, user.instructor, user.profileImageData, user.recoveryEmail)
+                        val db = AppDatabase.getDatabase(requireContext())
+                        withContext(Dispatchers.IO) {
+                            db.userDao().insert(userToSave)
                         }
+
                         if (user.instructor) {
                             parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_container_view, InstructorDashboardFragment())

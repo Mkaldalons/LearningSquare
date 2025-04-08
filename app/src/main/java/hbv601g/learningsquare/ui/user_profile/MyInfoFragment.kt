@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -20,38 +19,53 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
-import hbv601g.learningsquare.models.UserModel
+import hbv601g.learningsquare.storage.AppDatabase
+import hbv601g.learningsquare.storage.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
 class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
+    private lateinit var db: AppDatabase
+    private lateinit var userList: List<User>
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private val getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        if (uri != null) {
-            newProfileImageData = getByteArrayFromUri(uri, requireContext())
+        val getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            if (uri != null) {
+                newProfileImageData = getByteArrayFromUri(uri, requireContext())
 
-            val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            val loggedInUser = sharedPref.getString("loggedInUser", null)
+                val userName = userList[0].userName
 
-            if (loggedInUser != null) {
-                uploadAndDisplayImage(loggedInUser)
+                if (userName.isNotEmpty())
+                {
+                    uploadAndDisplayImage(userName)
+                }
+                else
+                {
+                    Toast.makeText(requireContext(), "Could not find user", Toast.LENGTH_SHORT).show()
+                }
+
+            } else {
+                Toast.makeText(requireContext(), "No image selected", Toast.LENGTH_SHORT).show()
             }
-
-        } else {
-            Toast.makeText(requireContext(), "No image selected", Toast.LENGTH_SHORT).show()
         }
-    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap: Bitmap? ->
         if (bitmap != null)
         {
             newProfileImageData = getByteArrayFromBitmap(bitmap)
-            val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            val loggedInUser = sharedPref.getString("loggedInUser", null)
 
-            if (loggedInUser != null) {
-                uploadAndDisplayImage(loggedInUser)
+            val userName = userList[0].userName
+
+            if (userName.isNotEmpty())
+            {
+                uploadAndDisplayImage(userName)
+            }
+            else
+            {
+                Toast.makeText(requireContext(), "Could not find user", Toast.LENGTH_SHORT).show()
             }
         }
         else
@@ -81,23 +95,26 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
         httpsService = HttpsService()
         userService = UserService(httpsService)
 
-        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val loggedInUser = sharedPref.getString("loggedInUser", null)
+        var errorText: String
 
-        if (!loggedInUser.isNullOrEmpty()) {
-            lifecycleScope.launch {
-                val user = userService.getUser(loggedInUser)
-                if (user != null) {
-                    usernameTextView.text = user.userName
-                    emailTextView.text = user.email
-                    displayProfileImage(user)
-                }
-                else {
-                    usernameTextView.text = "User not found"
-                }
+        lifecycleScope.launch {
+
+            withContext(Dispatchers.IO)
+            {
+                db = AppDatabase.getDatabase(requireContext())
+                userList = db.userDao().getAll()
             }
-        } else {
-            usernameTextView.text = "No user logged in"
+
+            if (userList.isNotEmpty()) {
+                val user = userList[0]
+                usernameTextView.text = user.userName
+                emailTextView.text = user.email
+                displayProfileImage(user)
+
+            } else {
+                errorText = "No user logged in"
+                usernameTextView.text = errorText
+            }
         }
 
         uploadProfilePicture.setOnClickListener {
@@ -110,7 +127,7 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
 
     }
 
-    private fun displayProfileImage(user: UserModel)
+    private fun displayProfileImage(user: User)
     {
         lifecycleScope.launch {
             if (user.profileImageData.isNullOrEmpty())

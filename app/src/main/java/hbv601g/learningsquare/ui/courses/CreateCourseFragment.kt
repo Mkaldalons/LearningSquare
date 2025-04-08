@@ -13,9 +13,15 @@ import hbv601g.learningsquare.R
 import hbv601g.learningsquare.services.HttpsService
 import kotlinx.coroutines.launch
 import io.ktor.client.statement.bodyAsText
-import android.content.Context
+import hbv601g.learningsquare.storage.AppDatabase
+import hbv601g.learningsquare.storage.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
+    private lateinit var db: AppDatabase
+    private lateinit var userList: List<User>
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -25,10 +31,7 @@ class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
         val buttonCancel = view.findViewById<Button>(R.id.buttonCancel)
         val errorMessageTextView = view.findViewById<TextView>(R.id.errorMessageTextView)
 
-        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val loggedInInstructor = sharedPref.getString("loggedInUser", null)
-
-        var errorText = ""
+        var errorText: String
 
         buttonSubmit.setOnClickListener {
             val courseName = inputCourseName.text.toString().trim()
@@ -38,24 +41,28 @@ class CreateCourseFragment : Fragment(R.layout.fragment_create_course) {
 
             if (textInputs.all { it.isNotEmpty() }) {
                 lifecycleScope.launch {
+
+                    withContext(Dispatchers.IO)
+                    {
+                        db = AppDatabase.getDatabase(requireContext())
+                        userList = db.userDao().getAll()
+                    }
+
                     val httpsService = HttpsService()
 
                     try {
-                        val response = httpsService.createCourse(courseName, loggedInInstructor!!, description)
+                        val response = httpsService.createCourse(courseName, userList[0].userName, description)
 
-                        Log.d("CreateCourse", "Response Status: ${response.status}")
+                        val responseBody = response.bodyAsText()
 
-                            val responseBody = response.bodyAsText()
-                            Log.d("CreateCourse", "Response Body: $responseBody")
-
-                            if (response.status.value == 200) {
-                                Toast.makeText(requireContext(), "Course Created Successfully!", Toast.LENGTH_SHORT).show()
+                        if (response.status.value == 200) {
+                            Toast.makeText(requireContext(), "Course Created Successfully!", Toast.LENGTH_SHORT).show()
                                 parentFragmentManager.popBackStack()
-                            } else {
-                                errorText = "Failed to create course: $responseBody"
-                                showError(errorMessageTextView, errorText)
-                                clearFields(inputCourseName, inputDescription)
-                            }
+                        } else {
+                            errorText = "Failed to create course: $responseBody"
+                            showError(errorMessageTextView, errorText)
+                            clearFields(inputCourseName, inputDescription)
+                        }
 
                     } catch (e: Exception) {
                         Log.e("CreateCourse", "Error creating course: ${e.message}")

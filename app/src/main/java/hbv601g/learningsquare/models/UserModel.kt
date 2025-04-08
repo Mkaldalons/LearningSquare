@@ -12,7 +12,3 @@ data class UserModel(
     val profileImageData: String?,
     val recoveryEmail: String?
     )
-{
-
-
-}

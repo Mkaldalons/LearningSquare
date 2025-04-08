@@ -1,6 +1,5 @@
 package hbv601g.learningsquare.ui.assignments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -18,7 +17,11 @@ import hbv601g.learningsquare.models.AssignmentModel
 import hbv601g.learningsquare.models.CourseModel
 import hbv601g.learningsquare.services.AssignmentService
 import hbv601g.learningsquare.services.HttpsService
+import hbv601g.learningsquare.storage.AppDatabase
+import hbv601g.learningsquare.storage.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AssignmentFragment : Fragment(R.layout.fragment_assignment){
     private lateinit var recyclerView: RecyclerView
@@ -27,6 +30,9 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
     private val assignments = mutableListOf<AssignmentModel>()
     private val courses = mutableListOf<CourseModel>()
     private var selectedCourseId: Int = -1
+
+    private lateinit var db: AppDatabase
+    private lateinit var userList: List<User>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,7 +67,7 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
             }
         }
 
-        val httpsService = HttpsService() // or inject it if you're using DI
+        val httpsService = HttpsService()
 
         assignmentAdapter = AssignmentAdapter(
             assignments,
@@ -100,7 +106,7 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
         {
             Toast.makeText(requireContext(), "Error: No courseID found", Toast.LENGTH_SHORT).show()
             assignments.clear()
-            assignmentAdapter.notifyDataSetChanged()
+            assignmentAdapter.notifyItemRangeChanged(0, assignments.size)
             return
         }
 
@@ -122,7 +128,7 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
             else
             {
                 assignments.clear()
-                assignmentAdapter.notifyDataSetChanged() // Viljum mögulega nota DiffUtil hér
+                assignmentAdapter.notifyItemRangeChanged(0, assignments.size)
                 val errorText = "No Assignments to show for course with ID: $courseId"
                 noAssignmentFoundMessage.visibility = View.VISIBLE
                 noAssignmentFoundMessage.text = errorText
@@ -132,17 +138,16 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
     }
 
     private fun loadCourses(coursesDropdown: Spinner) {
-        val sharedPref = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val loggedInInstructor = sharedPref.getString("loggedInUser", null)
-
-        if (loggedInInstructor == null) {
-            Toast.makeText(requireContext(), "Error: No logged-in user found", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         lifecycleScope.launch {
+
+            withContext(Dispatchers.IO)
+            {
+                db = AppDatabase.getDatabase(requireContext())
+                userList = db.userDao().getAll()
+            }
+
             val httpsService = HttpsService()
-            val coursesList = httpsService.getCourses(loggedInInstructor)
+            val coursesList = httpsService.getCourses(userList[0].userName)
 
             if (coursesList.isNotEmpty()) {
                 noAssignmentFoundMessage.visibility = View.GONE
@@ -158,7 +163,7 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
             }
             else
             {
-                val errorText = "No courses to show for: $loggedInInstructor"
+                val errorText = "No courses to show for: ${userList[0].userName}"
                 noAssignmentFoundMessage.visibility = View.VISIBLE
                 noAssignmentFoundMessage.text = errorText
             }

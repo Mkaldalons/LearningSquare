@@ -10,7 +10,7 @@
         android:id="@+id/assignmentHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Assignments"
+        android:text="@string/assignments"
         android:textSize="24sp"
         android:textColor="#2196F3"
         android:textStyle="bold"
