@@ -19,7 +19,6 @@ import hbv601g.learningsquare.services.StudentService
 import hbv601g.learningsquare.ui.StudentAdapter
 import kotlinx.coroutines.launch
 import androidx.core.graphics.toColorInt
-import androidx.room.util.convertByteToUUID
 
 class CourseDetailsFragment : Fragment(R.layout.fragment_course_details) {
 
@@ -146,7 +145,7 @@ class CourseDetailsFragment : Fragment(R.layout.fragment_course_details) {
                 val avg = try {
                     val studentService = StudentService(httpsService)
                     studentService.getStudentAverage(courseId, student.userName)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     null
                 }
                 val studentWithAverage = student.copy(averageGrade = avg)
