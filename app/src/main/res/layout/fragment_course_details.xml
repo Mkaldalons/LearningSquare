@@ -50,7 +50,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/edit_course"
-            android:layout_marginTop="8dp" />
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="#4CAF50"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
     <LinearLayout
@@ -69,14 +73,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/add_student_to_course"
-            android:textColor="#133191"
-            android:textSize="16sp" />
+            android:textColor="#2196F3"
+            android:textSize="16sp"/>
 
         <EditText
             android:id="@+id/studentUserNameInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="@style/InputField"
             android:autofillHints="studentUsername"
             android:hint="@string/student_username"
             android:inputType="text"
@@ -99,7 +104,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add"
-            android:background="#0080FF"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="#2196F3"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"
             android:padding="8dp" />
 
         <TextView
