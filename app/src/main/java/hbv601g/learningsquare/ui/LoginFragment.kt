@@ -15,7 +15,6 @@ import hbv601g.learningsquare.storage.AppDatabase
 import hbv601g.learningsquare.storage.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import android.util.Log
 import hbv601g.learningsquare.MainActivity
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
