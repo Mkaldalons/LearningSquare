@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,9 +27,10 @@ import kotlinx.coroutines.withContext
 class AssignmentFragment : Fragment(R.layout.fragment_assignment){
     private lateinit var recyclerView: RecyclerView
     private lateinit var assignmentAdapter: AssignmentAdapter
-    private lateinit var noAssignmentFoundMessage: TextView
+    private lateinit var emptyState: ConstraintLayout
     private val assignments = mutableListOf<AssignmentModel>()
     private val courses = mutableListOf<CourseModel>()
+    private lateinit var nothingFound: TextView
     private var selectedCourseId: Int = -1
 
     private lateinit var db: AppDatabase
@@ -39,7 +41,8 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
 
         val coursesDropdown = view.findViewById<Spinner>(R.id.coursesDropdown)
         val buttonCreateAssignment = view.findViewById<Button>(R.id.buttonCreateAssignment)
-        noAssignmentFoundMessage = view.findViewById(R.id.noAssignmentsFoundForThisCourseTextView)
+        emptyState = view.findViewById(R.id.emptyState)
+        nothingFound = view.findViewById(R.id.emptyStateMessage)
         recyclerView = view.findViewById(R.id.recyclerViewAssignments)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -119,7 +122,7 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
 
             if (assignmentList.isNotEmpty())
             {
-                noAssignmentFoundMessage.visibility = View.GONE
+                emptyState.visibility = View.GONE
                 assignments.clear()
                 assignments.addAll(assignmentList)
                 assignmentAdapter.notifyItemRangeRemoved(0, previousAssignmentListSize)
@@ -129,9 +132,9 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
             {
                 assignments.clear()
                 assignmentAdapter.notifyItemRangeChanged(0, assignments.size)
-                val errorText = "No Assignments to show for course with ID: $courseId"
-                noAssignmentFoundMessage.visibility = View.VISIBLE
-                noAssignmentFoundMessage.text = errorText
+                val emptyStateMessage = "No Assignments found for the selected course"
+                nothingFound.text = emptyStateMessage
+                emptyState.visibility = View.VISIBLE
             }
         }
 
@@ -150,7 +153,7 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
             val coursesList = httpsService.getCourses(userList[0].userName)
 
             if (coursesList.isNotEmpty()) {
-                noAssignmentFoundMessage.visibility = View.GONE
+                emptyState.visibility = View.GONE
                 courses.clear()
                 courses.addAll(coursesList)
 
@@ -163,9 +166,9 @@ class AssignmentFragment : Fragment(R.layout.fragment_assignment){
             }
             else
             {
-                val errorText = "No courses to show for: ${userList[0].userName}"
-                noAssignmentFoundMessage.visibility = View.VISIBLE
-                noAssignmentFoundMessage.text = errorText
+                val emptyStateMessage = "No Courses found for instructor ${userList[0].name}"
+                nothingFound.text = emptyStateMessage
+                emptyState.visibility = View.VISIBLE
             }
         }
     }

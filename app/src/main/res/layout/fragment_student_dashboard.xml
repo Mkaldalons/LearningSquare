@@ -30,6 +30,15 @@
         app:layout_constraintBottom_toTopOf="@id/bottomNavBar"
         app:layout_constraintVertical_bias="1.0" />
 
+    <include
+        android:id="@+id/emptyState"
+        layout="@layout/empty_state"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <LinearLayout
         android:id="@+id/bottomNavBar"
         android:layout_width="match_parent"

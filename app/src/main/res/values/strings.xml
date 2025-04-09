@@ -78,4 +78,6 @@
     <string name="average_grade_n_a">Average Grade: N/A</string>
     <string name="welcome_to_courses">Welcome to Courses</string>
     <string name="create_new_course">Create New Course</string>
+    <string name="nothing_here_yet">Nothing here yet!</string>
+    <string name="image_of_the_empty_set">image of the empty set</string>
 </resources>

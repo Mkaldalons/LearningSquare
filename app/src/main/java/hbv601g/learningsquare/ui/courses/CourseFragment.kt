@@ -3,7 +3,8 @@ package hbv601g.learningsquare.ui.courses
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,8 @@ import kotlinx.coroutines.withContext
 class CourseFragment : Fragment(R.layout.fragment_course) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var courseAdapter: CourseAdapter
+    private lateinit var emptyState: ConstraintLayout
+    private lateinit var nothingFound: TextView
     private val courses = mutableListOf<CourseModel>()
 
     private lateinit var db: AppDatabase
@@ -30,6 +33,8 @@ class CourseFragment : Fragment(R.layout.fragment_course) {
 
         recyclerView = view.findViewById(R.id.recyclerViewCourses)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        emptyState = view.findViewById(R.id.emptyState)
+        nothingFound = view.findViewById(R.id.emptyStateMessage)
 
         courseAdapter = CourseAdapter(courses) { selectedCourse ->
             val bundle = Bundle().apply {
@@ -66,13 +71,16 @@ class CourseFragment : Fragment(R.layout.fragment_course) {
             val coursesList = httpsService.getCourses(userList[0].userName)
 
             if (coursesList.isNotEmpty()) {
+                emptyState.visibility = View.GONE
                 val oldSize = courses.size
                 courses.clear()
                 courses.addAll(coursesList)
                 courseAdapter.notifyItemRangeRemoved(0, oldSize)
                 courseAdapter.notifyItemRangeInserted(0, coursesList.size)
             } else {
-                Toast.makeText(requireContext(), "No courses found for this instructor", Toast.LENGTH_SHORT).show()
+                val emptyStateMessage = "No courses found for instructor ${userList[0].name}"
+                nothingFound.text = emptyStateMessage
+                emptyState.visibility = View.VISIBLE
             }
         }
     }

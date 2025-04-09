@@ -1,10 +1,10 @@
 package hbv601g.learningsquare.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,7 +24,8 @@ import kotlinx.coroutines.withContext
 class StudentCourseFragment : Fragment(R.layout.student_course_layout) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var assignmentAdapter: AssignmentAdapter
-    private lateinit var noAssignmentFoundMessage: TextView
+    private lateinit var emptyState: ConstraintLayout
+    private lateinit var nothingFound: TextView
     private val assignments = mutableListOf<AssignmentModel>()
 
     private lateinit var db: AppDatabase
@@ -33,7 +34,8 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        noAssignmentFoundMessage = view.findViewById(R.id.noAssignmentsFoundForThisCourseTextView)
+        emptyState = view.findViewById(R.id.emptyState)
+        nothingFound = view.findViewById(R.id.emptyStateMessage)
         recyclerView = view.findViewById(R.id.recyclerViewAssignments)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -91,7 +93,7 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout) {
             val previousAssignmentListSize = assignments.size
 
             if (assignmentList.isNotEmpty()) {
-                noAssignmentFoundMessage.visibility = View.GONE
+                emptyState.visibility = View.GONE
                 assignments.clear()
                 assignments.addAll(assignmentList)
                 assignmentAdapter.notifyItemRangeRemoved(0, previousAssignmentListSize)
@@ -107,9 +109,9 @@ class StudentCourseFragment : Fragment(R.layout.student_course_layout) {
             } else {
                 assignments.clear()
                 assignmentAdapter.notifyItemRangeRemoved(0, assignments.size)
-                val errorText = "No Published Assignments to show for course with ID: $courseId"
-                noAssignmentFoundMessage.visibility = View.VISIBLE
-                noAssignmentFoundMessage.text = errorText
+                val errorText = "No Published Assignments to show for this course"
+                nothingFound.text = errorText
+                emptyState.visibility = View.VISIBLE
             }
         }
     }
