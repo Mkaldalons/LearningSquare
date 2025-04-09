@@ -54,4 +54,9 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fragment_container_view, dashboardFragment)
             .commit()
     }
+
+    fun hideNavBar()
+    {
+        findViewById<FrameLayout>(R.id.navBarContainer).visibility = View.GONE
+    }
 }

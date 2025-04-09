@@ -20,6 +20,7 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
+import hbv601g.learningsquare.MainActivity
 import hbv601g.learningsquare.storage.AppDatabase
 import hbv601g.learningsquare.storage.User
 import hbv601g.learningsquare.ui.LoginFragment
@@ -98,6 +99,7 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
         val updatePasswordButton = view.findViewById<Button>(R.id.updatePasswordButton)
         val updateRecoveryEmailButton = view.findViewById<Button>(R.id.updateRecoveryEmailButton)
         val deleteAccountButton = view.findViewById<Button>(R.id.deleteAccountButton)
+        val logoutButton = view.findViewById<Button>(R.id.logoutButton)
 
         httpsService = HttpsService()
         userService = UserService(httpsService)
@@ -146,10 +148,17 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
                 .commit()
         }
 
+        logoutButton.setOnClickListener {
+            (activity as MainActivity).hideNavBar()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, LoginFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
         deleteAccountButton.setOnClickListener {
             showDeleteAccountDialog()
         }
-
     }
 
     private fun displayProfileImage(user: User)
