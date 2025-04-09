@@ -16,7 +16,7 @@
             android:id="@+id/logoImage"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/ls_logo"
+            android:src="@drawable/learning_icon_login"
             android:layout_marginBottom="24dp"
             android:contentDescription="@string/logo_description" />
 
