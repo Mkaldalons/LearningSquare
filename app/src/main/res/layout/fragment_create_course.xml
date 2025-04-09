@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="160dp"
         android:autofillHints="Course Name"
+        style="@style/InputField"
         android:hint="@string/course_name"
         android:inputType="text"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:autofillHints="Description"
+        style="@style/InputField"
         android:hint="@string/description"
         android:inputType="textMultiLine"
         app:layout_constraintTop_toBottomOf="@id/inputCourseName"
@@ -47,8 +49,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/create_course"
+        android:background="@drawable/rounded_button"
         android:backgroundTint="#2196F3"
-        android:textColor="#FFFFFF"
+        android:textColor="@android:color/white"
         app:layout_constraintTop_toBottomOf="@+id/errorMessageTextView"
         android:layout_marginTop="24dp"/>
 
@@ -57,8 +60,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/cancel"
-        android:backgroundTint="#ff7F7f"
-        android:textColor="#FFfFFF"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:textColor="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/buttonSubmit"
         android:layout_marginTop="12dp"/>
 

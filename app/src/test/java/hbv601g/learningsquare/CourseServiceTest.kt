@@ -52,4 +52,24 @@ class CourseServiceTest {
         assertNotSame(before, after)
     }
 
+    @Test
+    fun testUpdateName(): Unit = runBlocking {
+        val courseId = 0
+        val newName = "Stærðfræðigreining I"
+
+        val success = courseService.editCourseName(courseId, newName)
+
+        assertTrue(success)
+    }
+
+    @Test
+    fun testUpdateDescription(): Unit = runBlocking {
+        val courseId = 0
+        val newDescription = "Uppáhalds áfanginn hennar Maríu"
+
+        val success = courseService.editCourseDescription(courseId, newDescription)
+
+        assertTrue(success)
+    }
+
 }

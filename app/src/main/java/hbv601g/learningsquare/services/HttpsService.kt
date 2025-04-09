@@ -188,6 +188,44 @@ class HttpsService {
         }
     }
 
+    suspend fun getCourse(courseId: Int): HttpResponse
+    {
+        val url = "$url/courses/course/$courseId"
+
+        val response: HttpResponse = client.get(url)
+
+        return response
+    }
+
+    suspend fun editCourse(courseId: Int, courseName: String?, courseDescription: String?): HttpResponse
+    {
+        val url = "$url/courses/$courseId"
+        var jsonBody = ""
+        if(courseName.isNullOrEmpty())
+        {
+            jsonBody = """
+                {
+                    "description": "$courseDescription"
+                }
+            """.trimIndent()
+        }
+        if(courseDescription.isNullOrEmpty())
+        {
+            jsonBody = """
+                {
+                    "courseName": "$courseName"
+                }
+            """.trimIndent()
+        }
+
+        val response: HttpResponse = client.patch(url)
+        {
+            contentType(ContentType.Application.Json)
+            setBody(jsonBody)
+        }
+        return response
+    }
+
     suspend fun addStudentToCourse(courseId: Int, userName: String): HttpResponse
     {
         val url = "$url/courses/$courseId/$userName"
