@@ -80,4 +80,5 @@
     <string name="create_new_course">Create New Course</string>
     <string name="nothing_here_yet">Nothing here yet!</string>
     <string name="image_of_the_empty_set">image of the empty set</string>
+    <string name="dashboard">Dashboard</string>
 </resources>

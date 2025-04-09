@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import hbv601g.learningsquare.MainActivity
 import hbv601g.learningsquare.R
 import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.services.UserService
@@ -60,17 +61,11 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
                             }
 
                             if (user.instructor) {
-                                parentFragmentManager.beginTransaction()
-                                    .replace(R.id.fragment_container_view, InstructorDashboardFragment())
-                                    .addToBackStack(null)
-                                    .commit()
+                                (activity as MainActivity).showDashboardAndNavBar(MainActivity.DashboardType.INSTRUCTOR)
                             }
                             else
                             {
-                                parentFragmentManager.beginTransaction()
-                                    .replace(R.id.fragment_container_view, StudentDashboardFragment())
-                                    .addToBackStack(null)
-                                    .commit()
+                                (activity as MainActivity).showDashboardAndNavBar(MainActivity.DashboardType.STUDENT)
                             }
                         }
                         else
