@@ -16,6 +16,7 @@ import hbv601g.learningsquare.storage.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import android.util.Log
+import hbv601g.learningsquare.MainActivity
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -45,7 +46,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     val user = userService.loginUser(username, password)
                     if (user != null)
                     {
-                        Log.d("Login", "Saving ${user.userName} to database")
                         val userToSave = User(0, user.userName, user.name ,user.email, user.password, user.instructor, user.profileImageData, user.recoveryEmail)
                         val db = AppDatabase.getDatabase(requireContext())
                         withContext(Dispatchers.IO) {
@@ -53,17 +53,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         }
 
                         if (user.instructor) {
-                            parentFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_container_view, InstructorDashboardFragment())
-                                .addToBackStack(null)
-                                .commit()
+                            (activity as MainActivity).showDashboardAndNavBar(MainActivity.DashboardType.INSTRUCTOR)
                         }
                         else
                         {
-                            parentFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_container_view, StudentDashboardFragment())
-                                .addToBackStack(null)
-                                .commit()
+                            (activity as MainActivity).showDashboardAndNavBar(MainActivity.DashboardType.STUDENT)
                         }
                     }
                     else {

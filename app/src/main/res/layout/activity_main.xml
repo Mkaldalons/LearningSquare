@@ -19,14 +19,17 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:name="hbv601g.learningsquare.ui.LoginFragment"
         tools:layout="@layout/fragment_login">
     </androidx.fragment.app.FragmentContainerView>
 
-    <include
-        layout="@layout/fragment_login"
+    <FrameLayout
+        android:id="@+id/navBarContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:visibility="gone" />
 
 </LinearLayout>

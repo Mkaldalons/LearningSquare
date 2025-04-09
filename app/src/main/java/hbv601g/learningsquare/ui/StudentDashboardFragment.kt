@@ -2,7 +2,6 @@ package hbv601g.learningsquare.ui
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -15,7 +14,6 @@ import hbv601g.learningsquare.services.HttpsService
 import hbv601g.learningsquare.storage.AppDatabase
 import hbv601g.learningsquare.storage.User
 import hbv601g.learningsquare.ui.courses.CourseAdapter
-import hbv601g.learningsquare.ui.user_profile.MyInfoFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,7 +32,6 @@ class StudentDashboardFragment : Fragment(R.layout.fragment_student_dashboard) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val myCourses = view.findViewById<Button>(R.id.myInfoButton)
         recyclerView = view.findViewById(R.id.recyclerViewCourses)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         emptyState = view.findViewById(R.id.emptyState)
@@ -53,13 +50,6 @@ class StudentDashboardFragment : Fragment(R.layout.fragment_student_dashboard) {
         recyclerView.adapter = courseAdapter
 
         loadCourses()
-
-        myCourses.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_view, MyInfoFragment())
-                .addToBackStack(null)
-                .commit()
-        }
     }
 
     private fun loadCourses() {
