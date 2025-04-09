@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.courses.CourseFragment">
 
-    <!-- Welcome Text -->
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
@@ -21,9 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
 
-    <!-- RecyclerView to Display Courses -->
 
-    <!-- Button to Create a New Course -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCourses"
         android:layout_width="match_parent"
@@ -35,6 +32,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/welcomeText"
         app:layout_constraintVertical_bias="1.0" />
+
+    <include
+        android:id="@+id/emptyState"
+        layout="@layout/empty_state"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/buttonCreateCourse"
