@@ -55,7 +55,7 @@
         android:id="@+id/buttonCreateAssignment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="#4CAF50"
         android:text="@string/create_new_assignment"
