@@ -81,4 +81,5 @@
     <string name="nothing_here_yet">Nothing here yet!</string>
     <string name="image_of_the_empty_set">image of the empty set</string>
     <string name="dashboard">Dashboard</string>
+    <string name="log_out">Log out</string>
 </resources>
