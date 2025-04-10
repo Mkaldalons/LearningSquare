@@ -54,7 +54,7 @@ class SignupFragment : Fragment(R.layout.fragment_signup_layout) {
 
                         if(user != null)
                         {
-                            val userToSave = User(0, user.userName, user.name ,user.email, user.password, user.instructor, user.profileImageData, user.recoveryEmail)
+                            val userToSave = User(0, user.userName, user.name ,user.email, user.password, user.instructor, user.recoveryEmail)
                             val db = AppDatabase.getDatabase(requireContext())
                             withContext(Dispatchers.IO) {
                                 db.userDao().insert(userToSave)

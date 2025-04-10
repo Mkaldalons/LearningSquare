@@ -164,19 +164,15 @@ class MyInfoFragment : Fragment(R.layout.fragment_my_info) {
     private fun displayProfileImage(user: User)
     {
         lifecycleScope.launch {
-            if (user.profileImageData.isNullOrEmpty())
+            val imageData = userService.getProfilePicture(user.userName)
+            if (imageData == null || imageData.isEmpty())
             {
                 profileImageView.setImageResource(R.drawable.ic_profile_placeholder)
             }
             else
             {
-                val profileImage = userService.getProfilePicture(user.userName)
-                if(profileImage != null)
-                {
-                    val profilePictureBitmap =
-                        profileImage.let { BitmapFactory.decodeByteArray(profileImage, 0, it.size) }
+                val profilePictureBitmap = imageData.let { BitmapFactory.decodeByteArray(imageData, 0, it.size) }
                     profileImageView.setImageBitmap(profilePictureBitmap)
-                }
             }
         }
     }
